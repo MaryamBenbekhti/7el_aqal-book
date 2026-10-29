@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | المسائل التطبيقية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;direction:rtl}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1}
+  .frac .t{font-size:14px;font-weight:900;padding:0 4px;border-bottom:2.5px solid currentColor;line-height:1.4;text-align:center;min-width:16px}
+  .frac .b{font-size:14px;font-weight:900;padding:0 4px;line-height:1.4;text-align:center;min-width:16px}
+  .ex-card{margin:0 20px 8px;border-radius:12px;padding:13px 15px}
+  .step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;direction:rtl}
+  .step-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0}
+  .step-t{font-size:12.5px;line-height:1.9;flex:1;text-align:right}
+  .q-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px;border:2px solid #FBE9E7;background:#FFFAF9}
+  .q-text{font-size:13px;font-weight:700;color:#1A2533;margin-bottom:10px;line-height:2}
+  .q-opts{display:flex;flex-direction:column;gap:6px}
+  .q-opt{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:right;border:1.5px solid #E0E0E0;background:#F4F7F9;color:#1A2533;transition:all .2s}
+  .q-opt.correct{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+  .q-opt.wrong{background:#FFEBEE;border-color:#C62828;color:#B71C1C;text-decoration:line-through;cursor:default}
+  .q-explain{background:#E8F5E9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:#1B5E20;line-height:2;display:none}
+  .show-btn{margin-top:8px;width:100%;padding:8px;background:#FBE9E7;border:1.5px dashed #E8512B;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:#C62828;cursor:pointer}
+  .cmp{margin:0 20px 10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+function fr(t,b,c='#E8512B'){
+  return `<span class="frac" style="color:${c}"><span class="t">${t}</span><span class="b">${b}</span></span>`;
+}
+
+const QDATA=[
+  {correct:1, explain:'عمر أحمد الآن=س | أمه=س+٢٠ | بعد ٥ سنوات: (س+٥)+(س+٢٥)=٦٠ → ٢س+٣٠=٦٠ → س=١٥ ✓'},
+  {correct:2, explain:'الربح = سعر البيع − سعر الشراء = ١٥٠−١٢٠ = ٣٠ | النسبة = ٣٠÷١٢٠×١٠٠ = ٢٥٪ ✓'},
+  {correct:0, explain:'أ تنجز في يوم = ١/٦ | ب تنجز في يوم = ١/٨ | معاً = ١/٦+١/٨ = ٧/٢٤ | الزمن = ٢٤÷٧ ≈ ٣٫٤ يوم ✓'},
+  {correct:3, explain:'نسبة الكحول = ٤٠٪ × ٢ + ٢٠٪ × ٣ = ٠٫٨+٠٫٦ = ١٫٤ | الإجمالي = ٥ ل | التركيز = ١٫٤÷٥×١٠٠ = ٢٨٪ ✓'},
+  {correct:1, explain:'المجموع = ٢+٣+٥ = ١٠ | نصيب أحمد = ٢/١٠×٥٠٠٠ = ١٠٠٠ | سعد = ٣/١٠×٥٠٠٠ = ١٥٠٠ | خالد = ٥/١٠×٥٠٠٠ = ٢٥٠٠ ✓'},
+  {correct:2, explain:'قاعدة ثلاثية طردية: ٨÷٢٤ = ١٤÷س → س = ١٤×٢٤÷٨ = ٤٢ ريال ✓'},
+  {correct:0, explain:'سعر ما بعد خصم ٢٠٪ = ٠٫٨×س = ٢٤٠ → س = ٢٤٠÷٠٫٨ = ٣٠٠ ريال ✓'},
+  {correct:3, explain:'معدل أ = ١/٤ | معدل ب = ١/٦ | ب وحدها يومين = ٢/٦ = ١/٣ | تبقى = ٢/٣ | أ وب معاً: ١/٤+١/٦=٥/١٢ | الوقت = (٢/٣)÷(٥/١٢) = ١٫٦ يوم ✓'},
+  {correct:1, explain:'الخسارة = ٢٠٠−١٦٠ = ٤٠ | النسبة = ٤٠÷٢٠٠×١٠٠ = ٢٠٪ خسارة ✓'},
+  {correct:2, explain:'عمر الأب الآن=س | الابن=س−٢٥ | س+(س−٢٥)=٧٥ → ٢س=١٠٠ → س=٥٠ | الأب=٥٠، الابن=٢٥ ✓'},
+];
+
+function revealQ(qi){
+  const{correct,explain}=QDATA[qi];
+  document.querySelectorAll(`#q${qi}opts .q-opt`).forEach((o,i)=>{
+    o.classList.add(i===correct?'correct':'wrong');
+    o.onclick=null;
+  });
+  const exp=document.getElementById(`q${qi}exp`);
+  exp.innerHTML='💡 '+explain;
+  exp.style.display='block';
+  const btn=document.getElementById(`q${qi}btn`);
+  if(btn)btn.style.display='none';
+}
+function pickQ(qi){revealQ(qi)}
+
+const PAGES=[
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف",bg:"#2E1A00",html:`
+<div style="background:linear-gradient(160deg,#2E1A00,#7A3B00);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(122,59,0,0.2);bottom:20%;right:-50px"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(245,166,35,0.07);top:15%;left:-30px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#2E1A00;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>الباب السادس</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">الباب السادس</div>
+    <div style="font-size:48px;text-align:center;margin-bottom:8px">🧮</div>
+    <div style="font-family:'Amiri',serif;font-size:32px;color:#fff;font-weight:700;text-align:center;line-height:1.5">المسائل التطبيقية</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:12.5px;color:rgba(255,220,150,0.9);text-align:center;line-height:2;padding:0 16px">
+      المسألة اللفظية =<br/><strong style="color:#F5A623">فهم + ترجمة + حساب</strong>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['خطوات الحل','الكلمات المفتاحية','القاعدة الثلاثية','مسائل العمر','المال والأرباح','العمل والإنجاز','الخلط','التوزيع'].map(t=>`
+        <div style="background:rgba(122,59,0,0.3);border:1px solid rgba(245,166,35,0.4);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.25);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(255,220,150,0.6)">المسائل التطبيقية</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: خطوات الحل ══ */
+{label:"خطوات الحل",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">خطوات حل المسألة اللفظية</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    كثير من الطلاب يُخطئون ليس لعدم المعرفة — بل لتخطّي هذه الخطوات.
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    ${[
+      ['#F5A623','١','اقرأ كاملاً أولاً','لا تبدأ الحساب قبل قراءة السؤال بالكامل'],
+      ['#E8512B','٢','حدّد المعطيات','الأرقام والمعلومات المذكورة'],
+      ['#00B4CC','٣','حدّد المطلوب','ما الذي يسأل عنه السؤال تحديداً؟'],
+      ['#2E7D32','٤','افرض المجهول','ضع س = الشيء المطلوب'],
+      ['#7B2D8B','٥','حوِّل لمعادلة','الكلمات → عمليات رياضية'],
+      ['#1565C0','٦','احسب وتحقق','عوّض الجواب في المسألة الأصلية'],
+    ].map(([c,n,t,d])=>`
+      <div class="step">
+        <div class="step-n" style="background:${c}">${n}</div>
+        <div class="step-t" style="color:#E0F7FA"><strong>${t}:</strong> <span style="color:#B2EBF2">${d}</span></div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- مثال كامل -->
+  <div style="margin:0 20px 12px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px">مثال كامل خطوة بخطوة</div>
+    <div style="font-size:12.5px;color:#1A2533;font-weight:700;margin-bottom:8px;line-height:1.7;background:rgba(255,255,255,0.6);border-radius:8px;padding:8px">"عدد إذا ضاعفته ثم أضفت ٤ أصبح ٢٠"</div>
+    ${[
+      ['#F5A623','المعطيات','ضاعف ← +٤ ← = ٢٠'],
+      ['#E8512B','المطلوب','العدد = ؟'],
+      ['#2E7D32','الفرض','العدد = س'],
+      ['#1565C0','المعادلة','٢س + ٤ = ٢٠'],
+      ['#7B2D8B','الحل','٢س = ١٦ ← س = ٨ ✓'],
+      ['#00838F','التحقق','٢×٨+٤ = ٢٠ ✓'],
+    ].map(([c,t,d])=>`
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;direction:ltr">
+        <div style="font-size:12px;color:${c};font-weight:700;flex:1;text-align:left">${d}</div>
+        <div style="font-size:11px;font-weight:800;color:${c};min-width:70px;text-align:right">${t}</div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+`},
+
+/* ══ 3: الكلمات المفتاحية ══ */
+{label:"الكلمات المفتاحية",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">الكلمات المفتاحية — ترجم فوراً</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    احفظ هذا الجدول — يحوّل أي مسألة لمعادلة في ثوانٍ.
+  </div>
+
+  <div style="margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#1565C0">
+      <div style="padding:10px;font-size:12px;font-weight:800;color:#fff;text-align:center">العملية الرياضية</div>
+      <div style="padding:10px;font-size:12px;font-weight:800;color:#fff;text-align:center">الكلمة في السؤال</div>
+    </div>
+    ${[
+      ['+ زائد','أضيف، زاد، مجموع، أكثر من'],
+      ['− ناقص','نقص، طُرح، فرق، أقل من'],
+      ['× ٢','ضِعف، مثلاه، ضاعف'],
+      ['× ٣','ثلاثة أمثال'],
+      ['÷ ٢','نصف'],
+      ['÷ ٤','ربع'],
+      ['× ١٠٠٪','نسبة مئوية من'],
+      ['= (يساوي)','أصبح، يعادل، ناتجه'],
+      ['مجهول واحد','افرض س = المطلوب'],
+      ['مجهولان','الأكبر=س، الأصغر=س−ن'],
+    ].map(([op,word],i)=>`
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:${i%2===0?'#fff':'#F4F7F9'}">
+        <div style="padding:9px 12px;font-size:13px;font-weight:900;color:#1565C0;text-align:center;border-left:1px solid #E3F2FD">${op}</div>
+        <div style="padding:9px 12px;font-size:12px;color:#1A2533;text-align:right;font-weight:600">${word}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- مثال سريع -->
+  <div style="margin:0 20px;background:#E3F2FD;border-radius:10px;padding:11px 14px">
+    <div style="font-size:12px;font-weight:800;color:#0D47A1;margin-bottom:6px">مثال سريع</div>
+    <div style="font-size:12px;color:#1A2533;line-height:2">"عدد إذا أضيف إليه ٥ أصبح ثلاثة أمثاله"<br/>
+    ← <strong style="color:#1565C0">س + ٥ = ٣س</strong> → س = ٢٫٥ ✓</div>
+  </div>
+</div>
+`},
+
+/* ══ 4: القاعدة الثلاثية ══ */
+{label:"القاعدة الثلاثية",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">⭐ القاعدة الثلاثية</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    أقوى أداة لحل مسائل التناسب — تُنجز الحل في سطرين.
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+      <div style="background:rgba(46,125,50,0.3);border:2px solid #2E7D32;border-radius:8px;padding:10px">
+        <div style="font-size:12px;font-weight:800;color:#A5D6A7;margin-bottom:4px">↑↑ طردي</div>
+        <div style="font-size:13px;font-weight:700;color:#fff">أ ÷ ب = ج ÷ د ← أ×د = ب×ج</div>
+        <div style="font-size:10px;color:#B2EBF2;margin-top:4px">زاد هذا ← زاد ذاك</div>
+      </div>
+      <div style="background:rgba(232,81,43,0.3);border:2px solid #E8512B;border-radius:8px;padding:10px">
+        <div style="font-size:12px;font-weight:800;color:#FFAB91;margin-bottom:4px">↑↓ عكسي</div>
+        <div style="font-size:13px;font-weight:700;color:#fff">أ × ب = ج × د</div>
+        <div style="font-size:10px;color:#B2EBF2;margin-top:4px">زاد هذا ← نقص ذاك</div>
+      </div>
+    </div>
+    <div style="font-size:11.5px;color:#B2EBF2">الخطوات: ضع المعطيات مقابل بعض ← ضع س ← اضرب تبادلياً</div>
+  </div>
+
+  ${[
+    {type:'↑↓ عكسي — عمال وأيام',
+     q:'٣ عمال ↔ ١٢ يوم | ٦ عمال ↔ س يوم',
+     note:'أكثر عمال ← أقل أيام ← عكسي',
+     sol:'٣ × ١٢ = ٦ × س → س = ٣٦÷٦ = <strong style="color:#2E7D32">٦ أيام ✓</strong>',
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {type:'↑↑ طردي — سعر الأقلام',
+     q:'٨ أقلام ↔ ٢٤ ريال | ١٤ قلم ↔ س ريال',
+     note:'أكثر أقلام ← سعر أكبر ← طردي',
+     sol:`${fr('٢٤','٨')} = ${fr('س','١٤')} ← نقرأ: ٢٤÷٨ = س÷١٤ → ضرب تبادلي: ٢٤×١٤ = ٨×س → س = <strong style="color:#1565C0">٤٢ ريال ✓</strong>`,
+     color:'#1565C0',bg:'#E3F2FD'},
+    {type:'↑↓ عكسي — سرعة وزمن',
+     q:'سرعة ٦٠ ↔ ٤ ساعات | سرعة ٨٠ ↔ س ساعة',
+     note:'سرعة أكبر ← وقت أقل ← عكسي',
+     sol:'٦٠ × ٤ = ٨٠ × س → س = ٢٤٠÷٨٠ = <strong style="color:#E8512B">٣ ساعات ✓</strong>',
+     color:'#E8512B',bg:'#FBE9E7'},
+  ].map(({type,q,note,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:4px;direction:ltr;text-align:right">${q}</div>
+      <div style="font-size:11px;color:#7B8FA1;margin-bottom:5px">${note}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600">${sol}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 5: مسائل العمر ══ */
+{label:"مسائل العمر",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">مسائل العمر</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#F3E5F5;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#4A148C;margin-bottom:8px">⭐ قواعد أساسية</div>
+    ${[
+      ['قبل ن سنوات','اطرح ن من العمر الحالي'],
+      ['بعد ن سنوات','أضف ن للعمر الحالي'],
+      ['أكبر بـ ن سنوات','الأكبر = س + ن'],
+      ['ضعف العمر','الأكبر = ٢ × الأصغر'],
+    ].map(([k,v])=>`
+      <div style="display:flex;justify-content:space-between;background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;margin-bottom:5px;direction:ltr">
+        <div style="font-size:12px;color:#7B2D8B;font-weight:700">${v}</div>
+        <div style="font-size:12px;color:#1A2533;font-weight:600">${k}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  ${[
+    {q:'الآن: أب وابنه مجموع أعمارهم ٧٥، والأب أكبر بـ ٢٥ سنة. ما عمر كل منهما؟',
+     sol:['افرض عمر الابن = س | عمر الأب = س+٢٥','س+(س+٢٥)=٧٥ → ٢س=٥٠ → س=٢٥','الابن=٢٥ | الأب=٥٠ ✓'],
+     color:'#7B2D8B',bg:'#F3E5F5'},
+    {q:'بعد ٥ سنوات: عمر أحمد وأمه سيصبح مجموعهما ٦٠، والأم أكبر من أحمد بـ ٢٠ سنة الآن. ما عمر أحمد الآن؟',
+     sol:['افرض عمر أحمد الآن = س | الأم = س+٢٠','بعد ٥ سنوات: (س+٥)+(س+٢٥)=٦٠','٢س+٣٠=٦٠ → س=١٥ ✓'],
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 6: المال والأرباح والخسائر ══ */
+{label:"المال والأرباح والخسائر",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">المال والأرباح والخسائر</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+      ${[
+        ['الربح','سعر البيع − سعر الشراء','#2E7D32'],
+        ['نسبة الربح','الربح÷سعر الشراء×١٠٠','#F5A623'],
+        ['الخسارة','سعر الشراء − سعر البيع','#E8512B'],
+        ['سعر بعد خصم','السعر × (١ − الخصم٪)','#00B4CC'],
+      ].map(([t,f,c])=>`
+        <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:9px">
+          <div style="font-size:11px;font-weight:800;color:${c};margin-bottom:3px">${t}</div>
+          <div style="font-size:11px;color:#B2EBF2;font-weight:600">${f}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  ${[
+    {type:'ربح',q:'اشترى تاجر بضاعة بـ ١٢٠ ريال وباعها بـ ١٥٠ ريال — ما نسبة الربح؟',
+     sol:'الربح = ١٥٠−١٢٠ = ٣٠ | نسبة الربح = ٣٠÷١٢٠×١٠٠ = <strong style="color:#2E7D32">٢٥٪ ✓</strong>',
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {type:'خسارة',q:'اشترى سيارة بـ ٢٠٠٠٠٠ وباعها بـ ١٦٠٠٠٠ — ما نسبة الخسارة؟',
+     sol:'الخسارة = ٢٠٠٠٠٠−١٦٠٠٠٠ = ٤٠٠٠٠ | النسبة = ٤٠٠٠٠÷٢٠٠٠٠٠×١٠٠ = <strong style="color:#E8512B">٢٠٪ ✓</strong>',
+     color:'#E8512B',bg:'#FBE9E7'},
+    {type:'سعر أصلي بعد خصم',q:'سعر بعد خصم ٢٠٪ أصبح ٢٤٠ ريال — ما السعر الأصلي؟',
+     sol:'٠٫٨ × السعر = ٢٤٠ → السعر = ٢٤٠÷٠٫٨ = <strong style="color:#1565C0">٣٠٠ ريال ✓</strong>',
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({type,q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600">${sol}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 7: العمل والإنجاز ══ */
+{label:"العمل والإنجاز",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">العمل والإنجاز</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#E0F2F1;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#004D40;margin-bottom:8px">⭐ القانون الأساسي</div>
+    <div style="font-size:14px;font-weight:900;color:#00695C;text-align:center;margin-bottom:8px">
+      معدل العمل = ${fr('١','الزمن اللازم','#00695C')}
+    </div>
+    ${[
+      ['إذا أ تُنجز في ن يوم','معدل أ في اليوم = ١÷ن'],
+      ['أ وب معاً في يوم','معدل المشترك = معدل أ + معدل ب'],
+      ['الزمن المشترك','= ١ ÷ (معدل أ + معدل ب)'],
+    ].map(([k,v])=>`
+      <div style="display:flex;justify-content:space-between;background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;margin-bottom:5px;direction:ltr">
+        <div style="font-size:12px;color:#00695C;font-weight:700">${v}</div>
+        <div style="font-size:12px;color:#1A2533;font-weight:600">${k}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  ${[
+    {q:'أ تُنجز عملاً في ٦ أيام وب في ٨ أيام — كم يوماً يحتاجان معاً؟',
+     sol:[`معدل أ = ${fr('١','٦')} | معدل ب = ${fr('١','٨')}`,`المشترك = ${fr('١','٦')}+${fr('١','٨')} = ${fr('٧','٢٤')}`,`الزمن = ٢٤÷٧ ≈ <strong style="color:#00695C">٣٫٤ يوم ✓</strong>`],
+     color:'#00695C',bg:'#E0F2F1'},
+    {q:'أ وب معاً ينجزان عملاً في ٤ أيام. أ وحدها تحتاج ٦ أيام. كم تحتاج ب وحدها؟',
+     sol:[`معدل المشترك = ${fr('١','٤')}`,`معدل أ = ${fr('١','٦')}`,`معدل ب = ${fr('١','٤')}−${fr('١','٦')} = ${fr('١','١٢')} → <strong style="color:#00695C">ب تحتاج ١٢ يوماً ✓</strong>`],
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 11px;font-size:12px;color:${color};font-weight:600;line-height:2.2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 8: الخلط والتوزيع ══ */
+{label:"الخلط والتوزيع",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">الخلط والمحاليل والتوزيع</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- الخلط -->
+  <div style="margin:0 20px 12px;background:#E3F2FD;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:8px">🧪 الخلط والمحاليل</div>
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;text-align:center;margin-bottom:8px">
+      الكمية الكلية × التركيز = المادة الفعلية
+    </div>
+    <div class="ex-card" style="background:rgba(255,255,255,0.6);padding:10px;margin:0">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px">خلط ٢ل بتركيز ٤٠٪ مع ٣ل بتركيز ٢٠٪ — ما تركيز الخليط؟</div>
+      <div style="font-size:12px;color:#1565C0;font-weight:600;line-height:2">
+        المادة الفعلية = ٢×٠٫٤ + ٣×٠٫٢ = ٠٫٨+٠٫٦ = ١٫٤ل<br/>
+        الإجمالي = ٢+٣ = ٥ل<br/>
+        التركيز = ١٫٤÷٥×١٠٠ = <strong style="color:#E8512B">٢٨٪ ✓</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- التوزيع -->
+  <div style="margin:0 20px 12px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px">📊 التوزيع بالنسبة</div>
+    <div style="font-size:12.5px;color:#1A2533;margin-bottom:8px;text-align:right;line-height:2">
+      نصيب كل طرف = ${fr('جزءه','مجموع النسب','#E8512B')} × الكمية الكلية
+    </div>
+    <div class="ex-card" style="background:rgba(255,255,255,0.6);padding:10px;margin:0">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px">وزّع ٥٠٠٠ ريال بين أحمد وسعد وخالد بنسبة ٢:٣:٥</div>
+      <div style="font-size:12px;color:#E8512B;font-weight:600;line-height:2">
+        المجموع = ٢+٣+٥ = ١٠<br/>
+        أحمد = ${fr('٢','١٠')} × ٥٠٠٠ = ١٠٠٠ | سعد = ١٥٠٠ | خالد = ٢٥٠٠ ✓
+      </div>
+    </div>
+  </div>
+
+  <!-- المضخات -->
+  <div style="margin:0 20px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">🚰 المضخات والأنابيب</div>
+    <div class="ex-card" style="background:rgba(255,255,255,0.6);padding:10px;margin:0">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px">٣ مضخات تملأ خزاناً في ٦ ساعات — كم ساعة لـ ٩ مضخات؟</div>
+      <div style="font-size:12px;color:#2E7D32;font-weight:600;line-height:2">
+        عكسي: ٣×٦ = ٩×س → س = ١٨÷٩ = <strong style="color:#E8512B">٢ ساعة ✓</strong>
+      </div>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ نسبة التغير ══ */
+{label:"نسبة التغير المتسلسل",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">نسبة التغير المتسلسل ⚠️</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    من أكثر <strong style="color:#C62828">فخاخ القدرات</strong> — زيادة ثم نقص لا تعود للأصل!
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:6px">القانون</div>
+    <div style="font-size:14px;font-weight:800;color:#fff;line-height:2">
+      القيمة الجديدة = القديمة × (١ + نسبة الزيادة) × (١ − نسبة النقص)
+    </div>
+  </div>
+
+  ${[
+    {type:'فخ شائع',
+     q:'زاد سعر سلعة ٢٠٪ ثم نقص ٢٠٪ — هل عاد للسعر الأصلي؟',
+     sol:'١٠٠ × ١٫٢ × ٠٫٨ = <strong style="color:#E8512B">٩٦</strong> ← لا! نقص ٤٪',
+     warn:'⚠️ الزيادة والنقص بنفس النسبة لا يعودان للأصل أبداً',
+     color:'#C62828',bg:'#FFEBEE'},
+    {type:'مثال ١',
+     q:'سعر سيارة زاد ١٠٪ ثم نقص ١٥٪ — ما النسبة الكلية؟',
+     sol:'١٠٠ × ١٫١ × ٠٫٨٥ = ٩٣٫٥ ← <strong style="color:#E8512B">نقص ٦٫٥٪</strong>',
+     warn:'',
+     color:'#E65100',bg:'#FBE9E7'},
+    {type:'مثال ٢',
+     q:'زاد راتب ٢٥٪ ثم نقص ٢٠٪ — هل زاد أم نقص؟',
+     sol:'١٠٠ × ١٫٢٥ × ٠٫٨ = <strong style="color:#2E7D32">١٠٠</strong> ← عاد للأصل بالضبط',
+     warn:'💡 ٢٥٪ زيادة مع ٢٠٪ نقص هما الوحيدان اللذان يتوازنان',
+     color:'#2E7D32',bg:'#E8F5E9'},
+  ].map(({type,q,sol,warn,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol}</div>
+      ${warn?`<div style="font-size:11px;color:${color};margin-top:5px;font-weight:700">${warn}</div>`:''}
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ الشراء المشترك ══ */
+{label:"الشراء المشترك وتقسيم الربح",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">الشراء المشترك وتقسيم الربح</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#E3F2FD;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:8px">⭐ القاعدة</div>
+    <div style="font-size:13px;font-weight:700;color:#1A2533;text-align:center;margin-bottom:6px">
+      يُقسَّم الربح بنسبة رأس المال × الزمن
+    </div>
+    <div style="font-size:11.5px;color:#1565C0;text-align:right;line-height:2">
+      إذا كان الاستثمار لنفس المدة ← يُقسَّم بنسبة رأس المال فقط<br/>
+      إذا اختلفت المدة ← نضرب رأس المال × المدة لكل شريك
+    </div>
+  </div>
+
+  ${[
+    {type:'نفس المدة',
+     q:'استثمر أحمد ٤٠٠٠٠ وسعد ٦٠٠٠٠ لمدة سنة — كيف يُقسَّم ربح ٢٠٠٠٠؟',
+     sol:['النسبة = ٤:٦ = ٢:٣ | المجموع=٥','أحمد = ٢÷٥×٢٠٠٠٠ = <strong style="color:#1565C0">٨٠٠٠</strong>','سعد = ٣÷٥×٢٠٠٠٠ = <strong style="color:#1565C0">١٢٠٠٠</strong>'],
+     color:'#1565C0',bg:'#E3F2FD'},
+    {type:'مدد مختلفة',
+     q:'أحمد استثمر ١٠٠٠٠ لـ ٦ أشهر، وسعد ١٥٠٠٠ لـ ٤ أشهر — كيف يُقسَّم ربح ١٠٠٠٠؟',
+     sol:['أحمد: ١٠٠٠٠×٦=٦٠٠٠٠ | سعد: ١٥٠٠٠×٤=٦٠٠٠٠','النسبة = ٦٠:٦٠ = ١:١','كل منهما = <strong style="color:#E8512B">٥٠٠٠ ✓</strong>'],
+     color:'#E65100',bg:'#FBE9E7'},
+  ].map(({type,q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ المتوسط التطبيقي ══ */
+{label:"المتوسط التطبيقي",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">مسائل المتوسط الحسابي التطبيقية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:12px 15px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:6px">الحيلة الذهبية</div>
+    <div style="font-size:13px;font-weight:700;color:#fff;line-height:2">
+      المجموع = المتوسط × العدد<br/>
+      <span style="font-size:11px;color:#B2EBF2">عند إضافة قيمة: المجموع الجديد = القديم + القيمة الجديدة</span>
+    </div>
+  </div>
+
+  ${[
+    {q:'متوسط درجات ٥ طلاب = ٨٠. أضيف طالب بدرجة ٩٠. ما المتوسط الجديد؟',
+     sol:['المجموع القديم = ٨٠×٥ = ٤٠٠','المجموع الجديد = ٤٠٠+٩٠ = ٤٩٠','المتوسط الجديد = ٤٩٠÷٦ ≈ <strong style="color:#00695C">٨١٫٧ ✓</strong>'],
+     color:'#00695C',bg:'#E0F2F1'},
+    {q:'متوسط ٤ أعداد = ٥٠. ما الرقم الذي يجب إضافته ليصبح المتوسط ٥٥؟',
+     sol:['المجموع الحالي = ٥٠×٤ = ٢٠٠','المجموع المطلوب = ٥٥×٥ = ٢٧٥','الرقم المضاف = ٢٧٥−٢٠٠ = <strong style="color:#1565C0">٧٥ ✓</strong>'],
+     color:'#1565C0',bg:'#E3F2FD'},
+    {q:'متوسط ٦ أرقام = ٤٠. حُذف رقم فأصبح المتوسط ٣٨. ما الرقم المحذوف؟',
+     sol:['المجموع القديم = ٤٠×٦ = ٢٤٠','المجموع الجديد = ٣٨×٥ = ١٩٠','الرقم المحذوف = ٢٤٠−١٩٠ = <strong style="color:#E8512B">٥٠ ✓</strong>'],
+     color:'#E8512B',bg:'#FBE9E7'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ التناسب المركب ══ */
+{label:"التناسب المركب",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">التناسب المركب</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    عدة متغيرات معاً — عمال + أيام + ساعات.
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:6px">القانون</div>
+    <div style="font-size:13px;font-weight:700;color:#fff;line-height:2">
+      عمال × أيام × ساعات = ثابت (كمية العمل)
+    </div>
+    <div style="font-size:11px;color:#B2EBF2;margin-top:4px">كل متغير له علاقته الخاصة (طردي أو عكسي)</div>
+  </div>
+
+  ${[
+    {q:'١٠ عمال يعملون ٨ ساعات يومياً لـ ١٢ يوماً. كم يوماً يحتاج ١٦ عاملاً لنفس العمل إذا عملوا ٦ ساعات؟',
+     sol:['كمية العمل = ١٠×٨×١٢ = ٩٦٠','١٦×٦×س = ٩٦٠','٩٦×س = ٩٦٠ → س = <strong style="color:#7B2D8B">١٠ أيام ✓</strong>'],
+     color:'#7B2D8B',bg:'#F3E5F5'},
+    {q:'٦ آلات تنتج ٩٠٠ وحدة في ٥ أيام. كم وحدة تنتج ٤ آلات في ١٥ يوماً؟',
+     sol:['معدل آلة واحدة في يوم = ٩٠٠÷(٦×٥) = ٣٠','الإنتاج = ٤ × ٣٠ × ١٥ = <strong style="color:#1565C0">١٨٠٠ وحدة ✓</strong>'],
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 11px;font-size:12px;color:${color};font-weight:600;line-height:2.2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:#7A4800;text-align:right">
+    💡 الخطوة الأولى دائماً: احسب كمية العمل الكلية أولاً
+  </div>
+</div>
+`},
+
+/* ══ الإنتاج والسعر ══ */
+{label:"مسائل الإنتاج والسعر",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">مسائل الإنتاج والسعر</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px">العلاقة الأساسية</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:10px">
+        <div style="font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:4px">↑↑ طردي</div>
+        <div style="font-size:11.5px;color:#1A2533;line-height:1.8">السعر الكلي ← الكمية<br/>أكثر وحدات = أكثر تكلفة</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:10px">
+        <div style="font-size:12px;font-weight:800;color:#E8512B;margin-bottom:4px">↑↓ عكسي</div>
+        <div style="font-size:11.5px;color:#1A2533;line-height:1.8">سعر الوحدة ← الكمية<br/>خصم الكمية الكبيرة</div>
+      </div>
+    </div>
+  </div>
+
+  ${[
+    {type:'تكلفة الإنتاج',
+     q:'تكلفة إنتاج ٢٠٠ وحدة = ٥٠٠٠ ريال. ما تكلفة ٣٥٠ وحدة؟',
+     sol:[`${fr('٥٠٠٠','٢٠٠')} = ${fr('س','٣٥٠')} ← طردي`,'س = ٣٥٠×٥٠٠٠÷٢٠٠ = <strong style="color:#E65100">٨٧٥٠ ريال ✓</strong>'],
+     color:'#E65100',bg:'#FBE9E7'},
+    {type:'التوفير عند الشراء بالجملة',
+     q:'سعر القلم المفرد ٥ ريال، عند شراء ١٢ قلم الخصم ٢٠٪. ما التوفير؟',
+     sol:['سعر ١٢ بدون خصم = ١٢×٥ = ٦٠','بعد خصم ٢٠٪ = ٦٠×٠٫٨ = ٤٨','التوفير = ٦٠−٤٨ = <strong style="color:#2E7D32">١٢ ريال ✓</strong>'],
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {type:'سعر التعادل',
+     q:'اشترى بضاعة بـ ٨٠٠ ريال وأراد ربح ٣٠٪. ما سعر البيع؟',
+     sol:['سعر البيع = ٨٠٠ × (١+٠٫٣) = ٨٠٠ × ١٫٣ = <strong style="color:#1565C0">١٠٤٠ ريال ✓</strong>'],
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({type,q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ أخطاء شائعة ══ */
+{label:"أخطاء شائعة في القدرات",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">⚠️ أخطاء شائعة في القدرات</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  ${[
+    {title:'الربح على الشراء أم البيع؟',
+     wrong:'نسبة الربح = ربح ÷ سعر البيع',
+     right:'نسبة الربح = ربح ÷ سعر الشراء × ١٠٠',
+     ex:'ربح ٣٠ على شراء ١٢٠ = ٣٠÷١٢٠×١٠٠ = ٢٥٪ ✓',color:'#C62828'},
+    {title:'الخصم على الأصلي وليس المخفَّض',
+     wrong:'خصم ٢٠٪ ثم ١٠٪ = خصم ٣٠٪',
+     right:'١٠٠×٠٫٨×٠٫٩ = ٧٢ ← الخصم الفعلي = ٢٨٪ وليس ٣٠٪',
+     ex:'خصم متتالي ≠ مجموع الخصومات',color:'#E65100'},
+    {title:'العمل المشترك عند البدء المتأخر',
+     wrong:'نطبق المعادلة مباشرة على الكل',
+     right:'احسب ما أنجزه من بدأ أولاً، ثم طبّق المشترك على الباقي',
+     ex:'ب عمل ٢ يوم وحده = ٢/٦ = ١/٣ | تبقى ٢/٣ يُنجز بالمشترك',color:'#7B2D8B'},
+    {title:'التناسب العكسي مع العمل',
+     wrong:'أكثر عمال ← أكثر أيام (طردي!)',
+     right:'أكثر عمال ← أقل أيام (عكسي دائماً)',
+     ex:'٦×١٢=٣×س → س=٢٤ يوماً لـ ٣ عمال ✓',color:'#1565C0'},
+    {title:'المتوسط بعد الحذف',
+     wrong:'نطرح القيمة من المتوسط مباشرة',
+     right:'المجموع الجديد = المجموع القديم − القيمة المحذوفة ÷ (العدد−١)',
+     ex:'مجموع=٢٤٠ حُذف ٥٠ → ١٩٠÷٥=٣٨ ✓',color:'#00695C'},
+  ].map(({title,wrong,right,ex,color})=>`
+    <div style="margin:0 20px 8px;background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+      <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:6px">⚠️ ${title}</div>
+      <div style="background:#FFEBEE;border-radius:7px;padding:6px 10px;font-size:11.5px;color:#C62828;margin-bottom:4px">✗ الخطأ: ${wrong}</div>
+      <div style="background:#E8F5E9;border-radius:7px;padding:6px 10px;font-size:11.5px;color:#1B5E20;margin-bottom:4px">✓ الصحيح: ${right}</div>
+      <div style="font-size:11px;color:${color};font-weight:600">${ex}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ تقنية التجريب ══ */
+{label:"⚡ تقنية التجريب من الخيارات",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1A237E">
+    <div class="sec-hdr-txt">⚡ تقنية التجريب — السلاح السري</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    بدل ما تحل المعادلة من الصفر — <strong style="color:#1A237E">جرّب الخيارات مباشرة!</strong><br/>
+    من يجيد الحساب السريع يوفّر <strong style="color:#E8512B">١٥-٣٠ ثانية</strong> لكل سؤال.
+  </div>
+
+  <!-- متى تستخدمها -->
+  <div style="margin:0 20px 12px;background:#E8EAF6;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1A237E;margin-bottom:8px">متى تستخدم التجريب؟</div>
+    ${[
+      ['✅ استخدمها','السؤال يسأل عن عدد أو قيمة محددة'],
+      ['✅ استخدمها','الخيارات أعداد صحيحة صغيرة'],
+      ['✅ استخدمها','المعادلة طويلة لكن التحقق سريع'],
+      ['❌ لا تستخدمها','الخيارات كسور أو أعداد كبيرة جداً'],
+      ['❌ لا تستخدمها','السؤال يطلب معادلة أو قانوناً'],
+    ].map(([s,t])=>`
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;direction:rtl">
+        <div style="font-size:12px;color:#1A2533;flex:1">${t}</div>
+        <div style="font-size:12px;font-weight:800;min-width:80px;color:${s.includes('✅')?'#2E7D32':'#C62828'}">${s}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- الاستراتيجية -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="font-size:12px;font-weight:800;color:#F5A623;margin-bottom:8px;text-align:center">الاستراتيجية الذكية</div>
+    ${[
+      ['#F5A623','١','ابدأ بالخيار الأوسط (ب أو ج)','إذا كبر الناتج ← جرّب أصغر | إذا صغر ← جرّب أكبر'],
+      ['#00B4CC','٢','جرّب الأرقام المريحة أولاً','الأعداد المنتهية بـ ٠ أو ٥ أسهل حساباً'],
+      ['#2E7D32','٣','تحقق بالتعويض','عوّض في المسألة مباشرة وليس في المعادلة'],
+    ].map(([c,n,t,d])=>`
+      <div class="step">
+        <div class="step-n" style="background:${c}">${n}</div>
+        <div class="step-t" style="color:#E0F7FA"><strong>${t}:</strong> <span style="color:#B2EBF2">${d}</span></div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- أمثلة تطبيقية -->
+  ${[
+    {q:'عدد إذا ضُرب في ٧ ثم طُرح منه ١٤ أصبح ٥٦ — ما العدد؟',
+     opts:['أ) ٨','ب) ١٠','ج) ١٢','د) ١٤'],
+     method:'ابدأ بـ ب: ١٠×٧−١٤=٥٦ ✓ ← الجواب ب مباشرة!',
+     time:'٥ ثوانٍ',color:'#1A237E',bg:'#E8EAF6'},
+    {q:'متوسط ٤ أعداد ٥٠. ما الرقم الذي يجعل المتوسط ٥٥؟',
+     opts:['أ) ٦٥','ب) ٧٠','ج) ٧٥','د) ٨٠'],
+     method:'جرّب ج: (٢٠٠+٧٥)÷٥ = ٢٧٥÷٥ = ٥٥ ✓',
+     time:'٨ ثوانٍ',color:'#E65100',bg:'#FBE9E7'},
+    {q:'أب مجموع أعمارهم ٧٥ والأب أكبر بـ ٢٥ — ما عمر الأب؟',
+     opts:['أ) ٤٠','ب) ٤٥','ج) ٥٠','د) ٥٥'],
+     method:'جرّب ج: ٥٠+٢٥=٧٥ ✓ ← مجموعهما ٧٥ وفرقهما ٢٥',
+     time:'٣ ثوانٍ',color:'#2E7D32',bg:'#E8F5E9'},
+  ].map(({q,opts,method,time,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">
+        ${opts.map(o=>`<span style="background:rgba(255,255,255,0.6);border-radius:6px;padding:3px 8px;font-size:11.5px;font-weight:600;color:#1A2533">${o}</span>`).join('')}
+      </div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:700">
+        ⚡ ${method}
+        <span style="float:left;font-size:10px;color:#F5A623;font-weight:800">⏱ ${time}</span>
+      </div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ فكِّر أقل ══ */
+{label:"⚡ فكِّر أقل — حُلَّ أسرع",bg:"#fff",html:`
+<div class="pw">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#7A3B00,#E65100);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#E65100">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+
+  ${[
+    {title:'مسائل العمر',
+     classic:'افرض، شكّل معادلتين، احل النظام',
+     fast:'اجمع الأعمار مباشرة | إذا فرق معروف → (المجموع+الفرق)÷٢',
+     ex:'مجموع=٧٥، فرق=٢٥ → الأكبر=(٧٥+٢٥)÷٢=٥٠ ✓',color:'#7B2D8B'},
+    {title:'الأرباح والخسائر',
+     classic:'ربح=بيع−شراء | نسبة=ربح÷شراء×١٠٠',
+     fast:'خصم ٢٠٪ ← اضرب في ٠٫٨ | ربح ٢٥٪ ← اضرب في ١٫٢٥',
+     ex:'سعر بعد خصم ٢٠٪: ٣٠٠×٠٫٨=٢٤٠ ✓',color:'#E65100'},
+    {title:'العمل والإنجاز',
+     classic:'أوجد معدل كل عامل ثم اجمع ثم اعكس',
+     fast:'زمن المشترك = (أ×ب)÷(أ+ب) عند عاملين فقط',
+     ex:'أ=٦، ب=٨: (٦×٨)÷(٦+٨) = ٤٨÷١٤ ≈ ٣٫٤ يوم ✓',color:'#00695C'},
+    {title:'القاعدة الثلاثية',
+     classic:'حدد النوع، ضع المعادلة، احل',
+     fast:'طردي: المعلوم÷المعلوم = س÷المطلوب ← ثم ضرب تبادلي | عكسي→ حاصل ضرب ثابت',
+     ex:'٨ أقلام=٢٤ ريال | ١٤ قلم: ١٤×٢٤÷٨=٤٢ ✓',color:'#2E7D32'},
+  ].map(({title,classic,fast,ex,color})=>`
+    <div style="margin:0 20px 8px;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+      <div style="background:${color};padding:8px 12px;font-size:12px;font-weight:800;color:#fff">${title}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        <div style="background:#FBE9E7;padding:9px 11px">
+          <div style="font-size:10px;font-weight:800;color:#C62828;margin-bottom:3px">📚 الكلاسيكية</div>
+          <div style="font-size:11px;color:#7B8FA1;line-height:1.7">${classic}</div>
+        </div>
+        <div style="background:#E8F5E9;padding:9px 11px">
+          <div style="font-size:10px;font-weight:800;color:#2E7D32;margin-bottom:3px">⚡ الحيلة</div>
+          <div style="font-size:11px;color:#1B5E20;font-weight:700;line-height:1.7">${fast}</div>
+        </div>
+      </div>
+      <div style="background:#FFF8E7;padding:7px 12px;font-size:11px;color:${color};font-weight:700">مثال: ${ex}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 10: تدريبات ١-٥ ══ */
+{label:"تدريبات ١-٥",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:0,q:'عمر أحمد الآن وأمه بعد ٥ سنوات سيصبح مجموع أعمارهما ٦٠، والأم أكبر بـ ٢٠ سنة. ما عمر أحمد الآن؟',
+     opts:['١٢','١٥','١٨','٢٠']},
+    {qi:1,q:'اشترى تاجر بضاعة بـ ١٢٠ ريال وباعها بـ ١٥٠ ريال. ما نسبة الربح؟',
+     opts:['٢٠٪','١٥٪','٢٥٪','٣٠٪']},
+    {qi:2,q:'أ تُنجز عملاً في ٦ أيام وب في ٨ أيام. كم يوماً يحتاجان معاً؟ (تقريباً)',
+     opts:['٢٫٥','٣','٣٫٤','٤']},
+    {qi:3,q:'خلط ٢ل بتركيز ٤٠٪ مع ٣ل بتركيز ٢٠٪. ما تركيز الخليط؟',
+     opts:['٣٠٪','٢٥٪','٣٥٪','٢٨٪']},
+    {qi:4,q:'وُزِّع ٥٠٠٠ ريال بين ثلاثة بنسبة ٢:٣:٥. ما نصيب أكبر شريك؟',
+     opts:['٢٠٠٠','٢٥٠٠','١٥٠٠','٣٠٠٠']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['١','٢','٣','٤','٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 11: تدريبات ٦-١٠ ══ */
+{label:"تدريبات ٦-١٠",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:5,q:'٨ أقلام بـ ٢٤ ريال. ما سعر ١٤ قلماً؟',
+     opts:['٣٦','٤٢','٤٨','٣٢']},
+    {qi:6,q:'سعر بعد خصم ٢٠٪ أصبح ٢٤٠ ريال. ما السعر الأصلي؟',
+     opts:['٣٠٠','٢٨٠','٣٢٠','٢٦٠']},
+    {qi:7,q:'أ تُنجز عملاً في ٤ أيام، ب في ٦ أيام. ب عملت ٢ أيام ثم انضمت أ. كم يوماً يستغرقان للإنهاء؟',
+     opts:['٢','١٫٦','٣','٢٫٤']},
+    {qi:8,q:'اشترى سيارة بـ ٢٠٠٠٠٠ وباعها بـ ١٦٠٠٠٠. ما نسبة الخسارة؟',
+     opts:['١٥٪','٢٥٪','١٠٪','٢٠٪']},
+    {qi:9,q:'مجموع عمر الأب والابن ٧٥ والأب أكبر بـ ٢٥ سنة. ما عمر الأب؟',
+     opts:['٤٠','٥٠','٤٥','٥٥']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['٦','٧','٨','٩','١٠'][qi-5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 12: الملخص ══ */
+{label:"الملخص",bg:"#2E1A00",html:`
+<div style="background:linear-gradient(160deg,#2E1A00,#7A3B00);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#2E1A00">ملخص المسائل التطبيقية</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#2E1A00;flex-shrink:0"></div>
+  </div>
+  ${[
+    ['خطوات الحل','اقرأ ← حدّد معطيات ← افرض ← حوِّل ← احسب ← تحقق'],
+    ['الكلمات المفتاحية','ضعف=×٢ | نصف=÷٢ | أكثر=+ | أقل=−'],
+    ['القاعدة الثلاثية','طردي: أ÷ب = ج÷د (قسمة ثم ضرب تبادلي) | عكسي: أ×ب = ج×د'],
+    ['مسائل العمر','بعد ن سنوات: أضف ن | الأكبر=(مجموع+فرق)÷٢'],
+    ['الأرباح','ربح=بيع−شراء | نسبة=ربح÷شراء×١٠٠'],
+    ['سعر بعد خصم','× (١−خصم%) أو ÷ (١−خصم%) لإيجاد الأصلي'],
+    ['العمل والإنجاز','معدل=١÷زمن | معاً=(أ×ب)÷(أ+ب)'],
+    ['الخلط','الكمية×التركيز | اجمع المادة الفعلية÷الإجمالي'],
+    ['التوزيع','نصيبه=جزءه÷المجموع×الكلي'],
+  ].map(([t,d])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#FFE0B2">${t}</div>
+        <div style="font-size:11px;color:rgba(255,220,150,0.7);margin-top:2px">${d}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#2E1A00;line-height:1.8">
+      المسألة اللفظية لا تعتمد على الحساب المعقد —<br/>بل على <strong>فهم النص وترجمته فوراً.</strong>
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:rgba(255,220,150,0.6)">
+    التالي: الهندسة والقياس ←
+  </div>
+</div>
+`},
+
+];
+
+function initExplains(){
+  QDATA.forEach((q,qi)=>{
+    const el=document.getElementById('q'+qi+'exp');
+    if(el) el.innerHTML='💡 '+q.explain;
+  });
+}
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+  initExplains();
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

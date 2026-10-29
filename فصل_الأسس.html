@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | فصل الأسس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;direction:rtl}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  /* الأس فوق الأساس */
+  .pw-num{display:inline-flex;align-items:flex-start;vertical-align:middle;margin:0 2px;line-height:1}
+  .pw-base{font-size:16px;font-weight:900;line-height:1.1}
+  .pw-exp{font-size:10px;font-weight:900;vertical-align:super;line-height:1;margin-right:1px}
+  /* كسر عادي */
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1}
+  .frac .top{font-size:13px;font-weight:800;padding:0 3px;border-bottom:2px solid currentColor;line-height:1.3}
+  .frac .bot{font-size:13px;font-weight:800;padding:0 3px;line-height:1.3}
+  /* كسر صغير للأس */
+  .frac-sm{display:inline-flex;flex-direction:column;align-items:center;line-height:1;vertical-align:super;margin:0 1px}
+  .frac-sm .top{font-size:8px;font-weight:900;padding:0 1px;border-bottom:1px solid currentColor;line-height:1.2}
+  .frac-sm .bot{font-size:8px;font-weight:900;padding:0 1px;line-height:1.2}
+  /* الجذر — direction:ltr إجباري حتى يكون العدد تحت الخط */
+  .sqrt-wrap{display:inline-flex;align-items:flex-end;vertical-align:middle;margin:0 3px;direction:ltr;position:relative}
+  .sqrt-index{font-size:9px;font-weight:900;line-height:1;position:absolute;top:-4px;left:0px}
+  .sqrt-sign{font-size:22px;font-weight:300;line-height:0.9;margin-left:6px}
+  .sqrt-body{font-size:15px;font-weight:800;border-top:2.5px solid currentColor;padding:1px 4px;line-height:1.3}
+  /* قاعدة */
+  .rule-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px}
+  .rule-num{border-radius:20px;padding:3px 12px;font-size:11px;font-weight:800;color:#fff;display:inline-block;margin-bottom:8px}
+  .rule-law{border-radius:8px;padding:10px 14px;text-align:center;font-size:14px;font-weight:800;margin:8px 0}
+  .rule-ex{background:rgba(0,0,0,0.05);border-radius:8px;padding:10px 14px;font-size:14px;font-weight:700;text-align:center;line-height:2.4}
+  /* quiz */
+  .q-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px;border:2px solid #E3F2FD;background:#F8FBFF}
+  .q-text{font-size:13px;font-weight:700;color:#1A2533;margin-bottom:10px;line-height:1.9}
+  .q-opts{display:flex;flex-direction:column;gap:6px}
+  .q-opt{padding:8px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;text-align:right;border:1.5px solid #E0E0E0;background:#F4F7F9;color:#1A2533;transition:all .2s}
+  .q-opt.correct{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+  .q-opt.wrong{background:#FFEBEE;border-color:#C62828;color:#B71C1C;text-decoration:line-through;cursor:default}
+  .q-explain{background:#E8F5E9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:#1B5E20;line-height:1.8;display:none}
+  .show-btn{margin-top:8px;width:100%;padding:8px;background:#F4F7F9;border:1.5px dashed #B0BEC5;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:#7B8FA1;cursor:pointer}
+  .show-btn:hover{background:#E3F2FD;border-color:#1565C0;color:#1565C0}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+// دالة رسم العدد مع أسه
+function pw(base, exp, bc='#1A2533', ec='#E8512B'){
+  return `<span class="pw-num"><span class="pw-base" style="color:${bc}">${base}</span><span class="pw-exp" style="color:${ec}">${exp}</span></span>`;
+}
+function fr(t,b,c='#1565C0'){
+  return `<span class="frac" style="color:${c}"><span class="top">${t}</span><span class="bot">${b}</span></span>`;
+}
+// كسر صغير للأس
+function frsm(t,b,c='#E8512B'){
+  return `<span class="frac-sm" style="color:${c}"><span class="top">${t}</span><span class="bot">${b}</span></span>`;
+}
+
+const QDATA = [
+  {correct:1, explain:'نجمع الأسس: ٣+٢=٥ ← '+pw('٢','٥')+'= ٣٢ ✓'},
+  {correct:2, explain:'نطرح الأسس: ٦−٢=٤ ← '+pw('٣','٤')+'= ٨١ ✓'},
+  {correct:0, explain:'أي عدد ≠ ٠ مرفوع للصفر = ١ ✓'},
+  {correct:3, explain:'نضرب الأسس: ٢×٣=٦ ← '+pw('٢','٦')+'= ٦٤ ✓'},
+  {correct:1, explain:pw('٢','−٤')+'= ١ ÷ '+pw('٢','٤')+'= ١ ÷ ١٦ ✓'},
+  {correct:1, explain:'٢٧ = '+pw('٣','٣')+' ← الجذر التكعيبي لـ ٢٧ = ٣ ✓'},
+  {correct:0, explain:'نحوّل: '+pw('٤','٢')+'= ('+pw('٢','٢')+')² = '+pw('٢','٤')+' | '+pw('٢','٥')+' > '+pw('٢','٤')+' ✓'},
+  {correct:1, explain:'الأساس بين ٠ و١ → الأس الأكبر = قيمة أصغر: '+pw('(½)','٣')+' < '+pw('(½)','٢')+' ✓'},
+  {correct:0, explain:pw('٢','٤')+'= ١٦ | '+pw('٤','٢')+'= ١٦ ← ١٦ − ١٦ = ٠ ✓'},
+  {correct:0, explain:'نضرب الأسس: ٢×٣=٦ ← '+pw('٥','٦')+' ✓'},
+];
+
+function revealQ(qi){
+  const {correct,explain}=QDATA[qi];
+  document.querySelectorAll('#q'+qi+'opts .q-opt').forEach((o,i)=>{
+    o.classList.add(i===correct?'correct':'wrong');
+    o.onclick=null;
+  });
+  const exp=document.getElementById('q'+qi+'exp');
+  exp.innerHTML='💡 '+explain;
+  exp.style.display='block';
+  const btn=document.getElementById('q'+qi+'btn');
+  if(btn) btn.style.display='none';
+}
+function pickQ(qi){revealQ(qi)}
+
+const PAGES = [
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف", bg:"#1A0A0A", html:`
+<div style="background:linear-gradient(160deg,#1A0A0A,#7B2D8B);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(123,45,139,0.15);bottom:20%;right:-60px"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(245,166,35,0.08);top:18%;left:-30px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#1A0A0A;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>فصل الأسس</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">القوى والأسس</div>
+    <div style="font-size:64px;font-weight:900;color:#F5A623;text-align:center;line-height:1;font-family:'Tajawal',sans-serif">
+      ${pw('أ','ن','#fff','#F5A623')}
+    </div>
+    <div style="font-family:'Amiri',serif;font-size:32px;color:#fff;font-weight:700;text-align:center;margin-top:14px;line-height:1.4">قواعد الأسس</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:12.5px;color:rgba(206,147,216,0.9);text-align:center;line-height:2;padding:0 16px">
+      من يفهم قواعد الأسس —<br/>يحل نصف أسئلة الجبر <strong style="color:#F5A623">في ثوانٍ.</strong>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['تعريف الأس','الأسس المشهورة','الضرب والقسمة','الأس السالب','الأس الصفري','الأس الكسري','المقارنة'].map(t=>`
+        <div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.3);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(206,147,216,0.6)">الباب الثاني</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: تعريف + الأسس المشهورة ══ */
+{label:"تعريف + المشهورة", bg:"#fff", html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#0D4F5C">
+    <div class="sec-hdr-txt">ما هو الأس؟</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- تعريف بصري -->
+  <div style="margin:0 20px 14px;background:#F3E5F5;border-radius:12px;padding:16px 18px;text-align:center">
+    <div style="font-size:40px;font-weight:900;margin-bottom:10px">${pw('٢','٥','#7B2D8B','#E8512B')}</div>
+    <div style="display:flex;justify-content:center;gap:24px;margin-bottom:10px">
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#7B2D8B">٢</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:2px">الأساس</div>
+      </div>
+      <div style="font-size:22px;color:#7B8FA1;padding-top:4px">،</div>
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#E8512B">٥</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:2px">الأس</div>
+      </div>
+    </div>
+    <div style="font-size:12.5px;color:#4A148C;line-height:1.9;font-weight:600">
+      الأس يخبرك <strong>كم مرة تضرب الأساس في نفسه</strong><br/>
+      ${pw('٢','٥','#7B2D8B','#E8512B')} = ٢ × ٢ × ٢ × ٢ × ٢ = <strong style="color:#E8512B">٣٢</strong>
+    </div>
+  </div>
+
+  <!-- الأسس المشهورة -->
+  <div class="sec-hdr" style="background:#0D4F5C;margin-top:4px">
+    <div class="sec-hdr-txt">⭐ الأسس المشهورة في القياس</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px;background:#0D4F5C;border-radius:12px;padding:14px 16px">
+    <div style="font-size:11px;font-weight:800;color:#F5A623;margin-bottom:10px;text-align:center">قوى العدد ٢ — احفظها كاملة!</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
+      ${[['١','٢'],['٢','٤'],['٣','٨'],['٤','١٦'],['٥','٣٢'],['٦','٦٤'],['٧','١٢٨'],['٨','٢٥٦'],['٩','٥١٢'],['١٠','١٠٢٤'],['١١','٢٠٤٨'],['١٢','٤٠٩٦']].map(([e,v])=>`
+        <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:7px 4px;text-align:center">
+          <div style="font-size:12px;color:#80CBC4">${pw('٢',e,'#B2EBF2','#F5A623')}</div>
+          <div style="font-size:14px;font-weight:900;color:#F5A623">${v}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 3: قوى ٣ و٥ و١٠ ══ */
+{label:"قوى أخرى مشهورة", bg:"#F4F7F9", html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">⭐ أسس مشهورة أخرى</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 20px 12px">
+    <div style="background:#F3E5F5;border-radius:12px;padding:12px">
+      <div style="font-size:12px;font-weight:800;color:#7B2D8B;margin-bottom:8px;text-align:center">قوى ٣</div>
+      ${[['١','٣'],['٢','٩'],['٣','٢٧'],['٤','٨١'],['٥','٢٤٣'],['٦','٧٢٩']].map(([e,v])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(255,255,255,0.5);border-radius:6px;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:900;color:#7B2D8B">${v}</span>
+          <span style="font-size:13px;color:#9C27B0">${pw('٣',e,'#9C27B0','#E8512B')}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:#E8F5E9;border-radius:12px;padding:12px">
+        <div style="font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;text-align:center">قوى ٥</div>
+        ${[['١','٥'],['٢','٢٥'],['٣','١٢٥'],['٤','٦٢٥']].map(([e,v])=>`
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(255,255,255,0.5);border-radius:6px;margin-bottom:4px">
+            <span style="font-size:14px;font-weight:900;color:#2E7D32">${v}</span>
+            <span style="font-size:13px;color:#388E3C">${pw('٥',e,'#388E3C','#E8512B')}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div style="background:#E3F2FD;border-radius:12px;padding:12px">
+        <div style="font-size:12px;font-weight:800;color:#1565C0;margin-bottom:8px;text-align:center">قوى ١٠</div>
+        ${[['١','١٠'],['٢','١٠٠'],['٣','١٠٠٠'],['٤','١٠٠٠٠']].map(([e,v])=>`
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(255,255,255,0.5);border-radius:6px;margin-bottom:4px">
+            <span style="font-size:13px;font-weight:900;color:#1565C0">${v}</span>
+            <span style="font-size:13px;color:#1976D2">${pw('١٠',e,'#1976D2','#E8512B')}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:12px;font-weight:800;color:#7A4800;margin-bottom:4px">💡 حيلة سريعة</div>
+    <div style="font-size:12px;color:#9B6000;line-height:1.9">
+      ${pw('٤','٣','#7A4800','#E8512B')} = ${pw('(٢²)','٣','#7A4800','#E8512B')} = ${pw('٢','٦','#E8512B','#E8512B')} = ٦٤<br/>
+      ${pw('٨','٢','#7A4800','#E8512B')} = ${pw('(٢³)','٢','#7A4800','#E8512B')} = ${pw('٢','٦','#E8512B','#E8512B')} = ٦٤<br/>
+      <strong style="color:#E8512B">كثير من الأعداد تُحلَّل لقوى ٢ أو ٣!</strong>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 4: القواعد ١-٢-٣ ══ */
+{label:"القواعد ١-٣", bg:"#fff", html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">قواعد الأسس الأساسية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div class="rule-card" style="background:#F3E5F5">
+    <span class="rule-num" style="background:#7B2D8B">القاعدة ١</span>
+    <div style="font-size:13px;font-weight:800;color:#4A148C;margin-bottom:8px;text-align:right">ضرب نفس الأساس → اجمع الأسس</div>
+    <div class="rule-law" style="background:#7B2D8B;color:#F5A623">
+      ${pw('أ','م','#fff','#F5A623')} × ${pw('أ','ن','#fff','#F5A623')} = ${pw('أ','م+ن','#fff','#F5A623')}
+    </div>
+    <div class="rule-ex" style="color:#4A148C">
+      ${pw('٢','٣')} × ${pw('٢','٤')} = ${pw('٢','٧')} = <strong style="color:#E8512B">١٢٨</strong><br/>
+      ${pw('٥','٢')} × ${pw('٥','٣')} = ${pw('٥','٥')} = <strong style="color:#E8512B">٣١٢٥</strong>
+    </div>
+  </div>
+
+  <div class="rule-card" style="background:#E3F2FD">
+    <span class="rule-num" style="background:#1565C0">القاعدة ٢</span>
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:8px;text-align:right">قسمة نفس الأساس → اطرح الأسس</div>
+    <div class="rule-law" style="background:#1565C0;color:#F5A623">
+      ${pw('أ','م','#fff','#F5A623')} ÷ ${pw('أ','ن','#fff','#F5A623')} = ${pw('أ','م−ن','#fff','#F5A623')}
+    </div>
+    <div class="rule-ex" style="color:#0D47A1">
+      ${pw('٢','٥')} ÷ ${pw('٢','٢')} = ${pw('٢','٣')} = <strong style="color:#E8512B">٨</strong><br/>
+      ${pw('٧','٦')} ÷ ${pw('٧','٤')} = ${pw('٧','٢')} = <strong style="color:#E8512B">٤٩</strong>
+    </div>
+  </div>
+
+  <div class="rule-card" style="background:#E8F5E9">
+    <span class="rule-num" style="background:#2E7D32">القاعدة ٣</span>
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px;text-align:right">رفع الأس لقوة → اضرب الأسس</div>
+    <div class="rule-law" style="background:#2E7D32;color:#F5A623">
+      (أ<sup style="font-size:12px;color:#F5A623;font-weight:900">م</sup>)<sup style="font-size:12px;color:#F5A623;font-weight:900">ن</sup> = أ<sup style="font-size:12px;color:#F5A623;font-weight:900">م×ن</sup>
+    </div>
+    <div class="rule-ex" style="color:#1B5E20">
+      (${pw('٣','٢')})³ = ${pw('٣','٦')} = <strong style="color:#E8512B">٧٢٩</strong><br/>
+      (${pw('٥','٢')})³ = ${pw('٥','٦')} = <strong style="color:#E8512B">١٥٦٢٥</strong>
+    </div>
+  </div>
+</div>
+`},
+
+{label:"القواعد ٤-٦", bg:"#F4F7F9", html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E8512B">
+    <div class="sec-hdr-txt">قواعد خاصة مهمة</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- القاعدة ٤: الأس السالب -->
+  <div class="rule-card" style="background:#FBE9E7">
+    <span class="rule-num" style="background:#E8512B">القاعدة ٤</span>
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px;text-align:right">الأس السالب → مقلوب العدد</div>
+    <div class="rule-law" style="background:#E8512B;color:#fff;font-size:18px;line-height:2.2">
+      أ<sup style="font-size:12px;color:#F5A623;font-weight:900">−ن</sup>
+      =
+      <span class="frac" style="color:#fff;font-size:14px">
+        <span class="top">١</span>
+        <span class="bot">أ<sup style="font-size:9px;color:#F5A623;font-weight:900">ن</sup></span>
+      </span>
+    </div>
+    <div class="rule-ex" style="color:#BF360C;line-height:2.8">
+      ٢<sup style="font-size:10px;color:#E8512B;font-weight:900">−٣</sup>
+      =
+      <span class="frac" style="color:#BF360C">
+        <span class="top">١</span>
+        <span class="bot">٢<sup style="font-size:9px;font-weight:900">٣</sup></span>
+      </span>
+      =
+      <span class="frac" style="color:#BF360C">
+        <span class="top">١</span>
+        <span class="bot">٨</span>
+      </span>
+      &nbsp;|&nbsp;
+      ٥<sup style="font-size:10px;color:#E8512B;font-weight:900">−٢</sup>
+      =
+      <span class="frac" style="color:#BF360C">
+        <span class="top">١</span>
+        <span class="bot">٢٥</span>
+      </span>
+    </div>
+    <div style="font-size:11px;color:#E8512B;margin-top:8px;text-align:center;font-weight:700;background:rgba(232,81,43,0.1);border-radius:6px;padding:5px">⚠️ الأس السالب لا يعني أن الناتج سالب!</div>
+  </div>
+
+  <!-- القاعدة ٥: الأس الصفري -->
+  <div class="rule-card" style="background:#FFF8E7">
+    <span class="rule-num" style="background:#F5A623;color:#0D4F5C">القاعدة ٥</span>
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:8px;text-align:right">الأس الصفري → دائماً واحد</div>
+    <div class="rule-law" style="background:#F5A623;color:#0D4F5C;font-size:18px">
+      أ<sup style="font-size:12px;color:#0D4F5C;font-weight:900">٠</sup> = ١ &nbsp; لأي عدد ≠ ٠
+    </div>
+    <div class="rule-ex" style="color:#7A4800;line-height:2.6">
+      ٧<sup style="font-size:10px;font-weight:900;color:#E8512B">٠</sup> = <strong style="color:#E8512B">١</strong>
+      &nbsp;|&nbsp;
+      ١٢٣<sup style="font-size:10px;font-weight:900;color:#E8512B">٠</sup> = <strong style="color:#E8512B">١</strong>
+      &nbsp;|&nbsp;
+      (−٥)<sup style="font-size:10px;font-weight:900;color:#E8512B">٠</sup> = <strong style="color:#E8512B">١</strong>
+    </div>
+  </div>
+
+  <!-- القاعدة ٦: الأس الكسري -->
+  <div class="rule-card" style="background:#E0F7FA">
+    <span class="rule-num" style="background:#00838F">القاعدة ٦</span>
+    <div style="font-size:13px;font-weight:800;color:#006064;margin-bottom:8px;text-align:right">الأس الكسري → جذر</div>
+    <div class="rule-law" style="background:#00838F;color:#fff;line-height:2.8;text-align:center">
+      <!-- أ^(١/ن) = ن√أ -->
+      <span style="font-size:18px;font-weight:900">أ</span><sup style="display:inline-flex;flex-direction:column;align-items:center;font-size:8px;font-weight:900;vertical-align:super;color:#F5A623;line-height:1;margin:0 1px"><span style="border-bottom:1.5px solid #F5A623;padding:0 2px;line-height:1.4">١</span><span style="padding:0 2px;line-height:1.3">ن</span></sup>
+      <span style="font-size:16px;color:#B2EBF2;margin:0 4px">=</span>
+      <span class="sqrt-wrap" style="color:#F5A623">
+        <span class="sqrt-index">ن</span>
+        <span class="sqrt-sign">√</span>
+        <span class="sqrt-body">أ</span>
+      </span>
+    </div>
+    <div class="rule-law" style="background:#00768A;color:#fff;line-height:2.8;text-align:center;margin-top:4px">
+      <!-- أ^(م/ن) = (ن√أ)^م -->
+      <span style="font-size:18px;font-weight:900">أ</span><sup style="display:inline-flex;flex-direction:column;align-items:center;font-size:8px;font-weight:900;vertical-align:super;color:#F5A623;line-height:1;margin:0 1px"><span style="border-bottom:1.5px solid #F5A623;padding:0 2px;line-height:1.4">م</span><span style="padding:0 2px;line-height:1.3">ن</span></sup>
+      <span style="font-size:16px;color:#B2EBF2;margin:0 4px">=</span>
+      (<span class="sqrt-wrap" style="color:#F5A623">
+        <span class="sqrt-index">ن</span>
+        <span class="sqrt-sign">√</span>
+        <span class="sqrt-body">أ</span>
+      </span>)<sup style="font-size:11px;color:#F5A623;font-weight:900">م</sup>
+    </div>
+    <div class="rule-ex" style="color:#006064;line-height:2.8;margin-top:4px">
+      <!-- ٩^(١/٢) = √٩ = ٣ -->
+      <span style="font-size:16px;font-weight:900">٩</span><sup style="display:inline-flex;flex-direction:column;align-items:center;font-size:8px;font-weight:900;vertical-align:super;color:#E8512B;line-height:1;margin:0 1px"><span style="border-bottom:1.5px solid #E8512B;padding:0 2px;line-height:1.4">١</span><span style="padding:0 2px;line-height:1.3">٢</span></sup>
+      =
+      <span class="sqrt-wrap" style="color:#006064">
+        <span class="sqrt-index" style="color:#E8512B">٢</span>
+        <span class="sqrt-sign">√</span>
+        <span class="sqrt-body">٩</span>
+      </span>
+      = <strong style="color:#E8512B;font-size:16px">٣</strong>
+      <br/>
+      <!-- ٨^(٢/٣) = (∛٨)² = ٤ -->
+      <span style="font-size:16px;font-weight:900">٨</span><sup style="display:inline-flex;flex-direction:column;align-items:center;font-size:8px;font-weight:900;vertical-align:super;color:#E8512B;line-height:1;margin:0 1px"><span style="border-bottom:1.5px solid #E8512B;padding:0 2px;line-height:1.4">٢</span><span style="padding:0 2px;line-height:1.3">٣</span></sup>
+      = (
+      <span class="sqrt-wrap" style="color:#006064">
+        <span class="sqrt-index" style="color:#E8512B">٣</span>
+        <span class="sqrt-sign">√</span>
+        <span class="sqrt-body">٨</span>
+      </span>
+      )<sup style="font-size:11px;color:#E8512B;font-weight:900">٢</sup>
+      = ٢<sup style="font-size:11px;color:#E8512B;font-weight:900">٢</sup>
+      = <strong style="color:#E8512B;font-size:16px">٤</strong>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 6: مقارنة الأسس ══ */
+{label:"مقارنة الأسس", bg:"#fff", html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">مقارنة الأسس — بدون حساب!</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    في القدرات لا تحتاج تحسب القيمة كاملة — استخدم هذه القواعد السريعة.
+  </div>
+
+  ${[
+    {rule:'نفس الأساس → قارن الأسس', color:'#E65100', bg:'#FBE9E7',
+     ex:[`${pw('٢','٥')} و ${pw('٢','٣')} ← ٥ > ٣ ← ${pw('٢','٥')} أكبر ✓`,
+         `${pw('٧','٤')} و ${pw('٧','٢')} ← ٤ > ٢ ← ${pw('٧','٤')} أكبر ✓`]},
+    {rule:'نفس الأس → قارن الأساس', color:'#1565C0', bg:'#E3F2FD',
+     ex:[`${pw('٥','٢')} و ${pw('٣','٢')} ← ٥ > ٣ ← ${pw('٥','٢')} أكبر ✓`,
+         `${pw('١٠','٣')} و ${pw('٧','٣')} ← ١٠ > ٧ ← ${pw('١٠','٣')} أكبر ✓`]},
+    {rule:'الأساس بين ٠ و١ → الأس الأكبر = قيمة أصغر!', color:'#C62828', bg:'#FFEBEE',
+     ex:[`${pw('(½)','٢')} و ${pw('(½)','٤')} ← الأس ٤ أكبر ← ${pw('(½)','٢')} أكبر ✓`]},
+    {rule:'استخدم التحليل عند الاختلاف', color:'#2E7D32', bg:'#E8F5E9',
+     ex:[`${pw('٤','٣')} و ${pw('٢','٦')} ← ${pw('٤','٣')} = ${pw('(٢²)','٣')} = ${pw('٢','٦')} ← متساويان ✓`]},
+  ].map(({rule,color,bg,ex})=>`
+    <div style="margin:0 20px 10px;background:${bg};border-radius:12px;padding:12px 14px">
+      <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:8px;text-align:right">▸ ${rule}</div>
+      ${ex.map(e=>`
+        <div style="background:rgba(255,255,255,0.65);border-radius:8px;padding:8px 12px;margin-bottom:5px;font-size:12.5px;font-weight:600;color:${color};text-align:right;line-height:1.9">${e}</div>
+      `).join('')}
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 7: تدريبات ١-٥ ══ */
+{label:"تدريبات ١-٥", bg:"#F4F7F9", html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  ${[
+    {qi:0, q:`ما ناتج: ${pw('٢','٣')} × ${pw('٢','٢')} ؟`,
+     opts:[pw('٢','٢'), pw('٢','٥'), pw('٢','٤'), pw('٢','٦')]},
+    {qi:1, q:`ما ناتج: ${pw('٣','٦')} ÷ ${pw('٣','٢')} ؟`,
+     opts:['٩', '٨١', '٢٧', '٣']},
+    {qi:2, q:`ما قيمة: ${pw('٩٩','٠')} ؟`,
+     opts:['١', '٩٩', 'صفر', 'غير معرّف']},
+    {qi:3, q:`ما ناتج: (${pw('٢','٢')})³ ؟`,
+     opts:[pw('٢','٣'), pw('٢','٥'), pw('٢','٤'), pw('٢','٦')]},
+    {qi:4, q:`ما قيمة: ${pw('٢','−٤')} ؟`,
+     opts:[fr('١','٢'), fr('١','١٦'), fr('١','٨'), fr('١','٤')]},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['١','٢','٣','٤','٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة الصحيحة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 8: تدريبات ٦-١٠ ══ */
+{label:"تدريبات ٦-١٠", bg:"#fff", html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  ${[
+    {qi:5, q:`ما قيمة: ${pw('٢٧','')}<span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B;margin-right:1px">(${frsm('١','٣')})</span> ؟`,
+     opts:['٩', '٣', '٢٧', '٦']},
+    {qi:6, q:`أيهما أكبر: ${pw('٢','٥')} أم ${pw('٤','٢')} ؟`,
+     opts:[`${pw('٢','٥')} أكبر`, `${pw('٤','٢')} أكبر`, 'متساويان', 'لا يمكن المقارنة']},
+    {qi:7, q:`إذا كان الأساس بين ٠ و١، أيهما أكبر: ${pw('(½)','٢')} أم ${pw('(½)','٣')} ؟`,
+     opts:[`${pw('(½)','٣')} أكبر`, `${pw('(½)','٢')} أكبر`, 'متساويان', 'يعتمد']},
+    {qi:8, q:`ما قيمة: ${pw('٢','٤')} − ${pw('٤','٢')} ؟`,
+     opts:['صفر', '٣', '٨', '١٢']},
+    {qi:9, q:`ما ناتج: (${pw('٥','٢')})³ ؟`,
+     opts:[pw('٥','٦'), pw('٥','٥'), pw('٥','٨'), pw('٥','٩')]},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['٦','٧','٨','٩','١٠'][qi-5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة الصحيحة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 9: الملخص ══ */
+
+{label:"⚡ فكِّر أقل — حُلَّ أسرع",bg:"#fff",html:`
+<div class="pw">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#7B2D8B,#7B2D8BCC);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#7B2D8B">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+  <div style="margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B2D8B">⚡ الحيلة السريعة</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+      <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">حساب <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٥</span></span> من الصفر</div>
+      <div style="padding:9px 11px;font-size:11.5px;color:#7B2D8B;font-weight:700;text-align:right;line-height:1.8">احفظ قوى ٢ حتى <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">١٢</span></span> → ٣٢ مباشرة</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
+      <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span></span> = ٤×٤×٤ = ٦٤</div>
+      <div style="padding:9px 11px;font-size:11.5px;color:#7B2D8B;font-weight:700;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span></span> = (<span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٢</span></span>)³ = <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٦</span></span> = ٦٤</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+      <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">مقارنة <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٥</span></span> و <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٢</span></span> — نحسب كل منهما</div>
+      <div style="padding:9px 11px;font-size:11.5px;color:#7B2D8B;font-weight:700;text-align:right;line-height:1.8">حوّل: <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٢</span></span> = <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٤</span></span> &lt; <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٥</span></span> → <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٥</span></span> أكبر</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
+      <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">أ</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">−ن</span></span> = عدد سالب!</div>
+      <div style="padding:9px 11px;font-size:11.5px;color:#7B2D8B;font-weight:700;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">أ</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">−ن</span></span> = مقلوب فقط، ليس سالباً ✓</div>
+    </div>
+  </div>
+  <div style="margin:0 20px;background:#F3E5F5;border:2px solid #7B2D8B;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#7B2D8B;margin-bottom:4px">💡 اللقطة الذهبية</div>
+    <div style="font-size:12px;color:#1A2533;font-weight:600;line-height:1.8">
+      احفظ قوى ٢ حتى <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">١٢</span></span> — ستوفر ٩٠٪ من وقت الأسس في القدرات
+    </div>
+  </div>
+</div>
+`},
+{label:"الملخص", bg:"#1A0A0A", html:`
+<div style="background:linear-gradient(160deg,#1A0A0A,#7B2D8B);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#1A0A0A">ملخص فصل الأسس</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#1A0A0A;flex-shrink:0"></div>
+  </div>
+  ${[
+    [pw('أ','م')+'×'+pw('أ','ن')+'='+pw('أ','م+ن'),'نفس الأساس في الضرب → اجمع الأسس'],
+    [pw('أ','م')+'÷'+pw('أ','ن')+'='+pw('أ','م−ن'),'نفس الأساس في القسمة → اطرح الأسس'],
+    ['('+pw('أ','م')+`)<span style="font-size:10px;font-weight:900;vertical-align:super;color:#F5A623">ن</span>` +' = '+pw('أ','م×ن'),'رفع الأس لقوة → اضرب الأسس'],
+    [pw('أ','−ن')+' = '+fr('١',pw('أ','ن')),'الأس السالب = مقلوب — ليس عدداً سالباً'],
+    [pw('أ','٠')+' = ١','أي عدد ≠ ٠ مرفوع للصفر = واحد'],
+    [pw('أ',frsm('م','ن'))+' = ('+pw('أ','م')+') تحت جذر ن','الأس الكسري = جذر ثم رفع لقوة'],
+    ['نفس الأساس → قارن الأسس','الأس الأكبر = القيمة الأكبر (إذا الأساس > ١)'],
+    ['الأساس بين ٠ و١ ← انتبه!','الأس الأكبر = القيمة الأصغر'],
+  ].map(([t,d])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#F3E5F5">${t}</div>
+        <div style="font-size:11px;color:rgba(206,147,216,0.7);margin-top:2px">${d}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#1A0A0A;line-height:1.8">
+      احفظ قوى ٢ حتى ${pw('٢','١٢','#1A0A0A','#1A0A0A')} —<br/>ستوفّر <strong>ثوانٍ ثمينة</strong> في كل سؤال.
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:rgba(206,147,216,0.6)">
+    التالي: فصل الجذور ←
+  </div>
+</div>
+`},
+
+];
+
+function initExplains(){
+  QDATA.forEach((q,qi)=>{
+    const el=document.getElementById('q'+qi+'exp');
+    if(el) el.innerHTML='💡 '+q.explain;
+  });
+}
+
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+  initExplains();
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | صفحة الحيل الجامعة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1}
+  .frac .t{font-size:13px;font-weight:900;padding:0 3px;border-bottom:2px solid currentColor;line-height:1.3;text-align:center}
+  .frac .b{font-size:13px;font-weight:900;padding:0 3px;line-height:1.3;text-align:center}
+  .cmp{margin:0 20px 10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
+  .cmp-title{padding:9px 14px;font-size:12px;font-weight:800;color:#fff;text-align:center}
+  .cmp-body{display:grid;grid-template-columns:1fr 1fr}
+  .cmp-hd{padding:7px 10px;font-size:11px;font-weight:800;color:#fff;text-align:center}
+  .cmp-cell{padding:10px 12px;font-size:11.5px;line-height:1.9;font-weight:600}
+  .badge{display:inline-block;background:#F5A623;color:#1A2533;font-size:10px;font-weight:900;padding:2px 8px;border-radius:20px;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+function fr(t,b,c='#1565C0'){
+  return `<span class="frac" style="color:${c}"><span class="t">${t}</span><span class="b">${b}</span></span>`;
+}
+function cmp(title, color, pairs){
+  return `
+  <div class="cmp">
+    <div class="cmp-title" style="background:${color}">${title}</div>
+    <div class="cmp-body" style="background:#f8f8f8">
+      <div class="cmp-hd" style="background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div class="cmp-hd" style="background:${color}">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    </div>
+    ${pairs.map(([classic,fast],i)=>`
+      <div class="cmp-body" style="background:${i%2===0?'#fff':'#F9F9F9'}">
+        <div class="cmp-cell" style="color:#888;border-left:1px solid #eee;text-align:right">${classic}</div>
+        <div class="cmp-cell" style="color:${color};text-align:right;font-weight:700">${fast}</div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+const PAGES=[
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف",bg:"#0D1B2E",html:`
+<div style="background:linear-gradient(160deg,#0D1B2E,#1A3A5C);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(245,166,35,0.06);bottom:10%;right:-80px"></div>
+  <div style="position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(245,166,35,0.04);top:10%;left:-50px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#0D1B2E;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>المرجع السريع الجامع</span><span>فكِّر أقل … حُلَّ أسرع</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;position:relative;z-index:2">
+    <div style="font-size:48px;margin-bottom:12px">⚡</div>
+    <div style="font-family:'Amiri',serif;font-size:28px;color:#F5A623;font-weight:700;text-align:center;line-height:1.5;margin-bottom:8px">صفحة الحيل الجامعة</div>
+    <div style="font-size:13px;color:#fff;font-weight:700;text-align:center;margin-bottom:16px">مقارنة شاملة: الطريقة الكلاسيكية ↔ الحيلة السريعة</div>
+    <div style="width:60%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin-bottom:20px"></div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.7);text-align:center;line-height:2.2">
+      هذه الصفحة هي <strong style="color:#F5A623">روح الكتاب</strong><br/>
+      كل حيلة هنا وُفِّرت من تجربة أسئلة القدرات الفعلية
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['الحساب الذهني','الكسور','النسبة والتناسب','الجبر','الإحصاء','المتتابعات','الأسس والجذور'].map(t=>`
+        <div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.3);padding:11px 20px;text-align:center;font-size:11px;font-weight:700;color:#F5A623;position:relative;z-index:2">
+    ٩ صفحات — حيلة واحدة من كل باب تغيّر الاختبار
+  </div>
+</div>
+`},
+
+/* ══ 2: الحساب الذهني ══ */
+{label:"الحساب الذهني",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">⚡ الحساب الذهني</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('الضرب والجمع السريع','#E65100',[
+    ['٩٩ × ٩٩ = نضرب خطوة خطوة...','(١٠٠−١)² = ١٠٠٠٠−٢٠٠+١ = ٩٨٠١'],
+    ['٢٣ × ١١ = ٢٣ × ١١ خطوات','اليسار|مجموع الرقمين|اليمين → ٢٥٣'],
+    ['٣٥٪ من ٢٤٠ = ٢٤٠×٣٥÷١٠٠','١٠٪=٢٤ | ٣٠٪=٧٢ | ٥٪=١٢ | المجموع=٨٤'],
+    ['آحاد ٢٧×٣٤ = نحسب الكل','آحاد ٧×٤=٢٨ → ينتهي بـ ٨ (حذف الخطأ)'],
+  ])}
+  ${cmp('فرق المربعين','#C62828',[
+    ['٥١×٤٩ = ضرب طويل','(٥٠+١)(٥٠−١) = ٢٥٠٠−١ = ٢٤٩٩'],
+    ['١٠٢×٩٨ = ضرب طويل','(١٠٠+٢)(١٠٠−٢) = ١٠٠٠٠−٤ = ٩٩٩٦'],
+  ])}
+</div>
+`},
+
+/* ══ 3: الكسور ══ */
+{label:"الكسور",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">⚡ الكسور</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('الجمع والطرح','#2E7D32',[
+    [`${fr('١','٢')}+${fr('١','٣')} = إيجاد مقام مشترك ثم الجمع`,'ضرب تبادلي: (١×٣+١×٢)÷(٢×٣) = ٥/٦'],
+    [`${fr('٥','٦')}−${fr('١','٣')} = تحويل لمقام ٦ ثم الطرح`,'(٥×٣−١×٦)÷١٨ = ٩÷١٨ = ١/٢'],
+  ])}
+  ${cmp('الضرب مع الاختصار','#1565C0',[
+    [`${fr('٨','١٥')} × ${fr('٥','١٢')} = ٨×٥÷(١٥×١٢) = ٤٠÷١٨٠`,'اختصر ٨↔١٢ (÷٤) و١٥↔٥ (÷٥) → ٢/٩'],
+    [`${fr('٣','٧')} × ${fr('٧','٩')} = حساب كامل`,'اختصر ٧ مع ٧ → ٣/٩ = ١/٣'],
+  ])}
+  ${cmp('المقارنة السريعة','#E8512B',[
+    [`${fr('٣','٤')} أم ${fr('٢','٣')} → تحويل لعشري أو مقام مشترك`,'ضرب تبادلي: ٣×٣=٩ و٢×٤=٨ → ٩>٨ → ٣/٤ أكبر'],
+    ['بسطان متساويان → حسب المقام','المقام الأصغر = الكسر الأكبر مباشرة'],
+  ])}
+</div>
+`},
+
+/* ══ 4: النسبة والتناسب ══ */
+{label:"النسبة والتناسب",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#6A1B9A">
+    <div class="sec-hdr-txt">⚡ النسبة والتناسب</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('المثلث السحري','#6A1B9A',[
+    ['الكل = الجزء ÷ (النسبة÷١٠٠) → خطوتان','غطِّ الكل في المثلث → ج÷ن% مباشرة'],
+    ['٢٠٪ من ٣٠٠ = ٣٠٠×٢٠÷١٠٠ = ٦٠','١٠٪=٣٠ → ٢٠٪=٦٠ (ضاعف العشرة)'],
+    ['٤٠ يمثل ٢٥٪ → ما الكل؟ → ٤٠÷(٢٥÷١٠٠)','٤٠ هو ربع الكل → ٤٠×٤ = ١٦٠'],
+  ])}
+  ${cmp('نسبة التغير','#C62828',[
+    ['(الجديد−القديم)÷القديم×١٠٠ — خطوات','زيادة ٢٠ على ٢٠٠ → ٢٠÷٢٠٠×١٠٠ = ١٠٪'],
+    ['تنبه: زيادة ٢٠٪ ثم نقص ٢٠٪ ≠ صفر','١٠٠×١٫٢×٠٫٨ = ٩٦ ← نقص ٤٪'],
+  ])}
+  ${cmp('التناسب العكسي','#E65100',[
+    ['أكثر عمال = أيام أقل → أ×ب = ج×د','٣×١٢ = ٦×س → س = ٣٦÷٦ = ٦ أيام'],
+    ['أسرع = وقت أقل → نفس القانون','٦٠×٦ = ١٢٠×س → س = ٣ ساعات'],
+  ])}
+</div>
+`},
+
+/* ══ 5: الأسس والجذور ══ */
+{label:"الأسس والجذور",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">⚡ الأسس والجذور</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('قوانين الأسس','#7B2D8B',[
+    ['نحسب القيمة الكاملة للمقارنة','نفس الأساس → قارن الأسس فقط: ٢⁵>٢³'],
+    ['حساب الأسس الكبيرة يدوياً','احفظ قوى ٢ حتى ٢¹² → توفير ٩٠٪ من الوقت'],
+    ['٤³ = ٤×٤×٤ = ٦٤','٤³=(٢²)³=٢⁶=٦٤ (تحليل لقوى ٢)'],
+  ])}
+  ${cmp('الجذور','#00838F',[
+    ['حساب الجذر بقسمة متكررة','احفظ الجذور حتى √٢٢٥ → مباشرة'],
+    ['√٧٢ = حساب...','√٧٢ = √(٣٦×٢) = ٦√٢'],
+    ['مقارنة √٥٠ و√٤٩','٥٠>٤٩ → √٥٠>√٤٩ (قارن الأعداد مباشرة)'],
+  ])}
+</div>
+`},
+
+/* ══ 6: الجبر ══ */
+{label:"الجبر",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#1A0A2E">
+    <div class="sec-hdr-txt">⚡ الجبر</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('المتطابقات','#4A148C',[
+    ['٥١×٤٩ = حساب يدوي طويل','فرق المربعين: (٥٠+١)(٥٠−١) = ٢٤٩٩'],
+    ['(٩٩)² = ضرب طويل','(١٠٠−١)² = ١٠٠٠٠−٢٠٠+١ = ٩٨٠١'],
+    ['توسيع (أ+ب)² خطوة خطوة','مباشرة: أ²+٢أب+ب²'],
+  ])}
+  ${cmp('حل المعادلات','#1565C0',[
+    ['حل المعادلة كاملاً من البداية','جرّب الخيارات مباشرة: عوّض وتحقق'],
+    ['معادلة بمجهولين → نظام كامل','انظر: هل يمكن الحذف أو التعويض الفوري؟'],
+    ['المتباينة → خطوات متعددة','تذكر: ÷ سالب تنقلب الإشارة'],
+  ])}
+  ${cmp('التربيعية','#E8512B',[
+    ['القانون العام دائماً','جرّب التحليل أولاً: (س−أ)(س−ب)=٠'],
+    ['حساب المميز ب²−٤أج','جرّب الخيارات: عوّض وتحقق (أسرع)'],
+  ])}
+</div>
+`},
+
+/* ══ 7: الإحصاء والاحتمالات ══ */
+{label:"الإحصاء والاحتمالات",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1A237E">
+    <div class="sec-hdr-txt">⚡ الإحصاء والاحتمالات</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('المتوسط والوسيط','#1A237E',[
+    ['مجموع الأعداد كلها ثم القسمة','أعداد منتظمة؟ المتوسط = (أول+آخر)÷٢'],
+    ['رتّب القيم ثم ابحث عن الوسيط','عدد فردي؟ الوسيط = القيمة الوسطى مباشرة'],
+    ['أضيفت قيمة جديدة → أعد الحساب','إذا القيمة > المتوسط → المتوسط يزيد فقط'],
+  ])}
+  ${cmp('الاحتمالات','#E65100',[
+    ['احتمال عدم الحادثة = ١ − ب(أ)','ب(لا أ) = ١ − ب(أ) مباشرة'],
+    ['حادثتان مستقلتان → رسم شجرة','ب(أ و ب) = ب(أ) × ب(ب) مباشرة'],
+    ['عدة خيارات → يرسم فضاء عيني','مبدأ العد: م × ن (ضرب الخيارات)'],
+  ])}
+</div>
+`},
+
+/* ══ 8: المتتابعات والأنماط ══ */
+{label:"المتتابعات والأنماط",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#33691E">
+    <div class="sec-hdr-txt">⚡ المتتابعات والأنماط</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${cmp('المتتابعة الحسابية','#E65100',[
+    ['أ+(ن−١)×د — تطبيق القانون كاملاً','الحد العاشر في ٢،٥،٨ = ٢+٩×٣ = ٢٩'],
+    ['مجموع ← نحسب كل حد ثم نجمع','م = ن÷٢×(أول+آخر) — بدون جمع طويل'],
+    ['١+٢+...+١٠٠ → جمع متسلسل','١٠٠÷٢×١٠١ = ٥٠٥٠ (غاوس)'],
+  ])}
+  ${cmp('الدوريات','#C62828',[
+    ['نتابع الحدود واحداً واحداً','رقم الحد ÷ طول الدورة → الباقي يحدد الحد'],
+    ['الحد الـ١٠٠ في أ،ب،ج،أ،ب،ج→ نعد','١٠٠÷٣ باقي ١ → الحد الأول = أ'],
+  ])}
+  ${cmp('اكتشاف النمط','#2E7D32',[
+    ['نجرب أنواع مختلفة حتى نجد','١: فرق ثابت? ٢: نسبة ثابتة? ٣: مربعات?'],
+    ['١،٤،٩،١٦ → ننظر في الفرق','مربعات: الحد = ن² مباشرة'],
+  ])}
+</div>
+`},
+
+/* ══ 9: الجدول الذهبي الجامع ══ */
+{label:"الجدول الذهبي",bg:"#0D1B2E",html:`
+<div style="background:linear-gradient(160deg,#0D1B2E,#1A3A5C);min-height:680px;padding-bottom:28px">
+  <div style="margin:20px 20px 14px;background:#F5A623;border-radius:10px;padding:14px 20px;text-align:center">
+    <div style="font-size:15px;font-weight:800;color:#0D1B2E">🏆 الجدول الذهبي الجامع</div>
+    <div style="font-size:11px;color:#0D1B2E;margin-top:3px">أسرع حيلة من كل باب — احفظها قبل الاختبار</div>
+  </div>
+
+  ${[
+    {باب:'الحساب الذهني',حيلة:'فرق المربعين: (١٠٠+٢)(١٠٠−٢) = ٩٩٩٦',color:'#E65100'},
+    {باب:'الكسور',حيلة:'الضرب التبادلي للمقارنة: أ×د مقابل ب×ج',color:'#2E7D32'},
+    {باب:'النسبة والتناسب',حيلة:'المثلث السحري: غطِّ المجهول وطبِّق القانون',color:'#6A1B9A'},
+    {باب:'الأسس',حيلة:'احفظ قوى ٢ حتى ٢¹² — وفّر ٩٠٪ وقت',color:'#7B2D8B'},
+    {باب:'الجذور',حيلة:'قارن الأعداد تحت الجذر مباشرة (لا تحسب)',color:'#00838F'},
+    {باب:'الجبر',حيلة:'جرّب الخيارات أولاً في المعادلات التربيعية',color:'#4A148C'},
+    {باب:'الإحصاء',حيلة:'أعداد منتظمة؟ المتوسط = (أول+آخر)÷٢',color:'#1A237E'},
+    {باب:'الاحتمالات',حيلة:'النقيض = ١ − ب(أ) — الأسرع دائماً',color:'#E65100'},
+    {باب:'المتتابعات',حيلة:'غاوس: م = ن÷٢ × (أول+آخر)',color:'#33691E'},
+    {باب:'الدوريات',حيلة:'رقم الحد ÷ طول الدورة → الباقي = موقعه',color:'#C62828'},
+  ].map(({باب,حيلة,color})=>`
+    <div style="margin:0 20px 7px;background:rgba(255,255,255,0.06);border-radius:10px;padding:10px 14px;border-right:4px solid ${color}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:3px">${باب}</div>
+      <div style="font-size:12px;font-weight:700;color:#fff;line-height:1.6">${حيلة}</div>
+    </div>
+  `).join('')}
+
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#0D1B2E;line-height:1.8">
+      من حفظ هذه الحيل العشر —<br/>وفّر <strong>٣٠ دقيقة</strong> في اختبار القدرات 🎯
+    </div>
+  </div>
+</div>
+`},
+
+];
+
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

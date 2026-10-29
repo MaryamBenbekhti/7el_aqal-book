@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | الزوايا والمستقيمات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 14px;border-radius:10px;padding:13px 18px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .q-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px;border:2px solid #E0F2F1;background:#F9FFFE}
+  .q-text{font-size:13px;font-weight:700;color:#1A2533;margin-bottom:10px;line-height:2}
+  .q-opts{display:flex;flex-direction:column;gap:6px}
+  .q-opt{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:right;border:1.5px solid #E0E0E0;background:#F4F7F9;color:#1A2533;transition:all .2s}
+  .q-opt.correct{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+  .q-opt.wrong{background:#FFEBEE;border-color:#C62828;color:#B71C1C;text-decoration:line-through;cursor:default}
+  .q-explain{background:#E8F5E9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:#1B5E20;line-height:2;display:none}
+  .show-btn{margin-top:8px;width:100%;padding:8px;background:#E0F2F1;border:1.5px dashed #00695C;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:#00695C;cursor:pointer}
+  svg text{font-family:'Tajawal',sans-serif}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+const QDATA=[
+  {correct:2, explain:'الزاوية على خط مستقيم = ١٨٠° | ١٨٠−٦٥ = ١١٥° ✓'},
+  {correct:0, explain:'الزاوية المتتامة = ٩٠° − ٣٥° = ٥٥° ✓'},
+  {correct:3, explain:'الزوايا المتقابلة بالرأس متساوية دائماً = ٤٠° ✓'},
+  {correct:1, explain:'مجموع الزوايا حول نقطة = ٣٦٠° | ٣٦٠−(٩٠+١٢٠+٨٠) = ٣٦٠−٢٩٠ = ٧٠° ✓'},
+  {correct:2, explain:'الزاوية المتكاملة = ١٨٠° − ٧٠° = ١١٠° ✓'},
+  {correct:0, explain:'الزوايا المتناظرة (مع المتوازيات) متساوية = ٦٥° ✓'},
+  {correct:3, explain:'الزاويتان الداخليتان على نفس الجهة مجموعهما ١٨٠° | ١٨٠−٧٥ = ١٠٥° ✓'},
+  {correct:1, explain:'مجموع زوايا الخط المستقيم = ١٨٠° | س+٢س+٣س=١٨٠ | ٦س=١٨٠ | س=٣٠° ✓'},
+  {correct:2, explain:'الزاوية القائمة = ٩٠° | ٩٠−٥٤ = ٣٦° ✓'},
+  {correct:0, explain:'الزوايا المتبادلة (مع المتوازيات) متساوية = ٥٥° ✓'},
+];
+function revealQ(qi){
+  const{correct,explain}=QDATA[qi];
+  document.querySelectorAll(`#q${qi}opts .q-opt`).forEach((o,i)=>{
+    o.classList.add(i===correct?'correct':'wrong'); o.onclick=null;
+  });
+  const exp=document.getElementById(`q${qi}exp`);
+  exp.innerHTML='💡 '+explain; exp.style.display='block';
+  const btn=document.getElementById(`q${qi}btn`); if(btn)btn.style.display='none';
+}
+function pickQ(qi){revealQ(qi)}
+
+// دالة لرسم قوس بنقاط دقيقة
+function arc(cx,cy,r,a1,a2,steps=30){
+  let pts=[];
+  for(let i=0;i<=steps;i++){
+    let t=a1+(a2-a1)*i/steps, rad=t*Math.PI/180;
+    pts.push(`${(cx+r*Math.cos(rad)).toFixed(1)},${(cy-r*Math.sin(rad)).toFixed(1)}`);
+  }
+  return 'M'+pts[0]+' '+pts.slice(1).map(p=>'L'+p).join(' ');
+}
+
+const PAGES=[
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف",bg:"#0A2A1A",html:`
+<div style="background:linear-gradient(160deg,#0A2A1A,#00695C);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(0,105,92,0.2);bottom:20%;right:-50px"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(245,166,35,0.07);top:15%;left:-30px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#0A2A1A;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>الهندسة — الفصل الأول</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">باب الهندسة والقياس</div>
+    <!-- رسمة زاوية في الغلاف -->
+    <svg width="120" height="80" viewBox="0 0 120 80" style="margin-bottom:12px">
+      <line x1="10" y1="65" x2="110" y2="65" stroke="#F5A623" stroke-width="3" stroke-linecap="round"/>
+      <line x1="10" y1="65" x2="70" y2="10" stroke="#F5A623" stroke-width="3" stroke-linecap="round"/>
+      <path d="${arc(10,65,32,0,50)}" fill="none" stroke="rgba(245,166,35,0.6)" stroke-width="2"/>
+      <circle cx="10" cy="65" r="4" fill="#F5A623"/>
+      <text x="50" y="58" font-size="12" fill="#F5A623" font-weight="bold" text-anchor="middle">50</text>
+    </svg>
+    <div style="font-family:'Amiri',serif;font-size:32px;color:#fff;font-weight:700;text-align:center;line-height:1.4">الزوايا والمستقيمات</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:12.5px;color:rgba(178,235,242,0.9);text-align:center;line-height:2;padding:0 16px">
+      من يفهم الزوايا —<br/>يحل <strong style="color:#F5A623">كل أسئلة الهندسة</strong> بثقة.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['أنواع الزوايا','الزوايا المتكاملة','المتتامة','المتقابلة بالرأس','الزوايا حول نقطة','المتوازيات'].map(t=>`
+        <div style="background:rgba(0,105,92,0.25);border:1px solid rgba(0,188,212,0.4);border-radius:20px;padding:5px 14px;font-size:11px;color:#B2EBF2;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.25);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(178,235,242,0.5)">الهندسة والقياس</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: أنواع الزوايا ══ */
+{label:"أنواع الزوايا",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">أنواع الزوايا</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="margin:0 20px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <!-- حادة -->
+    <div style="background:#E8F5E9;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:6px">حادة — أقل من ٩٠°</div>
+      <svg width="120" height="85" viewBox="0 0 120 85">
+        <line x1="15" y1="68" x2="105" y2="68" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="15" y1="68" x2="72" y2="11" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="${arc(15,68,26,0,45)}" fill="none" stroke="#2E7D32" stroke-width="1.8"/>
+        <circle cx="15" cy="68" r="3.5" fill="#2E7D32"/>
+        <text x="59" y="53" font-size="10" fill="#2E7D32" font-weight="bold" text-anchor="middle">45</text>
+      </svg>
+    </div>
+    <!-- قائمة -->
+    <div style="background:#E3F2FD;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#1565C0;margin-bottom:6px">قائمة — ٩٠°</div>
+      <svg width="120" height="85" viewBox="0 0 120 85">
+        <line x1="15" y1="68" x2="105" y2="68" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="15" y1="68" x2="15" y2="10" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="15" y="52" width="16" height="16" fill="rgba(21,101,192,0.1)" stroke="#1565C0" stroke-width="1.8"/>
+        <circle cx="15" cy="68" r="3.5" fill="#1565C0"/>
+        <text x="46" y="42" font-size="10" fill="#1565C0" font-weight="bold" text-anchor="middle">90</text>
+      </svg>
+    </div>
+    <!-- منفرجة -->
+    <div style="background:#FBE9E7;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#E8512B;margin-bottom:6px">منفرجة — أكبر من ٩٠°</div>
+      <svg width="120" height="85" viewBox="0 0 120 85">
+        <line x1="10" y1="70" x2="110" y2="70" stroke="#E8512B" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="10" y1="70" x2="${(10+95*Math.cos(120*Math.PI/180)).toFixed(1)}" y2="${(70-95*Math.sin(120*Math.PI/180)).toFixed(1)}" stroke="#E8512B" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="${arc(10,70,42,0,120)}" fill="none" stroke="#E8512B" stroke-width="1.8"/>
+        <circle cx="10" cy="70" r="3.5" fill="#E8512B"/>
+        <text x="42" y="18" font-size="10" fill="#E8512B" font-weight="bold" text-anchor="middle">120</text>
+      </svg>
+    </div>
+    <!-- مستقيمة -->
+    <div style="background:#F3E5F5;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#7B2D8B;margin-bottom:6px">مستقيمة — ١٨٠°</div>
+      <svg width="120" height="85" viewBox="0 0 120 85">
+        <line x1="10" y1="58" x2="110" y2="58" stroke="#7B2D8B" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="${arc(60,58,28,0,180)}" fill="rgba(123,45,139,0.08)" stroke="#7B2D8B" stroke-width="1.8"/>
+        <circle cx="60" cy="58" r="3.5" fill="#7B2D8B"/>
+        <text x="60" y="18" font-size="10" fill="#7B2D8B" font-weight="bold" text-anchor="middle">180</text>
+      </svg>
+    </div>
+  </div>
+  <!-- جدول سريع -->
+  <div style="margin:0 20px;background:#0D4F5C;border-radius:12px;padding:12px 15px">
+    ${[['حادة','< ٩٠°','#A5D6A7'],['قائمة','= ٩٠°','#B3E5FC'],['منفرجة','٩٠° < ز < ١٨٠°','#FFAB91'],['مستقيمة','= ١٨٠°','#CE93D8'],['كاملة','= ٣٦٠°','#F5A623']].map(([n,v,c])=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <div style="font-size:12px;font-weight:700;color:${c}">${v}</div>
+        <div style="font-size:12px;font-weight:800;color:${c}">${n}</div>
+      </div>`).join('')}
+  </div>
+</div>
+`},
+
+/* ══ 3: الزوايا المتكاملة والمتتامة ══ */
+{label:"متكاملة ومتتامة",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">المتكاملة والمتتامة</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="margin:0 20px 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <!-- متتامة -->
+    <div style="background:#F3E5F5;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#7B2D8B;margin-bottom:4px">متتامة = ٩٠°</div>
+      <svg width="120" height="90" viewBox="0 0 120 90">
+        <line x1="15" y1="72" x2="105" y2="72" stroke="#7B2D8B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="60" y1="72" x2="60" y2="15" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="60" y1="72" x2="98" y2="28" stroke="#E8512B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="60" y1="72" x2="22" y2="28" stroke="#1565C0" stroke-width="2" stroke-linecap="round"/>
+        <rect x="60" y="58" width="14" height="14" fill="none" stroke="#7B2D8B" stroke-width="1.5"/>
+        <circle cx="60" cy="72" r="3" fill="#7B2D8B"/>
+        <text x="83" y="52" font-size="10" fill="#E8512B" font-weight="bold" text-anchor="middle">60</text>
+        <text x="37" y="52" font-size="10" fill="#1565C0" font-weight="bold" text-anchor="middle">30</text>
+      </svg>
+      <div style="font-size:10.5px;color:#7B8FA1">٣٠ + ٦٠ = ٩٠°</div>
+    </div>
+    <!-- متكاملة -->
+    <div style="background:#E8EAF6;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#3949AB;margin-bottom:4px">متكاملة = ١٨٠°</div>
+      <svg width="120" height="90" viewBox="0 0 120 90">
+        <line x1="10" y1="68" x2="110" y2="68" stroke="#3949AB" stroke-width="2" stroke-linecap="round"/>
+        <line x1="60" y1="68" x2="88" y2="20" stroke="#E8512B" stroke-width="2" stroke-linecap="round"/>
+        <path d="${arc(60,68,26,0,60)}" fill="rgba(46,125,50,0.1)" stroke="#2E7D32" stroke-width="1.5"/>
+        <path d="${arc(60,68,26,60,180)}" fill="rgba(232,81,43,0.1)" stroke="#E8512B" stroke-width="1.5"/>
+        <circle cx="60" cy="68" r="3" fill="#3949AB"/>
+        <text x="100" y="48" font-size="10" fill="#2E7D32" font-weight="bold" text-anchor="middle">60</text>
+        <text x="35" y="28" font-size="10" fill="#E8512B" font-weight="bold" text-anchor="middle">120</text>
+      </svg>
+      <div style="font-size:10.5px;color:#7B8FA1">٦٠ + ١٢٠ = ١٨٠°</div>
+    </div>
+  </div>
+  <!-- قواعد سريعة -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:8px;text-align:center">القوانين</div>
+    ${[['المتتامة','= ٩٠° − الزاوية','مثال: متتامة ٣٥° = ٥٥°','#CE93D8'],['المتكاملة','= ١٨٠° − الزاوية','مثال: متكاملة ٧٠° = ١١٠°','#B3E5FC']].map(([n,f,e,c])=>`
+      <div style="background:rgba(255,255,255,0.07);border-radius:8px;padding:9px 12px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <div style="font-size:13px;font-weight:800;color:${c}">${f}</div>
+          <div style="font-size:12px;font-weight:700;color:${c}">${n}</div>
+        </div>
+        <div style="font-size:11px;color:#B2EBF2">${e}</div>
+      </div>`).join('')}
+  </div>
+  <!-- أمثلة سريعة -->
+  ${[['زاوية = ٤٠° — ما متتامتها؟','٩٠ − ٤٠ = ٥٠°','#7B2D8B','#F3E5F5'],['زاوية = ١١٠° — ما متكاملتها؟','١٨٠ − ١١٠ = ٧٠°','#1565C0','#E3F2FD']].map(([q,a,c,bg])=>`
+    <div style="margin:0 20px 8px;background:${bg};border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;direction:ltr">
+      <div style="font-size:13px;font-weight:900;color:${c}">${a} ✓</div>
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533">${q}</div>
+    </div>`).join('')}
+</div>
+`},
+
+/* ══ 4: زوايا على خط + حول نقطة ══ */
+{label:"زوايا على خط وحول نقطة",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">زوايا على خط مستقيم وحول نقطة</div>
+    <div class="sec-dot"></div>
+  </div>
+  <!-- زوايا على خط مستقيم -->
+  <div style="margin:0 20px 12px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px">زوايا على خط مستقيم = ١٨٠°</div>
+    <svg width="100%" height="90" viewBox="0 0 300 90" style="display:block">
+      <line x1="20" y1="65" x2="280" y2="65" stroke="#E65100" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="150" y1="65" x2="205" y2="12" stroke="#E8512B" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="150" cy="65" r="4" fill="#BF360C"/>
+      <path d="${arc(150,65,26,0,65)}" fill="rgba(46,125,50,0.1)" stroke="#2E7D32" stroke-width="1.8"/>
+      <path d="${arc(150,65,26,65,180)}" fill="rgba(232,81,43,0.1)" stroke="#E8512B" stroke-width="1.8"/>
+      <text x="194" y="40" font-size="11" fill="#2E7D32" font-weight="bold" text-anchor="middle">65</text>
+      <text x="119" y="19" font-size="11" fill="#E8512B" font-weight="bold" text-anchor="middle">115</text>
+      <text x="70" y="84" font-size="11" fill="#BF360C">٦٥ + ١١٥ = ١٨٠° ✓</text>
+    </svg>
+  </div>
+  <!-- زوايا حول نقطة -->
+  <div style="margin:0 20px 12px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">زوايا حول نقطة = ٣٦٠°</div>
+    <svg width="100%" height="130" viewBox="0 0 280 130" style="display:block">
+      <!-- ٤ شعاعات من المركز -->
+      <line x1="140" y1="65" x2="230" y2="65" stroke="#1565C0" stroke-width="2" stroke-linecap="round"/>
+      <line x1="140" y1="65" x2="140" y2="15" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+      <line x1="140" y1="65" x2="50" y2="65" stroke="#E8512B" stroke-width="2" stroke-linecap="round"/>
+      <line x1="140" y1="65" x2="140" y2="115" stroke="#7B2D8B" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="140" cy="65" r="4" fill="#1A2533"/>
+      <!-- أقواس الزوايا الأربع -->
+      <path d="${arc(140,65,20,0,90)}" fill="rgba(21,101,192,0.1)" stroke="#1565C0" stroke-width="1.5"/>
+      <path d="${arc(140,65,20,90,180)}" fill="rgba(46,125,50,0.1)" stroke="#2E7D32" stroke-width="1.5"/>
+      <path d="${arc(140,65,20,180,270)}" fill="rgba(232,81,43,0.1)" stroke="#E8512B" stroke-width="1.5"/>
+      <path d="${arc(140,65,20,270,360)}" fill="rgba(123,45,139,0.1)" stroke="#7B2D8B" stroke-width="1.5"/>
+      <!-- نصوص -->
+      <text x="168" y="52" font-size="10" fill="#1565C0" font-weight="bold">90</text>
+      <text x="112" y="52" font-size="10" fill="#2E7D32" font-weight="bold">90</text>
+      <text x="112" y="84" font-size="10" fill="#E8512B" font-weight="bold">90</text>
+      <text x="168" y="84" font-size="10" fill="#7B2D8B" font-weight="bold">90</text>
+      <text x="60" y="120" font-size="11" fill="#1B5E20">٩٠+٩٠+٩٠+٩٠ = ٣٦٠° ✓</text>
+    </svg>
+  </div>
+  <!-- مثال تطبيقي -->
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:11px 14px">
+    <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:6px">ثلاث زوايا حول نقطة: ٩٠°، ١٢٠°، ٨٠° — ما الرابعة؟</div>
+    <div style="font-size:13px;font-weight:800;color:#E65100">٣٦٠ − (٩٠+١٢٠+٨٠) = ٣٦٠ − ٢٩٠ = <strong>٧٠°</strong> ✓</div>
+  </div>
+</div>
+`},
+
+/* ══ 5: الزوايا المتقابلة بالرأس ══ */
+{label:"الزوايا المتقابلة بالرأس",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">الزوايا المتقابلة بالرأس</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    عند تقاطع خطين تتكون <strong style="color:#C62828">٤ زوايا</strong> — المتقابلتان بالرأس متساويتان دائماً.
+  </div>
+  <div style="margin:0 20px 14px;background:#FFEBEE;border-radius:12px;padding:14px 16px">
+    <svg width="100%" height="140" viewBox="0 0 300 140" style="display:block">
+      ${(()=>{
+        const cx=150, cy=70, al=23.1;
+        const rad=al*Math.PI/180;
+        const L=130;
+        // خط ١
+        const x1a=cx-L*Math.cos(rad), y1a=cy+L*Math.sin(rad);
+        const x1b=cx+L*Math.cos(rad), y1b=cy-L*Math.sin(rad);
+        // خط ٢
+        const x2a=cx-L*Math.cos(rad), y2a=cy-L*Math.sin(rad);
+        const x2b=cx+L*Math.cos(rad), y2b=cy+L*Math.sin(rad);
+        const ra=16, rt=36;
+        const a1=arc(cx,cy,ra,-al,al);
+        const a3=arc(cx,cy,ra,180-al,180+al);
+        const a2=arc(cx,cy,ra,al,180-al);
+        const a4=arc(cx,cy,ra,-(180-al),-al);
+        return `
+        <line x1="${x1a.toFixed(1)}" y1="${y1a.toFixed(1)}" x2="${x1b.toFixed(1)}" y2="${y1b.toFixed(1)}" stroke="#C62828" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="${x2a.toFixed(1)}" y1="${y2a.toFixed(1)}" x2="${x2b.toFixed(1)}" y2="${y2b.toFixed(1)}" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="${cx}" cy="${cy}" r="4" fill="#1A2533"/>
+        <path d="${a1}" fill="rgba(198,40,40,0.12)" stroke="#C62828" stroke-width="1.8"/>
+        <path d="${a3}" fill="rgba(198,40,40,0.12)" stroke="#C62828" stroke-width="1.8"/>
+        <path d="${a2}" fill="rgba(21,101,192,0.12)" stroke="#1565C0" stroke-width="1.8"/>
+        <path d="${a4}" fill="rgba(21,101,192,0.12)" stroke="#1565C0" stroke-width="1.8"/>
+        <text x="${cx+rt}" y="${cy+4}" font-size="10" fill="#C62828" font-weight="bold" text-anchor="middle">50</text>
+        <text x="${cx-rt}" y="${cy+4}" font-size="10" fill="#C62828" font-weight="bold" text-anchor="middle">50</text>
+        <text x="${cx}" y="${cy-rt+4}" font-size="10" fill="#1565C0" font-weight="bold" text-anchor="middle">130</text>
+        <text x="${cx}" y="${cy+rt+12}" font-size="10" fill="#1565C0" font-weight="bold" text-anchor="middle">130</text>`;
+      })()}
+      <text x="40" y="132" font-size="10.5" fill="#7B8FA1">المتقابلتان بالرأس متساويتان ✓</text>
+    </svg>
+  </div>
+  <!-- القاعدة -->
+  <div style="margin:0 20px 10px;background:#0D4F5C;border-radius:12px;padding:12px 15px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:6px">القاعدة</div>
+    <div style="font-size:13px;font-weight:700;color:#fff;line-height:2">
+      ز₁ = ز₃ (متقابلتان بالرأس)<br/>
+      ز₂ = ز₄ (متقابلتان بالرأس)<br/>
+      ز₁ + ز₂ = ١٨٠°
+    </div>
+  </div>
+  <!-- مثال -->
+  <div style="margin:0 20px;background:#FFEBEE;border-radius:10px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;direction:ltr">
+    <div style="font-size:13px;font-weight:900;color:#C62828">٤٠° ✓</div>
+    <div style="font-size:12.5px;font-weight:700;color:#1A2533">تقاطع خطان وزاوية = ٤٠° — ما المقابلة؟</div>
+  </div>
+</div>
+`},
+
+/* ══ 6: المستقيمات المتوازية ══ */
+{label:"المستقيمات المتوازية",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">المستقيمات المتوازية مع القاطع</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="margin:0 20px 12px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <svg width="100%" height="160" viewBox="0 0 300 160" style="display:block">
+      <!-- خطان متوازيان -->
+      <line x1="20" y1="45" x2="280" y2="45" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="120" x2="280" y2="120" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- سهمان للتوازي خط ١ -->
+      <polygon points="148,45 140,40 140,50" fill="#2E7D32"/>
+      <polygon points="162,45 154,40 154,50" fill="#2E7D32"/>
+      <!-- سهمان للتوازي خط ٢ -->
+      <polygon points="148,120 140,115 140,125" fill="#2E7D32"/>
+      <polygon points="162,120 154,115 154,125" fill="#2E7D32"/>
+      <!-- القاطع -->
+      <line x1="95" y1="8" x2="195" y2="157" stroke="#E8512B" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- نقطتا التقاطع -->
+      <circle cx="122" cy="45" r="4" fill="#1A2533"/>
+      <circle cx="160" cy="120" r="4" fill="#1A2533"/>
+      <!-- أقواس متناظرة -->
+      <path d="${arc(122,45,18,0,68)}" fill="rgba(21,101,192,0.12)" stroke="#1565C0" stroke-width="1.8"/>
+      <path d="${arc(160,120,18,0,68)}" fill="rgba(21,101,192,0.12)" stroke="#1565C0" stroke-width="1.8"/>
+      <!-- أقواس داخلية -->
+      <path d="${arc(122,45,18,68,180)}" fill="rgba(245,166,35,0.12)" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="${arc(160,120,18,180,248)}" fill="rgba(232,81,43,0.12)" stroke="#E8512B" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <!-- نصوص -->
+      <text x="154" y="27" font-size="11" fill="#1565C0" font-weight="bold">70</text>
+      <text x="192" y="102" font-size="11" fill="#1565C0" font-weight="bold">70</text>
+      <text x="99" y="13" font-size="11" fill="#F5A623" font-weight="bold">110</text>
+      <text x="18" y="153" font-size="10" fill="#1565C0" font-weight="bold">متناظرة = ٧٠°</text>
+      <text x="160" y="153" font-size="10" fill="#E8512B" font-weight="bold">داخليتان = ١٨٠°</text>
+    </svg>
+  </div>
+  <!-- القواعد -->
+  <div style="margin:0 20px 10px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:8px;text-align:center">القواعد الثلاث</div>
+    ${[
+      ['#A5D6A7','الزوايا المتناظرة','متساوية ↑↑'],
+      ['#80CBC4','الزوايا المتبادلة','متساوية ↕'],
+      ['#FFAB91','الداخليتان (نفس الجهة)','مجموعهما ١٨٠°'],
+    ].map(([c,n,v])=>`
+      <div style="display:flex;justify-content:space-between;background:rgba(255,255,255,0.07);border-radius:8px;padding:8px 12px;margin-bottom:5px">
+        <div style="font-size:12px;font-weight:700;color:${c}">${v}</div>
+        <div style="font-size:12px;font-weight:800;color:${c}">${n}</div>
+      </div>`).join('')}
+  </div>
+  <!-- مثال -->
+  <div style="margin:0 20px;background:#E8F5E9;border-radius:10px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;direction:ltr">
+    <div style="font-size:13px;font-weight:900;color:#2E7D32">٧٥° ✓</div>
+    <div style="font-size:12px;font-weight:700;color:#1A2533">متوازيان مع قاطع، زاوية = ٧٥° — ما المتناظرة؟</div>
+  </div>
+</div>
+`},
+
+
+/* ══ معادلات على الزوايا ══ */
+{label:"معادلات على الزوايا",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">حل معادلات على الزوايا</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    افرض المجهول ← شكّل المعادلة من القاعدة الهندسية ← احل.
+  </div>
+
+  ${[
+    {type:'زاويتان متكاملتان',
+     q:'زاويتان متكاملتان إحداهما ٣س والأخرى ٢س + ١٠ — أوجد كل زاوية',
+     steps:['٣س + (٢س+١٠) = ١٨٠','٥س + ١٠ = ١٨٠ → ٥س = ١٧٠','س = ٣٤ | الأولى = ١٠٢° | الثانية = ٧٨° ✓'],
+     color:'#7B2D8B',bg:'#F3E5F5'},
+    {type:'زاويتان متتامتان',
+     q:'زاويتان متتامتان، الكبرى تزيد على الصغرى بـ ٣٠° — ما كل منهما؟',
+     steps:['افرض الصغرى = س | الكبرى = س+٣٠','س + (س+٣٠) = ٩٠ → ٢س = ٦٠','س = ٣٠° | الكبرى = ٦٠° ✓'],
+     color:'#1565C0',bg:'#E3F2FD'},
+    {type:'زوايا على خط مستقيم',
+     q:'ثلاث زوايا على خط مستقيم: س، ٢س، ٣س — أوجد كل زاوية',
+     steps:['س + ٢س + ٣س = ١٨٠','٦س = ١٨٠ → س = ٣٠°','الزوايا: ٣٠°، ٦٠°، ٩٠° ✓'],
+     color:'#E65100',bg:'#FBE9E7'},
+    {type:'زوايا متقابلة بالرأس',
+     q:'زاويتان متقابلتان بالرأس: ٣س+١٠ و ٥س−٢٠ — أوجد س',
+     steps:['المتقابلتان متساويتان:','٣س+١٠ = ٥س−٢٠ → ٣٠ = ٢س','س = ١٥ | الزاوية = ٥٥° ✓'],
+     color:'#C62828',bg:'#FFEBEE'},
+  ].map(({type,q,steps,color,bg})=>`
+    <div style="margin:0 20px 9px;background:${bg};border-radius:12px;padding:12px 14px">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:7px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${steps.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ تطبيقات إيجاد المجهول ══ */
+{label:"تطبيقات إيجاد المجهول",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">تطبيقات إيجاد المجهول</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    أسئلة متنوعة كما تظهر في القدرات — لا تتسرع!
+  </div>
+
+  ${[
+    {q:'زاوية تساوي ضعف متتامتها — ما الزاوية؟',
+     sol:['افرض الزاوية = س | متتامتها = ٩٠−س','س = ٢(٩٠−س) → س = ١٨٠−٢س → ٣س = ١٨٠','<strong style="color:#E65100">س = ٦٠° ✓</strong>'],
+     color:'#E65100',bg:'#FBE9E7'},
+    {q:'الفرق بين زاوية ومتكاملتها ٣٠° — ما الزاوية؟',
+     sol:['افرض الزاوية = س | متكاملتها = ١٨٠−س','س − (١٨٠−س) = ٣٠ → ٢س = ٢١٠','<strong style="color:#1565C0">س = ١٠٥° ✓</strong>'],
+     color:'#1565C0',bg:'#E3F2FD'},
+    {q:'أربع زوايا حول نقطة بنسبة ١:٢:٣:٤ — ما أكبرها؟',
+     sol:['المجموع = ٣٦٠° | مجموع النسب = ١٠','أكبرها = ٤/١٠ × ٣٦٠ = <strong style="color:#2E7D32">١٤٤° ✓</strong>'],
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {q:'مستقيمان متوازيان، إحدى الزوايا الداخلية تساوي ضعف الأخرى — ما كل منهما؟',
+     sol:['الداخليتان مجموعهما ١٨٠° | الكبرى = ٢ × الصغرى','س + ٢س = ١٨٠ → س = ٦٠° | الكبرى = <strong style="color:#7B2D8B">١٢٠° ✓</strong>'],
+     color:'#7B2D8B',bg:'#F3E5F5'},
+    {q:'زاوية تزيد على ثلثها بـ ٦٠° — ما الزاوية؟',
+     sol:['س − س/٣ = ٦٠ → ٢س/٣ = ٦٠ → س = <strong style="color:#C62828">٩٠° ✓</strong> (قائمة!)'],
+     color:'#C62828',bg:'#FFEBEE'},
+  ].map(({q,sol,color,bg})=>`
+    <div style="margin:0 20px 8px;background:${bg};border-radius:12px;padding:12px 14px">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:7px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 7: فكِّر أقل ══ */
+{label:"⚡ فكِّر أقل — حُلَّ أسرع",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#00695C,#00897B);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#00695C">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+  <div style="margin:0 20px 10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#00695C">⚡ الحيلة السريعة</div>
+    </div>
+    ${[
+      ['ز + متكاملتها = ١٨٠ → حل المعادلة','مباشرة: ١٨٠ − الزاوية = المتكاملة'],
+      ['ز + متتامتها = ٩٠ → حل المعادلة','مباشرة: ٩٠ − الزاوية = المتتامة'],
+      ['رسم الزوايا وإيجاد كل زاوية','المتقابلة بالرأس = نفس القيمة مباشرة'],
+      ['حساب مجموع الزوايا ثم الطرح','الزوايا حول نقطة: ٣٦٠ − المعطيات'],
+      ['تحديد نوع التوازي ثم القانون','متناظرة = متساوية | داخليتان = ١٨٠'],
+    ].map(([c,f],i)=>`
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:${i%2===0?'#fff':'#F4F7F9'}">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">${c}</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#00695C;font-weight:700;text-align:right;line-height:1.8">${f}</div>
+      </div>`).join('')}
+  </div>
+  <div style="margin:0 20px;background:#E0F2F1;border:2px solid #00695C;border-radius:10px;padding:11px 14px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#00695C;margin-bottom:4px">💡 اللقطة الذهبية</div>
+    <div style="font-size:12px;color:#1A2533;font-weight:600;line-height:1.8">الزوايا المتقابلة بالرأس متساوية دائماً<br/>بمجرد رؤية التقاطع — اكتب القيمة مباشرة</div>
+  </div>
+</div>
+`},
+
+/* ══ 8: تدريبات ١-٥ ══ */
+{label:"تدريبات ١-٥",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:0,q:'زاويتان على خط مستقيم، إحداهما ٦٥° — ما الأخرى؟',
+     opts:['٩٥°','١٠٥°','١١٥°','١٢٥°']},
+    {qi:1,q:'ما المتتامة لزاوية ٣٥° ؟',
+     opts:['٥٥°','٦٥°','٤٥°','٧٥°']},
+    {qi:2,q:'تقاطع خطان وكانت إحدى الزوايا ٤٠° — ما الزاوية المقابلة بالرأس؟',
+     opts:['٥٠°','١٤٠°','١٣٠°','٤٠°']},
+    {qi:3,q:'ثلاث زوايا حول نقطة: ٩٠°، ١٢٠°، ٨٠° — ما الرابعة؟',
+     opts:['٦٠°','٧٠°','٨٠°','٩٠°']},
+    {qi:4,q:'ما المتكاملة لزاوية ٧٠° ؟',
+     opts:['٩٠°','١٠٠°','١١٠°','٨٠°']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['١','٢','٣','٤','٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>`).join('')}
+</div>
+`},
+
+/* ══ 9: تدريبات ٦-١٠ ══ */
+{label:"تدريبات ٦-١٠",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:5,q:'مستقيمان متوازيان مع قاطع، زاوية متناظرة = ٦٥° — ما قيمتها على الخط الآخر؟',
+     opts:['٦٥°','١١٥°','٧٥°','٨٥°']},
+    {qi:6,q:'الزاويتان الداخليتان على نفس الجهة، إحداهما ٧٥° — ما الأخرى؟',
+     opts:['٧٥°','١٠٥°','٩٥°','١١٥°']},
+    {qi:7,q:'ثلاث زوايا على نقطة مستقيمة: س، ٢س، ٣س — ما قيمة س؟',
+     opts:['٢٠°','٣٠°','٤٠°','٤٥°']},
+    {qi:8,q:'زاوية تساوي ٥٤° — ما متتامتها؟',
+     opts:['٢٦°','٣٦°','٤٦°','٥٦°']},
+    {qi:9,q:'مستقيمان متوازيان مع قاطع، زاوية متبادلة = ٥٥° — ما قيمتها؟',
+     opts:['٥٥°','١٢٥°','٦٥°','١١٥°']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['٦','٧','٨','٩','١٠'][qi-5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>`).join('')}
+</div>
+`},
+
+/* ══ 10: الملخص ══ */
+{label:"الملخص",bg:"#0A2A1A",html:`
+<div style="background:linear-gradient(160deg,#0A2A1A,#00695C);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#0A2A1A">ملخص الزوايا والمستقيمات</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#0A2A1A;flex-shrink:0"></div>
+  </div>
+  ${[
+    ['زاوية حادة','أقل من ٩٠°'],
+    ['زاوية قائمة','تساوي ٩٠° — علامتها المربع الصغير'],
+    ['زاوية منفرجة','بين ٩٠° و١٨٠°'],
+    ['المتتامة','= ٩٠° − الزاوية'],
+    ['المتكاملة','= ١٨٠° − الزاوية'],
+    ['زوايا على خط مستقيم','مجموعها = ١٨٠°'],
+    ['زوايا حول نقطة','مجموعها = ٣٦٠°'],
+    ['المتقابلة بالرأس','متساوية دائماً'],
+    ['متناظرة (متوازيان)','متساوية'],
+    ['داخليتان (نفس الجهة)','مجموعهما = ١٨٠°'],
+  ].map(([t,d])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#E0F2F1">${t}</div>
+        <div style="font-size:11px;color:rgba(178,235,242,0.7);margin-top:2px">${d}</div>
+      </div>
+    </div>`).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#0A2A1A;line-height:1.8">
+      المتقابلة بالرأس = نفس القيمة فوراً —<br/><strong>لا تحسب، فقط اكتب!</strong>
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:rgba(178,235,242,0.6)">
+    التالي: المثلثات ←
+  </div>
+</div>
+`},
+];
+
+function initExplains(){
+  QDATA.forEach((q,qi)=>{
+    const el=document.getElementById('q'+qi+'exp');
+    if(el) el.innerHTML='💡 '+q.explain;
+  });
+}
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+  initExplains();
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

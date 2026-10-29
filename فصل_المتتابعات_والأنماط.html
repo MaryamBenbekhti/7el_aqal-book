@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | المتتابعات والأنماط</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;direction:rtl}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1}
+  .frac .t{font-size:14px;font-weight:900;padding:0 4px;border-bottom:2.5px solid currentColor;line-height:1.4;text-align:center;min-width:16px}
+  .frac .b{font-size:14px;font-weight:900;padding:0 4px;line-height:1.4;text-align:center;min-width:16px}
+  .ex-card{margin:0 20px 8px;border-radius:12px;padding:13px 15px}
+  .step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;direction:rtl}
+  .step-n{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0}
+  .step-t{font-size:12.5px;line-height:1.8;flex:1;text-align:right}
+  .q-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px;border:2px solid #FFF3E0;background:#FFFBF5}
+  .q-text{font-size:13px;font-weight:700;color:#1A2533;margin-bottom:10px;line-height:2}
+  .q-opts{display:flex;flex-direction:column;gap:6px}
+  .q-opt{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:right;border:1.5px solid #E0E0E0;background:#F4F7F9;color:#1A2533;transition:all .2s}
+  .q-opt.correct{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+  .q-opt.wrong{background:#FFEBEE;border-color:#C62828;color:#B71C1C;text-decoration:line-through;cursor:default}
+  .q-explain{background:#E8F5E9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:#1B5E20;line-height:2;display:none}
+  .show-btn{margin-top:8px;width:100%;padding:8px;background:#FFF8E7;border:1.5px dashed #F5A623;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:#E65100;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+function fr(t,b,c='#E65100'){
+  return `<span class="frac" style="color:${c}"><span class="t">${t}</span><span class="b">${b}</span></span>`;
+}
+
+const QDATA=[
+  {correct:2, explain:'الفرق = ٤ | الحد الخامس = ٣ + (٥−١)×٤ = ٣+١٦ = ١٩ ✓'},
+  {correct:1, explain:'٣٠ = ٢ + (ن−١)×٤ → ٢٨=٤(ن−١) → ن−١=٧ → ن=٨ ✓'},
+  {correct:3, explain:'م = ن÷٢ × (أ+آخر) = ٥÷٢ × (٣+١٩) = ٢٫٥×٢٢ = ٥٥ ✓'},
+  {correct:0, explain:'أ=٢، ر=٣ | الحد الخامس = ٢ × ٣⁴ = ٢×٨١ = ١٦٢ ✓'},
+  {correct:2, explain:'الفرق بين الحدود: +١، +٢، +٣، +٤ → الحد التالي = ١١+٥ = ١٦ ✓'},
+  {correct:1, explain:'الدورة: ٢،٤،٦ — طولها ٣ | ١٤÷٣ = ٤ والباقي ٢ → الحد الثاني في الدورة = ٤ ✓'},
+  {correct:3, explain:'٥٠÷٤ = ١٢ والباقي ٢ → الحد الثاني = ب ✓'},
+  {correct:0, explain:'١،٤،٩،١٦ = مربعات → الحد التالي = ٥² = ٢٥ ✓'},
+  {correct:2, explain:'م = ن÷٢ × (أ+آخر) = ١٠÷٢ × (١+١٩) = ٥×٢٠ = ١٠٠ ✓'},
+  {correct:1, explain:'أ=٣، ر=٢ | ح₄ = ٣×٢^(٤−١) = ٣×٨ = ٢٤ ✓'},
+];
+
+function revealQ(qi){
+  const{correct,explain}=QDATA[qi];
+  document.querySelectorAll(`#q${qi}opts .q-opt`).forEach((o,i)=>{
+    o.classList.add(i===correct?'correct':'wrong');
+    o.onclick=null;
+  });
+  const exp=document.getElementById(`q${qi}exp`);
+  exp.innerHTML='💡 '+explain;
+  exp.style.display='block';
+  const btn=document.getElementById(`q${qi}btn`);
+  if(btn)btn.style.display='none';
+}
+function pickQ(qi){revealQ(qi)}
+
+const PAGES=[
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف",bg:"#1A2E0A",html:`
+<div style="background:linear-gradient(160deg,#1A2E0A,#33691E);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(51,105,30,0.2);bottom:20%;right:-50px"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(245,166,35,0.07);top:15%;left:-30px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#1A2E0A;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>فصل خاص</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">تابع للباب الثامن</div>
+    <div style="font-size:28px;font-weight:900;color:#F5A623;text-align:center;margin-bottom:8px;letter-spacing:1px">٢ ، ٥ ، ٨ ، ١١ ، ...</div>
+    <div style="font-family:'Amiri',serif;font-size:32px;color:#fff;font-weight:700;text-align:center;line-height:1.5">المتتابعات<br/>والأنماط والدوريات</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:12.5px;color:rgba(200,230,160,0.9);text-align:center;line-height:2;padding:0 16px">
+      اكتشف القانون —<br/>وستحل <strong style="color:#F5A623">أي متتابعة في ثوانٍ.</strong>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['المتتابعة الحسابية','المتتابعة الهندسية','الأنماط العددية','الدوريات','غاوس','اكتشف القانون'].map(t=>`
+        <div style="background:rgba(51,105,30,0.3);border:1px solid rgba(139,195,74,0.4);border-radius:20px;padding:5px 14px;font-size:11px;color:#DCEDC8;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.25);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(200,230,160,0.6)">الباب الثامن</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: المتتابعة الحسابية ══ */
+{label:"المتتابعة الحسابية",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">المتتابعة الحسابية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:700;color:#BF360C;margin-bottom:8px;text-align:right">
+      كل حد يزيد عن سابقه بـ <strong>فرق ثابت (د)</strong>
+    </div>
+    <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      ${['٣','٧','١١','١٥','١٩'].map((n,i)=>`
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:40px;height:40px;border-radius:50%;background:#E8512B;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff">${n}</div>
+          ${i<4?`<div style="font-size:10px;color:#E8512B;font-weight:700;margin-top:2px">+٤</div>`:''}
+        </div>
+        ${i<4?`<div style="font-size:20px;color:#E8512B;align-self:center;padding-bottom:16px">→</div>`:''}
+      `).join('')}
+    </div>
+    <div style="font-size:12px;color:#BF360C;text-align:center;font-weight:600">الفرق الثابت د = ٤</div>
+  </div>
+
+  <!-- القوانين -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(245,166,35,0.15);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:11px;color:#B2EBF2;margin-bottom:4px">الحد العام</div>
+        <div style="font-size:14px;font-weight:900;color:#F5A623">حₙ = أ + (ن−١)×د</div>
+      </div>
+      <div style="background:rgba(0,180,204,0.15);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:11px;color:#B2EBF2;margin-bottom:4px">مجموع أول ن حد</div>
+        <div style="font-size:14px;font-weight:900;color:#00B4CC">مₙ = ${fr('ن','٢','#00B4CC')} × (أ + آخر)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- أمثلة -->
+  ${[
+    {q:'المتتابعة: ٥،٨،١١،١٤،... — ما الحد الخامس؟',
+     sol:'أ=٥ | د=٣ | الحد الخامس = ٥+(٥−١)×٣ = ٥+١٢ = <strong style="color:#E8512B">١٧ ✓</strong>',
+     color:'#E65100',bg:'#FBE9E7'},
+    {q:'المتتابعة: ٢،٦،١٠،... — في أي حد يظهر العدد ٣٠؟',
+     sol:'٣٠=٢+(ن−١)×٤ → ٢٨=٤(ن−١) → ن−١=٧ → ن=<strong style="color:#E8512B">٨ ✓</strong>',
+     color:'#1565C0',bg:'#E3F2FD'},
+    {q:'المتتابعة: ٣،٧،١١،١٥،١٩ — ما مجموع حدودها؟',
+     sol:'م = ٥÷٢ × (٣+١٩) = ٢٫٥×٢٢ = <strong style="color:#E8512B">٥٥ ✓</strong>',
+     color:'#2E7D32',bg:'#E8F5E9'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 3: طريقة غاوس ══ */
+{label:"طريقة غاوس",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">⭐ طريقة غاوس للمجموع السريع</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    اجمع الحد الأول مع الأخير، والثاني مع ما قبل الأخير... كلها تعطي نفس المجموع!
+  </div>
+
+  <!-- مثال بصري -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:14px 16px">
+    <div style="font-size:12px;color:#B2EBF2;text-align:center;margin-bottom:10px">٢ + ٤ + ٦ + ٨ + ١٠</div>
+    <div style="display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;direction:ltr">
+      ${[['٢','١٠'],['٤','٨'],['٦','']].map(([a,b],i)=>`
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="background:#1565C0;border-radius:6px;padding:5px 10px;font-size:14px;font-weight:900;color:#fff">${a}</div>
+          ${b?`<div style="font-size:11px;color:#F5A623;font-weight:700">+</div>
+          <div style="background:#E8512B;border-radius:6px;padding:5px 10px;font-size:14px;font-weight:900;color:#fff">${b}</div>
+          <div style="font-size:11px;color:#B2EBF2">=</div>
+          <div style="background:#F5A623;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:900;color:#0D4F5C">١٢</div>`
+          :`<div style="font-size:13px;color:#B2EBF2;padding:5px">← وسط</div>`}
+        </div>
+      `).join('<div style="font-size:16px;color:#B2EBF2;padding:0 4px">|</div>')}
+    </div>
+    <div style="text-align:center;margin-top:10px;font-size:13px;font-weight:800;color:#F5A623">
+      ١٢+١٢+٦ = ٣٠ ✓ &nbsp;|&nbsp; أو: م = ٥÷٢ × (٢+١٠) = ٣٠
+    </div>
+  </div>
+
+  <!-- مثال ٢ -->
+  <div style="margin:0 20px 12px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">مثال ٢: ٣+٧+١١+١٥+١٩+٢٣</div>
+    <div style="font-size:12px;color:#1A2533;line-height:2;text-align:right">
+      ٣+٢٣=<strong style="color:#2E7D32">٢٦</strong> | ٧+١٩=<strong style="color:#2E7D32">٢٦</strong> | ١١+١٥=<strong style="color:#2E7D32">٢٦</strong><br/>
+      المجموع = ٣ × ٢٦ = <strong style="color:#E8512B;font-size:15px">٧٨ ✓</strong><br/>
+      أو: م = ٦÷٢ × (٣+٢٣) = ٣×٢٦ = ٧٨
+    </div>
+  </div>
+
+  <!-- تطبيق سريع -->
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:8px">⚡ تطبيق سريع في القدرات</div>
+    <div style="font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+      ما مجموع الأعداد من ١ إلى ١٠٠؟<br/>
+      م = ١٠٠÷٢ × (١+١٠٠) = ٥٠ × ١٠١ = <strong style="color:#E8512B;font-size:15px">٥٠٥٠ ✓</strong>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 4: المتتابعة الهندسية ══ */
+{label:"المتتابعة الهندسية",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">المتتابعة الهندسية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#F3E5F5;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:700;color:#4A148C;margin-bottom:8px;text-align:right">
+      كل حد يُضرب في <strong>نسبة ثابتة (ر)</strong>
+    </div>
+    <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:8px;direction:ltr">
+      ${[['٢','×٣'],['٦','×٣'],['١٨','×٣'],['٥٤','×٣'],['١٦٢','']].map(([n,op])=>`
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="width:44px;height:44px;border-radius:50%;background:#7B2D8B;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff">${n}</div>
+          ${op?`<div style="font-size:10px;color:#7B2D8B;font-weight:700">${op}</div><div style="font-size:16px;color:#7B2D8B">→</div>`:''}
+        </div>
+      `).join('')}
+    </div>
+    <div style="font-size:12px;color:#4A148C;text-align:center;font-weight:600">النسبة الثابتة ر = ٣</div>
+  </div>
+
+  <!-- القانون -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="font-size:11px;color:#B2EBF2;margin-bottom:6px">الحد العام</div>
+    <div style="font-size:16px;font-weight:900;color:#F5A623">حₙ = أ × ر<sup style="font-size:11px;font-weight:900;vertical-align:super;color:#F5A623">ن−١</sup></div>
+    <div style="font-size:11px;color:#B2EBF2;margin-top:6px">أ = الحد الأول | ر = النسبة | ن = رقم الحد</div>
+  </div>
+
+  ${[
+    {q:'المتتابعة: ٢،٦،١٨،٥٤،... — ما الحد الخامس؟',
+     sol:'أ=٢، ر=٣ | الحد الخامس = ٢ × ٣<sup style="font-size:10px;font-weight:900;vertical-align:super;color:#7B2D8B">٤</sup> = ٢×٨١ = <strong style="color:#E8512B">١٦٢ ✓</strong>',
+     color:'#7B2D8B',bg:'#F3E5F5'},
+    {q:'المتتابعة: ٣،٦،١٢،٢٤،... — ما مجموع أول ٤ حدود؟',
+     sol:'أ=٣، ر=٢ | ٣+٦+١٢+٢٤ = <strong style="color:#E8512B">٤٥ ✓</strong>',
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol}</div>
+    </div>
+  `).join('')}
+
+  <!-- مقارنة سريعة -->
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:11px 14px">
+    <div style="font-size:12px;font-weight:800;color:#7A4800;margin-bottom:6px">حسابية أم هندسية؟</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="background:#FBE9E7;border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:11px;font-weight:800;color:#E8512B;margin-bottom:4px">حسابية</div>
+        <div style="font-size:11px;color:#7B8FA1">الفرق ثابت (جمع/طرح)</div>
+        <div style="font-size:12px;color:#E8512B;font-weight:700">٢،٥،٨،١١</div>
+      </div>
+      <div style="background:#F3E5F5;border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:11px;font-weight:800;color:#7B2D8B;margin-bottom:4px">هندسية</div>
+        <div style="font-size:11px;color:#7B8FA1">النسبة ثابتة (ضرب/قسمة)</div>
+        <div style="font-size:12px;color:#7B2D8B;font-weight:700">٢،٦،١٨،٥٤</div>
+      </div>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 5: الأنماط العددية ══ */
+{label:"الأنماط العددية",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#00838F">
+    <div class="sec-hdr-txt">الأنماط العددية</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    ليس كل نمط حسابي أو هندسي — تعلّم كيف تكتشف القانون بسرعة.
+  </div>
+
+  <!-- خطوات اكتشاف النمط -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="font-size:12px;font-weight:800;color:#F5A623;margin-bottom:8px;text-align:center">⚡ كيف تكتشف النمط في ٣٠ ثانية</div>
+    ${[
+      ['#F5A623','احسب الفرق بين الحدود','ثابت؟ → حسابي'],
+      ['#00B4CC','احسب النسبة (قسمة)','ثابتة؟ → هندسي'],
+      ['#E8512B','انظر إذا الفرق نفسه يتغير','يزيد بثابت؟ → مربعات أو مركب'],
+      ['#2E7D32','جرّب التربيع أو التناوب','١،٤،٩،١٦ = ن²'],
+    ].map(([c,t,r])=>`
+      <div class="step"><div class="step-n" style="background:${c}">←</div>
+      <div class="step-t"><strong>${t}:</strong> ${r}</div></div>
+    `).join('')}
+  </div>
+
+  <!-- جدول أنماط شائعة -->
+  <div style="margin:0 20px 12px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;background:#00838F">
+      ${['المتتابعة','النوع','الحد التالي'].map(h=>`<div style="padding:8px 10px;font-size:11px;font-weight:800;color:#fff;text-align:center">${h}</div>`).join('')}
+    </div>
+    ${[
+      ['٢،٥،٨،١١','حسابية (د=٣)','١٤'],
+      ['٣،٦،١٢،٢٤','هندسية (ر=٢)','٤٨'],
+      ['١،٤،٩،١٦','مربعات (ن²)','٢٥'],
+      ['١،٢،٤،٧،١١','يزداد (+١،+٢،+٣...)','١٦'],
+      ['١،١،٢،٣،٥','فيبوناتشي','٨'],
+      ['٢،٤،٨،١٦','هندسية (ر=٢)','٣٢'],
+    ].map(([s,t,n],i)=>`
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr;background:${i%2?'#fff':'#E0F7FA'}">
+        <div style="padding:8px 10px;font-size:12.5px;font-weight:700;color:#1A2533;direction:ltr;text-align:left">${s}</div>
+        <div style="padding:8px 10px;font-size:11px;color:#00838F;text-align:center;font-weight:600">${t}</div>
+        <div style="padding:8px 10px;font-size:13px;font-weight:900;color:#E8512B;text-align:center">${n}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div style="margin:0 20px;background:#E0F7FA;border-radius:10px;padding:10px 14px;font-size:12px;color:#006064;font-weight:700;text-align:right">
+    💡 نمط فيبوناتشي: كل حد = مجموع الحدين اللذين قبله
+  </div>
+</div>
+`},
+
+/* ══ 6: الدوريات ══ */
+{label:"الدوريات",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">الدوريات — أسرع طريقة</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    الدورية: نمط <strong style="color:#C62828">يعيد نفسه</strong> كل عدد محدد من الحدود.
+  </div>
+
+  <!-- الخطوات -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px">
+    <div style="font-size:12px;font-weight:800;color:#F5A623;margin-bottom:8px;text-align:center">الخطوات الثلاث</div>
+    ${[
+      ['#F5A623','١','حدد طول الدورة','عدد العناصر قبل التكرار'],
+      ['#E8512B','٢','اقسم رقم الحد على طول الدورة','احفظ الباقي'],
+      ['#00B4CC','٣','الباقي يحدد موقعه','باقي=٠ ← آخر الدورة'],
+    ].map(([c,n,t,r])=>`
+      <div class="step">
+        <div class="step-n" style="background:${c}">${n}</div>
+        <div class="step-t"><strong>${t}:</strong> ${r}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- أمثلة -->
+  ${[
+    {title:'مثال ١: ٢،٤،٦،٢،٤،٦،... — ما الحد الـ١٤؟',
+     steps:['طول الدورة = ٣','١٤ ÷ ٣ = ٤ والباقي ٢','الباقي ٢ → الحد الثاني في الدورة = <strong style="color:#E8512B">٤ ✓</strong>'],
+     color:'#C62828',bg:'#FFEBEE'},
+    {title:'مثال ٢: أ،ب،ج،د،أ،ب،ج،د،... — ما الحد الـ٥٠؟',
+     steps:['طول الدورة = ٤','٥٠ ÷ ٤ = ١٢ والباقي ٢','الباقي ٢ → الحد الثاني = <strong style="color:#E8512B">ب ✓</strong>'],
+     color:'#7B2D8B',bg:'#F3E5F5'},
+    {title:'مثال ٣ (باقي صفر): ما الحد الـ٩ في المتتابعة السابقة؟',
+     steps:['٩ ÷ ٣ = ٣ والباقي ٠','الباقي ٠ → آخر الدورة = ٦','الحد التاسع = <strong style="color:#E8512B">٦ ✓</strong>'],
+     color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({title,steps,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:8px">${title}</div>
+      ${steps.map(s=>`<div style="font-size:12px;color:${color};font-weight:600;line-height:2;text-align:right">← ${s}</div>`).join('')}
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 7: حد مفقود + متتابعة مجهولة ══ */
+{label:"مسائل خاصة",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">مسائل خاصة تتكرر في القدرات</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- الحد المفقود -->
+  <div style="margin:0 20px 10px;background:#E0F2F1;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#004D40;margin-bottom:8px">🔍 إيجاد الحد المفقود</div>
+    ${[
+      {q:'٤، ٩، ١٤، ؟، ٢٤',sol:'الفرق=٥ | ١٤+٥ = <strong style="color:#E8512B">١٩ ✓</strong>'},
+      {q:'٣، ؟، ١٢، ٢٤',sol:'هندسية ر=٢ | ٣×٢ = <strong style="color:#E8512B">٦ ✓</strong>'},
+      {q:'٢، ٦، ؟، ٥٤',sol:'هندسية ر=٣ | ٦×٣ = <strong style="color:#E8512B">١٨ ✓</strong>'},
+    ].map(({q,sol})=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.7);border-radius:8px;padding:8px 12px;margin-bottom:5px">
+        <div style="font-size:12px;color:#004D40;font-weight:600">${sol}</div>
+        <div style="font-size:13px;font-weight:800;color:#1A2533;direction:ltr">${q}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- إيجاد د أو ر -->
+  <div style="margin:0 20px 10px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">⚡ إيجاد الفرق أو النسبة</div>
+    ${[
+      {q:'المتتابعة: ٥، ؟، ؟، ١٧ — ما الفرق؟',sol:'آخر-أول = ١٧−٥=١٢ | عدد الفجوات=٣ | د = ١٢÷٣ = <strong style="color:#E8512B">٤ ✓</strong>'},
+      {q:'المتتابعة: ٢، ؟، ؟، ٢٥٠ — ما النسبة؟',sol:'ر³ = ٢٥٠÷٢ = ١٢٥ | ر = ∛١٢٥ = <strong style="color:#E8512B">٥ ✓</strong>'},
+    ].map(({q,sol})=>`
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 12px;margin-bottom:6px">
+        <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:4px">${q}</div>
+        <div style="font-size:12px;color:#2E7D32;font-weight:600">${sol}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- مجموع بدون أول أو آخر -->
+  <div style="margin:0 20px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px">📊 مجموع من حد إلى حد</div>
+    <div style="font-size:12px;color:#1A2533;line-height:2;text-align:right">
+      ما مجموع الأعداد من ٢٠ إلى ٥٠؟<br/>
+      م(١→٥٠) − م(١→١٩)<br/>
+      = ${`<span style="color:#E8512B">٥٠÷٢×(١+٥٠)</span>`} − ${`<span style="color:#1565C0">١٩÷٢×(١+١٩)</span>`}<br/>
+      = ١٢٧٥ − ١٩٠ = <strong style="color:#E8512B">١٠٨٥ ✓</strong><br/>
+      <span style="font-size:11px;color:#7B8FA1">أو مباشرة: ٣١÷٢×(٢٠+٥٠) = ١٠٨٥</span>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 8: الحيل المختصرة ══ */
+{label:"الحيل المختصرة",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">⚡ الحيل المختصرة مقابل الكلاسيكية</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    في القدرات <strong style="color:#1565C0">الوقت عدوك</strong> — هذه الحيل توفر ٥٠٪ من الوقت.
+  </div>
+
+  ${[
+    {
+      title:'ما الحد العاشر في: ٢،٥،٨،١١،...',
+      classic:['أ=٢، د=٣','ح₁₀ = ٢+(١٠−١)×٣','= ٢+٢٧ = ٢٩','(٣ خطوات)'],
+      shortcut:['٢ + ٩×٣','= ٢+٢٧ = ٢٩','✓ مباشرة'],
+      time:'٣ ثوانٍ',color:'#E65100'
+    },
+    {
+      title:'ما مجموع: ١+٣+٥+...+١٩ (أعداد فردية)',
+      classic:['أ=١، د=٢، آخر=١٩','ن = (١٩−١)÷٢+١ = ١٠','م = ١٠÷٢×(١+١٩) = ١٠٠','(٣ خطوات)'],
+      shortcut:['عدد الأعداد الفردية = ن','مجموعها = ن²','١٠ أعداد → ١٠² = ١٠٠ ✓'],
+      time:'ثانيتان',color:'#2E7D32'
+    },
+    {
+      title:'ما الحد الـ١٠٠ في الدورة: أ،ب،ج،أ،ب،ج،...',
+      classic:['طول الدورة = ٣','١٠٠ ÷ ٣ = ٣٣ والباقي ١','الباقي ١ → الحد الأول = أ','(٣ خطوات)'],
+      shortcut:['١٠٠ ÷ ٣ → باقي ١','← أ مباشرة ✓'],
+      time:'ثانيتان',color:'#7B2D8B'
+    },
+    {
+      title:'ما مجموع: ١+٢+٣+...+١٠٠',
+      classic:['م = ١٠٠÷٢×(١+١٠٠)','= ٥٠×١٠١','= ٥٠٥٠','(خطوتان)'],
+      shortcut:['(أول+آخر)×ن÷٢','(١+١٠٠)×١٠٠÷٢','= ٥٠٥٠ ✓'],
+      time:'ثانيتان',color:'#1565C0'
+    },
+  ].map(({title,classic,shortcut,time,color})=>`
+    <div style="margin:0 20px 8px;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+      <div style="background:${color};padding:8px 12px;font-size:12px;font-weight:800;color:#fff">${title}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        <div style="background:#FBE9E7;padding:10px 12px;border-left:1px solid #eee">
+          <div style="font-size:10px;font-weight:800;color:#C62828;margin-bottom:4px">📚 الكلاسيكية</div>
+          ${classic.map(s=>`<div style="font-size:11px;color:#7B8FA1;line-height:1.8">${s}</div>`).join('')}
+        </div>
+        <div style="background:#E8F5E9;padding:10px 12px">
+          <div style="font-size:10px;font-weight:800;color:#2E7D32;margin-bottom:4px">⚡ الحيلة</div>
+          ${shortcut.map(s=>`<div style="font-size:11.5px;color:#1B5E20;font-weight:700;line-height:1.8">${s}</div>`).join('')}
+          <div style="font-size:10px;color:#F5A623;font-weight:700;margin-top:4px">⏱ ${time}</div>
+        </div>
+      </div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 9: تدريبات ١-٥ ══ */
+{label:"تدريبات ١-٥",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:0,q:'المتتابعة: ٣،٧،١١،١٥،... — ما الحد الخامس؟',
+     opts:['١٦','١٨','١٩','٢٠']},
+    {qi:1,q:'المتتابعة: ٢،٦،١٠،١٤،... — في أي حد يظهر العدد ٣٠؟',
+     opts:['٦','٨','٧','٩']},
+    {qi:2,q:'ما مجموع المتتابعة: ٣،٧،١١،١٥،١٩ ؟',
+     opts:['٤٥','٥٠','٥٥','٦٠']},
+    {qi:3,q:'المتتابعة الهندسية: ٢،٦،١٨،٥٤،... — ما الحد الخامس؟',
+     opts:['١٦٢','١٤٤','١٣٠','١٠٨']},
+    {qi:4,q:'ما الحد التالي: ١،٢،٤،٧،١١،... ؟',
+     opts:['١٤','١٥','١٦','١٨']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['١','٢','٣','٤','٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 10: تدريبات ٦-١٠ ══ */
+{label:"تدريبات ٦-١٠",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:5,q:'المتتابعة الدورية: ٢،٤،٦،٢،٤،٦،... — ما الحد الـ١٤؟',
+     opts:['٢','٤','٦','٨']},
+    {qi:6,q:'المتتابعة: أ،ب،ج،د،أ،ب،ج،د،... — ما الحد الـ٥٠؟',
+     opts:['أ','ب','ج','د']},
+    {qi:7,q:'ما الحد التالي: ١،٤،٩،١٦،٢٥،... ؟',
+     opts:['٣٦','٣٠','٣٢','٢٨']},
+    {qi:8,q:'ما مجموع الأعداد من ١ إلى ١٩ (متتابعة فردية: ١،٣،٥،...،١٩)؟',
+     opts:['٨١','١٠٠','٩٠','٩٦']},
+    {qi:9,q:'المتتابعة الهندسية: ٣،٦،١٢،٢٤،... — ما الحد الرابع؟',
+     opts:['٤٨','٣٦','٢٤','٤٢']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['٦','٧','٨','٩','١٠'][qi-5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 11: الملخص ══ */
+
+{label:"⚡ فكِّر أقل — حُلَّ أسرع",bg:"#fff",html:`
+<div class="pw">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#33691E,#33691ECC);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#33691E">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+
+  <div style="margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#33691E">⚡ الحيلة السريعة</div>
+    </div>
+    
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">نطبق القانون ح=أ+(ن−١)×د كاملاً</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#33691E;font-weight:700;text-align:right;line-height:1.8">الحد العاشر في ٢،٥،٨ = ٢+٩×٣ = ٢٩</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">نجمع الحدود واحداً واحداً</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#33691E;font-weight:700;text-align:right;line-height:1.8">غاوس: م = ن÷٢ × (أول+آخر)</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">نتابع الدورة حداً حداً</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#33691E;font-weight:700;text-align:right;line-height:1.8">رقم الحد ÷ طول الدورة → الباقي</div>
+      </div>
+  </div>
+
+  <div style="margin:0 20px;background:#33691E15;border:2px solid #33691E;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#33691E;margin-bottom:4px">💡 اللقطة الذهبية</div>
+    <div style="font-size:12px;color:#1A2533;font-weight:600;line-height:1.8">الحد العاشر في ٢،٥،٨ = ٢+٩×٣ = ٢٩</div>
+  </div>
+</div>
+`},
+{label:"الملخص",bg:"#1A2E0A",html:`
+<div style="background:linear-gradient(160deg,#1A2E0A,#33691E);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#1A2E0A">ملخص المتتابعات والأنماط</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#1A2E0A;flex-shrink:0"></div>
+  </div>
+  ${[
+    ['المتتابعة الحسابية','حₙ = أ+(ن−١)×د | فرق ثابت'],
+    ['مجموع الحسابية','مₙ = ن÷٢ × (أ+آخر)'],
+    ['غاوس','اجمع أول مع آخر، ثاني مع ما قبل الأخير...'],
+    ['المتتابعة الهندسية','حₙ = أ×ر<sup style="font-size:9px;vertical-align:super;font-weight:900">ن−١</sup> | نسبة ثابتة'],
+    ['اكتشاف النمط','فرق ثابت→حسابي | نسبة ثابتة→هندسي | ن²→مربعات'],
+    ['الدوريات — الخطوة ١','حدد طول الدورة'],
+    ['الدوريات — الخطوة ٢','رقم الحد ÷ طول الدورة → احفظ الباقي'],
+    ['الدوريات — الخطوة ٣','الباقي=٠ → آخر الدورة | غيره → موقعه بالترتيب'],
+  ].map(([t,d])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#DCEDC8">${t}</div>
+        <div style="font-size:11px;color:rgba(200,230,160,0.7);margin-top:2px">${d}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#1A2E0A;line-height:1.8">
+      قاعدة ذهبية —<br/>إذا رأيت نمطاً <strong>اسأل: هل الفرق ثابت؟ هل النسبة ثابتة؟</strong>
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:rgba(200,230,160,0.6)">
+    التالي: المسائل التطبيقية ←
+  </div>
+</div>
+`},
+
+];
+
+function initExplains(){
+  QDATA.forEach((q,qi)=>{
+    const el=document.getElementById('q'+qi+'exp');
+    if(el) el.innerHTML='💡 '+q.explain;
+  });
+}
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+  initExplains();
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

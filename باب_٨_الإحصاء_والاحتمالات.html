@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | الإحصاء والاحتمالات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;direction:rtl}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1}
+  .frac .t{font-size:14px;font-weight:900;padding:0 4px;border-bottom:2.5px solid currentColor;line-height:1.4;text-align:center;min-width:16px}
+  .frac .b{font-size:14px;font-weight:900;padding:0 4px;line-height:1.4;text-align:center;min-width:16px}
+  .ex-card{margin:0 20px 8px;border-radius:12px;padding:13px 15px}
+  .q-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px;border:2px solid #E8EAF6;background:#F8F9FF}
+  .q-text{font-size:13px;font-weight:700;color:#1A2533;margin-bottom:10px;line-height:2}
+  .q-opts{display:flex;flex-direction:column;gap:6px}
+  .q-opt{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:right;border:1.5px solid #E0E0E0;background:#F4F7F9;color:#1A2533;transition:all .2s}
+  .q-opt.correct{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+  .q-opt.wrong{background:#FFEBEE;border-color:#C62828;color:#B71C1C;text-decoration:line-through;cursor:default}
+  .q-explain{background:#E8F5E9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:#1B5E20;line-height:2;display:none}
+  .show-btn{margin-top:8px;width:100%;padding:8px;background:#E8EAF6;border:1.5px dashed #3949AB;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:#3949AB;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+function fr(t,b,c='#3949AB'){
+  return `<span class="frac" style="color:${c}"><span class="t">${t}</span><span class="b">${b}</span></span>`;
+}
+
+const QDATA=[
+  {correct:1, explain:'المجموع=٦+٨+١٠+١٢+١٤=٥٠ | العدد=٥ | المتوسط=٥٠÷٥=١٠ ✓'},
+  {correct:2, explain:'نرتب: ٤،٥،٧،٨،٩ | الوسيط = القيمة الوسطى = ٧ ✓'},
+  {correct:0, explain:'٦ تكررت ٣ مرات وهي الأكثر ← المنوال = ٦ ✓'},
+  {correct:3, explain:'المدى = أكبر − أصغر = ١٨ − ٩ = ٩ ✓'},
+  {correct:1, explain:'إضافة قيمة أعلى من المتوسط ← المتوسط يزيد ✓'},
+  {correct:2, explain:`الاحتمال = ${fr('العدد المطلوب','المجموع')} = ${fr('٣','٦')} = ${fr('١','٢')} ✓`},
+  {correct:0, explain:`احتمال عدم الفوز = ١ − ${fr('١','٤')} = ${fr('٣','٤')} ✓`},
+  {correct:3, explain:`أحداث مستقلة: ${fr('٣','٦')} × ${fr('٣','٦')} = ${fr('٩','٣٦')} = ${fr('١','٤')} ✓`},
+  {correct:1, explain:`احتمال الأحمر أو الأزرق = ${fr('٣','١٠')} + ${fr('٤','١٠')} = ${fr('٧','١٠')} ✓`},
+  {correct:2, explain:'الوسيط لست قيم = متوسط القيمتين الوسطيتين = (٧+٩)÷٢ = ٨ ✓'},
+];
+
+function revealQ(qi){
+  const{correct,explain}=QDATA[qi];
+  document.querySelectorAll(`#q${qi}opts .q-opt`).forEach((o,i)=>{
+    o.classList.add(i===correct?'correct':'wrong');
+    o.onclick=null;
+  });
+  const exp=document.getElementById(`q${qi}exp`);
+  exp.innerHTML='💡 '+explain;
+  exp.style.display='block';
+  const btn=document.getElementById(`q${qi}btn`);
+  if(btn)btn.style.display='none';
+}
+function pickQ(qi){revealQ(qi)}
+
+const PAGES=[
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف",bg:"#0D1B4F",html:`
+<div style="background:linear-gradient(160deg,#0D1B4F,#1A237E);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(26,35,126,0.3);bottom:20%;right:-50px"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(245,166,35,0.07);top:15%;left:-30px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#0D1B4F;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>الباب الثامن</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">الباب الثامن</div>
+    <div style="font-size:52px;text-align:center;margin-bottom:8px">📊🎲</div>
+    <div style="font-family:'Amiri',serif;font-size:34px;color:#fff;font-weight:700;text-align:center;line-height:1.4">الإحصاء<br/>والاحتمالات</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:12.5px;color:rgba(197,202,233,0.9);text-align:center;line-height:2;padding:0 16px">
+      أسئلة الإحصاء في القدرات —<br/>تحتاج <strong style="color:#F5A623">فهم وتحليل</strong> أكثر من حساب طويل.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['المتوسط','الوسيط','المنوال','المدى','التمثيل البياني','الاحتمال','الحوادث'].map(t=>`
+        <div style="background:rgba(26,35,126,0.3);border:1px solid rgba(92,107,192,0.4);border-radius:20px;padding:5px 14px;font-size:11px;color:#9FA8DA;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.25);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(159,168,218,0.6)">الإحصاء والاحتمالات</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: المتوسط الحسابي ══ */
+{label:"المتوسط الحسابي",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#1A237E">
+    <div class="sec-hdr-txt">المتوسط الحسابي</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="font-size:14px;font-weight:800;color:#F5A623;margin-bottom:6px">
+      المتوسط = ${fr('مجموع القيم','عدد القيم','#F5A623')}
+    </div>
+  </div>
+
+  <div class="ex-card" style="background:#E8EAF6">
+    <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px">القيم: ٦، ٨، ١٠، ١٢، ١٤</div>
+    <div style="font-size:12px;color:#3949AB;line-height:2">
+      المجموع = ٦+٨+١٠+١٢+١٤ = ٥٠<br/>
+      العدد = ٥<br/>
+      المتوسط = ٥٠ ÷ ٥ = <strong style="color:#E8512B;font-size:15px">١٠ ✓</strong>
+    </div>
+  </div>
+
+  <!-- القوانين السريعة -->
+  <div style="margin:0 20px 12px;background:#FFF8E7;border:2px solid #F5A623;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:10px">⚡ قوانين سريعة — تظهر في القدرات!</div>
+    ${[
+      ['زادت كل القيم بعدد ثابت','المتوسط يزيد بنفس العدد'],
+      ['ضُربت كل القيم في عدد','المتوسط يضرب في نفس العدد'],
+      ['قيم متتابعة حسابياً','المتوسط = الوسيط = المنتصف'],
+      ['أضيفت قيمة > المتوسط','المتوسط يزيد'],
+      ['أضيفت قيمة < المتوسط','المتوسط ينقص'],
+      ['المدى مع إضافة ثابت','المدى لا يتغير'],
+    ].map(([c,r])=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.7);border-radius:8px;padding:7px 11px;margin-bottom:5px;direction:ltr">
+        <div style="font-size:12px;font-weight:700;color:#E8512B">${r}</div>
+        <div style="font-size:12px;color:#7A4800">← ${c}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div style="margin:0 20px;background:#E8EAF6;border-radius:10px;padding:10px 14px;font-size:12px;color:#3949AB;font-weight:700;text-align:right">
+    💡 القيم منتظمة؟ المتوسط = (أول + آخر) ÷ ٢
+  </div>
+</div>
+`},
+
+/* ══ 3: الوسيط + المنوال + المدى ══ */
+{label:"الوسيط والمنوال والمدى",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#283593">
+    <div class="sec-hdr-txt">الوسيط والمنوال والمدى</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  ${[
+    {name:'الوسيط',icon:'⬛',
+     def:'القيمة الوسطى بعد الترتيب تصاعدياً',
+     law:'عدد فردي: القيمة الوسطى مباشرة\nعدد زوجي: متوسط القيمتين الوسطيتين',
+     ex1:'٩، ٤، ٧، ٥، ٨ → رتّب: ٤،٥،٧،٨،٩ → الوسيط = ٧',
+     ex2:'٣، ٧، ٩، ١٠ → (٧+٩)÷٢ = ٨',
+     color:'#283593',bg:'#E8EAF6'},
+    {name:'المنوال',icon:'🔁',
+     def:'القيمة الأكثر تكراراً',
+     law:'قد يكون للبيانات منوال واحد أو أكثر\nأو لا يوجد منوال إذا كانت القيم مختلفة كلها',
+     ex1:'٤،٦،٦،٨،٣،٦،٢،٤ → ٦ تكررت ٣ مرات → المنوال = ٦',
+     ex2:'١،٢،٣،٤ → لا يوجد منوال',
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {name:'المدى',icon:'↔️',
+     def:'الفرق بين أكبر وأصغر قيمة',
+     law:'المدى = أكبر قيمة − أصغر قيمة\nكلما كان المدى صغيراً كلما كانت البيانات متقاربة',
+     ex1:'١٢،١٥،٩،١٨،١٤ → ١٨−٩ = ٩',
+     ex2:'٢٠،٢٠،٢٠ → المدى = ٠',
+     color:'#E8512B',bg:'#FBE9E7'},
+  ].map(({name,icon,def,law,ex1,ex2,color,bg})=>`
+    <div style="margin:0 20px 10px;background:${bg};border-radius:12px;padding:13px 15px">
+      <div style="font-size:14px;font-weight:800;color:${color};margin-bottom:6px">${icon} ${name}</div>
+      <div style="font-size:12px;color:#1A2533;font-weight:600;margin-bottom:6px">${def}</div>
+      <div style="font-size:11px;color:#7B8FA1;line-height:1.8;margin-bottom:6px">${law.replace('\n','<br/>')}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2">
+        ${ex1}<br/><span style="color:#7B8FA1">${ex2}</span>
+      </div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 4: التمثيل البياني ══ */
+{label:"التمثيل البياني",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">التمثيل البياني — قراءة وتحليل</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    أسئلة القدرات تعطيك جدولاً أو رسماً — المهارة في <strong style="color:#00695C">القراءة السريعة</strong>.
+  </div>
+
+  <!-- جدول تكراري مثال -->
+  <div style="margin:0 20px 12px;background:#E0F2F1;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#004D40;margin-bottom:10px">مثال — جدول التكرار</div>
+    <div style="border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:#00695C">
+        ${['الدرجة','التكرار','التكرار التجميعي'].map(h=>`<div style="padding:8px;font-size:11px;font-weight:800;color:#fff;text-align:center">${h}</div>`).join('')}
+      </div>
+      ${[['٥٠-٦٠','٣','٣'],['٦٠-٧٠','٧','١٠'],['٧٠-٨٠','١٢','٢٢'],['٨٠-٩٠','٨','٣٠']].map(([d,f,c],i)=>`
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:${i%2?'#fff':'#E0F2F1'}">
+          ${[d,f,c].map(v=>`<div style="padding:8px;font-size:12px;font-weight:700;text-align:center;color:#1A2533">${v}</div>`).join('')}
+        </div>
+      `).join('')}
+    </div>
+    <div style="font-size:12px;color:#00695C;margin-top:8px;line-height:2;text-align:right">
+      المجموع = ٣٠ طالب<br/>
+      أكثر فئة: ٧٠-٨٠ (١٢ طالب) ← المنوال تقريباً<br/>
+      نصف الطلاب (١٥) في الفئة ٧٠-٨٠ ← الوسيط تقريباً
+    </div>
+  </div>
+
+  <!-- أنواع التمثيل -->
+  <div style="margin:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    ${[
+      {type:'المخطط العمودي',tip:'ارتفاع العمود = التكرار',color:'#1565C0',bg:'#E3F2FD'},
+      {type:'المخطط الدائري',tip:'المساحة = النسبة المئوية',color:'#7B2D8B',bg:'#F3E5F5'},
+      {type:'المخطط الخطي',tip:'الاتجاه = التغير عبر الزمن',color:'#E8512B',bg:'#FBE9E7'},
+      {type:'جدول التكرار',tip:'اقرأ التكرار والمجموع',color:'#00695C',bg:'#E0F2F1'},
+    ].map(({type,tip,color,bg})=>`
+      <div style="background:${bg};border-radius:10px;padding:11px 12px">
+        <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:4px">${type}</div>
+        <div style="font-size:11px;color:#7B8FA1">${tip}</div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+`},
+
+/* ══ 5: الاحتمالات — المفاهيم ══ */
+{label:"الرسوم البيانية",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#00695C">
+    <div class="sec-hdr-txt">الرسوم البيانية التوضيحية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- المخطط العمودي -->
+  <div style="margin:0 20px 12px;background:#E0F2F1;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#004D40;margin-bottom:10px">📊 المخطط العمودي (الأعمدة)</div>
+    <svg width="100%" height="150" viewBox="0 0 300 150" style="direction:ltr;display:block">
+      <!-- محور ص -->
+      <line x1="40" y1="10" x2="40" y2="120" stroke="#004D40" stroke-width="2"/>
+      <!-- محور س -->
+      <line x1="40" y1="120" x2="290" y2="120" stroke="#004D40" stroke-width="2"/>
+      <!-- خطوط مساعدة -->
+      ${[20,40,60,80].map((v,i)=>`
+        <line x1="38" y1="${120-v}" x2="290" y2="${120-v}" stroke="#B2DFDB" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <text x="34" y="${124-v}" font-size="9" fill="#00695C" text-anchor="end">${v}</text>
+      `).join('')}
+      <!-- الأعمدة -->
+      ${[['يناير',50,'#00838F',55],['فبراير',80,'#E8512B',105],['مارس',60,'#1565C0',155],['أبريل',95,'#F5A623',205],['مايو',70,'#7B2D8B',255]].map(([m,v,c,x])=>`
+        <rect x="${x-18}" y="${120-v}" width="36" height="${v}" fill="${c}" rx="3"/>
+        <text x="${x}" y="${115-v}" font-size="10" font-weight="bold" fill="${c}" text-anchor="middle">${v}</text>
+        <text x="${x}" y="135" font-size="9" fill="#004D40" text-anchor="middle">${m}</text>
+      `).join('')}
+    </svg>
+    <div style="font-size:11.5px;color:#004D40;font-weight:600;text-align:right;margin-top:4px">
+      ارتفاع العمود = القيمة | أبريل الأعلى = ٩٥ | يناير الأدنى = ٥٠
+    </div>
+  </div>
+
+  <!-- المخطط الدائري -->
+  <div style="margin:0 20px 12px;background:#F3E5F5;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#4A148C;margin-bottom:10px">🥧 المخطط الدائري</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="#1565C0"/>
+        <path d="M50,50 L50,10 A40,40 0 0,1 88,65 Z" fill="#E8512B"/>
+        <path d="M50,50 L88,65 A40,40 0 0,1 20,80 Z" fill="#F5A623"/>
+        <path d="M50,50 L20,80 A40,40 0 0,1 50,10 Z" fill="#2E7D32"/>
+      </svg>
+      <div style="flex:1">
+        ${[['#1565C0','رياضيات','٤٠٪'],['#2E7D32','علوم','٣٠٪'],['#E8512B','لغة','٢٠٪'],['#F5A623','أخرى','١٠٪']].map(([c,l,p])=>`
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+            <div style="width:12px;height:12px;border-radius:3px;background:${c}"></div>
+            <div style="font-size:11.5px;color:#1A2533;font-weight:600">${l}: <span style="color:${c}">${p}</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div style="font-size:11.5px;color:#4A148C;font-weight:600;margin-top:6px">المساحة = النسبة المئوية | الكل = ١٠٠٪</div>
+  </div>
+
+  <!-- المخطط الخطي -->
+  <div style="margin:0 20px;background:#E3F2FD;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:10px">📈 المخطط الخطي (الاتجاه)</div>
+    <svg width="100%" height="90" viewBox="0 0 280 90" style="direction:ltr">
+      <line x1="30" y1="10" x2="30" y2="75" stroke="#1565C0" stroke-width="2"/>
+      <line x1="30" y1="75" x2="270" y2="75" stroke="#1565C0" stroke-width="2"/>
+      <polyline points="50,60 90,45 130,50 170,25 210,30 250,15" fill="none" stroke="#E8512B" stroke-width="2.5"/>
+      ${[[50,60],[90,45],[130,50],[170,25],[210,30],[250,15]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#E8512B"/>`).join('')}
+      ${[['يناير',45],['فبراير',85],['مارس',125],['أبريل',165],['مايو',205],['يونيو',245]].map(([m,x])=>`<text x="${x}" y="88" font-size="8" fill="#7B8FA1" text-anchor="middle">${m}</text>`).join('')}
+    </svg>
+    <div style="font-size:11.5px;color:#0D47A1;font-weight:600">الخط يتجه للأعلى = زيادة | للأسفل = نقصان</div>
+  </div>
+</div>
+`},
+
+/* ══ 10: الانحراف المعياري + العينة ══ */
+{label:"الانحراف والعينة",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#283593">
+    <div class="sec-hdr-txt">الانحراف المعياري والعينة</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- الانحراف المعياري -->
+  <div style="margin:0 20px 12px;background:#E8EAF6;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#283593;margin-bottom:8px">📏 الانحراف المعياري (مبسط)</div>
+    <div style="font-size:12.5px;color:#1A2533;line-height:2;margin-bottom:8px">
+      يقيس <strong style="color:#283593">مدى تشتت البيانات</strong> عن المتوسط.<br/>
+      كلما كان <strong style="color:#2E7D32">صغيراً ← البيانات متقاربة</strong><br/>
+      كلما كان <strong style="color:#E8512B">كبيراً ← البيانات متباعدة</strong>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#E8F5E9;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:4px">انحراف صغير</div>
+        <div style="font-size:13px;font-weight:700;color:#1A2533">٩، ١٠، ١١، ١٠</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:4px">متقاربة من ١٠</div>
+      </div>
+      <div style="background:#FFEBEE;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:12px;font-weight:800;color:#E8512B;margin-bottom:4px">انحراف كبير</div>
+        <div style="font-size:13px;font-weight:700;color:#1A2533">٢، ١٠، ١٨، ١٠</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:4px">متباعدة عن ١٠</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:12px;color:#283593;font-weight:600">
+      💡 في القدرات: المطلوب غالباً مقارنة الانحراف لا حسابه
+    </div>
+  </div>
+
+  <!-- العينة والمجتمع -->
+  <div style="margin:0 20px 12px;background:#E0F7FA;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#006064;margin-bottom:8px">👥 المجتمع والعينة</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:13px;font-weight:900;color:#006064">المجتمع</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:4px">جميع الأفراد أو البيانات</div>
+        <div style="font-size:11px;color:#006064;margin-top:4px">مثال: جميع طلاب المملكة</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:13px;font-weight:900;color:#E8512B">العينة</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:4px">جزء ممثل من المجتمع</div>
+        <div style="font-size:11px;color:#E8512B;margin-top:4px">مثال: ١٠٠٠ طالب عشوائي</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#006064;font-weight:600;text-align:right">
+      العينة الجيدة: عشوائية + ممثلة + كبيرة بما يكفي
+    </div>
+  </div>
+
+  <!-- التكرار النسبي -->
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:12px 14px">
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:6px">📊 التكرار النسبي</div>
+    <div style="font-size:13px;font-weight:800;color:#1A2533;text-align:center;margin-bottom:6px">
+      التكرار النسبي = ${fr('التكرار','المجموع الكلي','#E65100')} × ١٠٠٪
+    </div>
+    <div style="font-size:12px;color:#9B6000;line-height:2">
+      مثال: ١٢ طالب من أصل ٣٠ في الفئة ٧٠-٨٠<br/>
+      التكرار النسبي = ١٢÷٣٠ × ١٠٠ = <strong style="color:#E8512B">٤٠٪</strong>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 11: مبدأ العد والتوافيق ══ */
+{label:"مفاهيم الاحتمال",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">الاحتمالات — المفاهيم الأساسية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- التعريف -->
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:8px">الاحتمال = كم فرصة من كم إجمالي</div>
+    <div style="font-size:16px;font-weight:900;color:#fff;line-height:2">
+      ب(حادثة) = ${fr('عدد النتائج المطلوبة','إجمالي النتائج الممكنة','#F5A623')}
+    </div>
+    <div style="display:flex;justify-content:space-around;margin-top:10px">
+      ${[['٠','مستحيل'],['١','مؤكد'],['٠٫٥','متساوي']].map(([v,l])=>`
+        <div style="text-align:center">
+          <div style="font-size:18px;font-weight:900;color:#F5A623">${v}</div>
+          <div style="font-size:10px;color:#B2EBF2">${l}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <!-- أمثلة من القدرات -->
+  ${[
+    {q:'رمي نرد — ما احتمال ظهور عدد زوجي؟',
+     sol:`الأعداد الزوجية: ٢،٤،٦ ← ٣ نتائج<br/>الإجمالي: ٦ نتائج<br/>الاحتمال = ${fr('٣','٦')} = ${fr('١','٢')}`,
+     color:'#E65100',bg:'#FBE9E7'},
+    {q:'كيس فيه ٣ كرات حمراء و٥ زرقاء — ما احتمال سحب كرة حمراء؟',
+     sol:`الإجمالي = ٣+٥ = ٨<br/>الاحتمال = ${fr('٣','٨')}`,
+     color:'#1565C0',bg:'#E3F2FD'},
+    {q:'ورق لعب ٥٢ ورقة — ما احتمال سحب ورقة ملك (K)؟',
+     sol:`الملوك = ٤ أوراق<br/>الاحتمال = ${fr('٤','٥٢')} = ${fr('١','١٣')}`,
+     color:'#2E7D32',bg:'#E8F5E9'},
+  ].map(({q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 12px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 6: قوانين الاحتمال ══ */
+{label:"قوانين الاحتمال",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#6A1B9A">
+    <div class="sec-hdr-txt">قوانين الاحتمال المهمة</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  ${[
+    {name:'الحادثة المتكاملة',
+     law:`ب(لا أ) = ١ − ب(أ)`,
+     ex:`احتمال الفوز = ${fr('١','٤')} ← احتمال عدم الفوز = ١ − ${fr('١','٤')} = ${fr('٣','٤')}`,
+     note:'مجموع احتمال الحادثة ونقيضها = ١ دائماً',
+     color:'#6A1B9A',bg:'#F3E5F5'},
+    {name:'الحادثتان المستقلتان — و (AND)',
+     law:'ب(أ و ب) = ب(أ) × ب(ب)',
+     ex:`رمي نردتين: ظهور ٦ في كليهما = ${fr('١','٦')} × ${fr('١','٦')} = ${fr('١','٣٦')}`,
+     note:'كل حادثة لا تؤثر على الأخرى',
+     color:'#1565C0',bg:'#E3F2FD'},
+    {name:'حادثتان لا تجتمعان — أو (OR)',
+     law:'ب(أ أو ب) = ب(أ) + ب(ب)',
+     ex:`كرات ٣ حمراء و٤ زرقاء من ١٠:<br/>ب(أحمر أو أزرق) = ${fr('٣','١٠')} + ${fr('٤','١٠')} = ${fr('٧','١٠')}`,
+     note:'تُستخدم عندما الحادثتان لا تحدثان معاً',
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {name:'السحب بدون إعادة',
+     law:'الإجمالي يتغير في السحبة الثانية',
+     ex:`كيس ٥ كرات سحبنا واحدة ← تبقى ٤<br/>ب(الثانية) = ${fr('عدد المطلوب','٤')} `,
+     note:'انتبه: الإجمالي ينقص بعد كل سحب',
+     color:'#E8512B',bg:'#FBE9E7'},
+  ].map(({name,law,ex,note,color,bg})=>`
+    <div style="margin:0 20px 9px;background:${bg};border-radius:12px;padding:12px 14px">
+      <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:5px">${name}</div>
+      <div style="font-size:13px;font-weight:800;color:#1A2533;margin-bottom:5px">${law}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:12px;color:${color};font-weight:600;line-height:2;margin-bottom:4px">${ex}</div>
+      <div style="font-size:11px;color:#7B8FA1">${note}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 7: تدريبات ١-٥ ══ */
+{label:"مبدأ العد والتوافيق",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">مبدأ العد والترتيب والتوافيق</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- مبدأ العد -->
+  <div style="margin:0 20px 12px;background:#FFEBEE;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#C62828;margin-bottom:8px">⭐ مبدأ العد الأساسي</div>
+    <div style="font-size:13px;font-weight:700;color:#1A2533;text-align:center;margin-bottom:8px;background:rgba(255,255,255,0.6);border-radius:8px;padding:8px">
+      إذا كان الاختيار الأول له م طريقة والثاني له ن طريقة<br/>
+      <strong style="color:#C62828">الإجمالي = م × ن</strong>
+    </div>
+    ${[
+      ['ألبسة: ٣ قمصان و٤ بناطيل — كم تنسيقاً؟','٣ × ٤ = ١٢ تنسيقاً ✓'],
+      ['رمي نرد وعملة — كم نتيجة ممكنة؟','٦ × ٢ = ١٢ نتيجة ✓'],
+      ['كلمة من ٣ أحرف من ٢٦ حرفاً — كم كلمة؟','٢٦ × ٢٦ × ٢٦ = ١٧,٥٧٦ ✓'],
+    ].map(([q,a])=>`
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;margin-bottom:5px">
+        <div style="font-size:12px;font-weight:700;color:#1A2533">${q}</div>
+        <div style="font-size:12px;color:#C62828;font-weight:700">← ${a}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- الترتيب -->
+  <div style="margin:0 20px 12px;background:#E3F2FD;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:8px">🔢 الترتيب (الترتيب مهم)</div>
+    <div style="font-size:12.5px;color:#1A2533;line-height:2;margin-bottom:6px">
+      ترتيب ن عنصر = ن! (المضروب)<br/>
+      <span style="color:#1565C0">٣! = ٣×٢×١ = ٦ | ٤! = ٢٤ | ٥! = ١٢٠</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px;font-size:12px;color:#0D47A1;font-weight:600">
+      كم طريقة لترتيب ٤ أشخاص في صف؟<br/>
+      ٤! = ٤×٣×٢×١ = <strong style="color:#E8512B">٢٤ طريقة ✓</strong>
+    </div>
+  </div>
+
+  <!-- التوافيق -->
+  <div style="margin:0 20px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">🤝 التوافيق (الترتيب لا يهم)</div>
+    <div style="font-size:12.5px;color:#1A2533;line-height:2;margin-bottom:6px">
+      اختيار ر عنصر من ن عنصر (الترتيب لا يهم):<br/>
+      <span style="color:#2E7D32">ق(ن,ر) = ن! ÷ (ر! × (ن−ر)!)</span>
+    </div>
+    ${[
+      ['اختيار ٢ من ٤ أشخاص لجنة','ق(٤,٢) = ٤! ÷ (٢!×٢!) = ٢٤÷٤ = ٦ طرق ✓'],
+      ['اختيار ٣ من ٥ فرق','ق(٥,٣) = ١٢٠÷(٦×٢) = ١٠ طرق ✓'],
+    ].map(([q,a])=>`
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;margin-bottom:5px">
+        <div style="font-size:12px;font-weight:700;color:#1A2533">${q}</div>
+        <div style="font-size:12px;color:#2E7D32;font-weight:700">← ${a}</div>
+      </div>
+    `).join('')}
+    <div style="font-size:11.5px;color:#7B8FA1;margin-top:6px;font-weight:600">
+      💡 الفرق: لجنة (توافيق) vs رئيس+نائب (ترتيب)
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 12: الملخص ══ */
+{label:"تدريبات ١-٥",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1A237E">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:0,q:'ما متوسط: ٦، ٨، ١٠، ١٢، ١٤ ؟',
+     opts:['٨','١٠','١٢','٩']},
+    {qi:1,q:'ما وسيط: ٩، ٤، ٧، ٥، ٨ بعد الترتيب؟',
+     opts:['٥','٨','٧','٦']},
+    {qi:2,q:'ما منوال: ٤، ٦، ٦، ٨، ٣، ٦، ٢، ٤ ؟',
+     opts:['٦','٤','٨','٣']},
+    {qi:3,q:'ما مدى: ١٢، ١٥، ٩، ١٨، ١٤ ؟',
+     opts:['٦','٧','٨','٩']},
+    {qi:4,q:'متوسط ٥ أعداد = ١٢. أضيف عدد = ١٨. ما المتوسط الجديد؟',
+     opts:['١٢','١٣','١٤','١٥']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['١','٢','٣','٤','٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 8: تدريبات ٦-١٠ ══ */
+{label:"تدريبات ٦-١٠",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:5,q:'نرد: ما احتمال ظهور عدد أكبر من ٣؟',
+     opts:[fr('١','٣'),fr('١','٢'),fr('٢','٣'),fr('١','٦')]},
+    {qi:6,q:`احتمال فوز فريق = ${fr('١','٤')} — ما احتمال عدم الفوز؟`,
+     opts:[fr('١','٤'),fr('١','٢'),fr('٣','٤'),fr('٢','٣')]},
+    {qi:7,q:'رُميت عملتان معدنيتان — ما احتمال ظهور صورة في كليهما؟',
+     opts:[fr('١','٢'),fr('١','٣'),fr('١','٤'),fr('١','٦')]},
+    {qi:8,q:'كيس: ٣ حمراء، ٤ زرقاء، ٣ خضراء — ما احتمال سحب حمراء أو زرقاء؟',
+     opts:[fr('٣','١٠'),fr('٧','١٠'),fr('١','٢'),fr('٤','١٠')]},
+    {qi:9,q:'ما وسيط: ٣، ٧، ٩، ١٠، ٥، ٦ ؟',
+     opts:['٧','٦٫٥','٨','٦']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['٦','٧','٨','٩','١٠'][qi-5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 9: الرسوم البيانية ══ */
+
+{label:"⚡ فكِّر أقل — حُلَّ أسرع",bg:"#fff",html:`
+<div class="pw">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#1A237E,#1A237ECC);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#1A237E">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+
+  <div style="margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#1A237E">⚡ الحيلة السريعة</div>
+    </div>
+    
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">مجموع الأعداد ثم القسمة</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#1A237E;font-weight:700;text-align:right;line-height:1.8">منتظمة؟ المتوسط = (أول+آخر)÷٢</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">رتّب ثم ابحث عن الوسيط</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#1A237E;font-weight:700;text-align:right;line-height:1.8">فردي: الوسيط = القيمة الوسطى مباشرة</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">احتمال لا أ → رسم فضاء عيني</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#1A237E;font-weight:700;text-align:right;line-height:1.8">ب(لا أ) = ١ − ب(أ) مباشرة</div>
+      </div>
+  </div>
+
+  <div style="margin:0 20px;background:#1A237E15;border:2px solid #1A237E;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#1A237E;margin-bottom:4px">💡 اللقطة الذهبية</div>
+    <div style="font-size:12px;color:#1A2533;font-weight:600;line-height:1.8">منتظمة؟ المتوسط = (أول+آخر)÷٢</div>
+  </div>
+</div>
+`},
+{label:"الملخص",bg:"#0D1B4F",html:`
+<div style="background:linear-gradient(160deg,#0D1B4F,#1A237E);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#0D1B4F">ملخص الإحصاء والاحتمالات</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#0D1B4F;flex-shrink:0"></div>
+  </div>
+  ${[
+    ['المتوسط','مجموع القيم ÷ عددها'],
+    ['الوسيط','القيمة الوسطى بعد الترتيب (زوجي: متوسط الوسطيتين)'],
+    ['المنوال','الأكثر تكراراً — قد يكون أكثر من واحد أو لا يوجد'],
+    ['المدى','أكبر − أصغر'],
+    ['قيم منتظمة','المتوسط = الوسيط = المنتصف'],
+    [`الاحتمال`,`${fr('المطلوب','الإجمالي')} — بين ٠ و١`],
+    ['النقيض','ب(لا أ) = ١ − ب(أ)'],
+    ['و (مستقل)','ب(أ و ب) = ب(أ) × ب(ب)'],
+    ['أو (لا تجتمعان)','ب(أ أو ب) = ب(أ) + ب(ب)'],
+    ['الانحراف المعياري','صغير = بيانات متقاربة | كبير = بيانات متباعدة'],
+    ['التكرار النسبي','التكرار ÷ المجموع × ١٠٠٪'],
+    ['مبدأ العد','م × ن (ضرب عدد الخيارات)'],
+    ['الترتيب','ن! عندما الترتيب مهم'],
+    ['التوافيق','ق(ن,ر) عندما الترتيب لا يهم'],
+  ].map(([t,d])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#E8EAF6">${t}</div>
+        <div style="font-size:11px;color:rgba(159,168,218,0.7);margin-top:2px">${d}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#0D1B4F;line-height:1.8">
+      رتّب القيم أولاً دائماً —<br/>ثم <strong>الوسيط والمنوال والمدى</strong> تصبح سهلة.
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:rgba(159,168,218,0.6)">
+    التالي: المتتابعات والأنماط والدوريات ←
+  </div>
+</div>
+`},
+
+];
+
+function initExplains(){
+  QDATA.forEach((q,qi)=>{
+    const el=document.getElementById('q'+qi+'exp');
+    if(el) el.innerHTML='💡 '+q.explain;
+  });
+}
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+  initExplains();
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

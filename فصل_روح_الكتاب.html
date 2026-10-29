@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | روح الكتاب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;font-family:'Tajawal',sans-serif;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .page-white{background:#fff;min-height:680px;padding-bottom:28px}
+  .page-gray{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .page-dark{background:#0D4F5C;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-hdr-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .math-line{font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;text-align:center;padding:6px 0;direction:rtl}
+  .cmp-wrap{margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
+  .cmp-head{display:grid;grid-template-columns:1fr 1fr}
+  .cmp-hd{padding:10px 14px;font-size:12px;font-weight:800;color:#fff;text-align:center}
+  .cmp-row{display:grid;grid-template-columns:1fr 1fr}
+  .cmp-cell{padding:10px 12px;font-size:12px;line-height:1.8;text-align:center}
+  .rule-card{margin:0 20px 10px;border-radius:12px;padding:15px 18px;border-right:5px solid}
+  .div-row{margin:0 20px 8px;background:#fff;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;direction:rtl;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  .div-num{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
+  .est-step{margin:0 20px 10px;background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;direction:rtl;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  .est-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .trick-box{margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:16px 18px}
+  .trick-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;direction:rtl}
+  .trick-num{width:22px;height:22px;border-radius:50%;background:#F5A623;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#0D4F5C;flex-shrink:0;margin-top:2px}
+  .trick-text{font-size:12px;color:#E0F7FA;line-height:1.8;flex:1;text-align:right}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;direction:rtl}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+const PAGES = [
+
+/* ══ 1: COVER ══ */
+{ label:"الغلاف", bg:"#1A0533", html:`
+<div style="background:linear-gradient(160deg,#1A0533,#0D4F5C);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(245,166,35,0.07);bottom:20%;right:-60px"></div>
+  <div style="position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(0,180,204,0.08);top:15%;left:-40px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;text-align:center;font-weight:700;font-size:11px;color:#1A0533;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>فصل خاص</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">⭐ روح الكتاب</div>
+    <div style="font-family:'Amiri',serif;font-size:38px;color:#fff;font-weight:700;text-align:center;line-height:1.4">أساسيات الرياضيات</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:16px auto"></div>
+    <div style="font-size:14px;color:#F5A623;font-weight:700;text-align:center">وسرعة الحساب</div>
+    <div style="width:60%;height:1px;background:rgba(0,180,204,0.3);margin:14px auto"></div>
+    <div style="font-size:12.5px;color:#B2EBF2;text-align:center;line-height:2;padding:0 16px">
+      قبل أن تتعلم الحِيَل —<br/>يجب أن يكون سلاحك الأساسي حاداً.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      <div style="background:rgba(0,180,204,0.15);border:1px solid rgba(0,180,204,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#80CBC4;font-weight:600">جدول الضرب</div>
+      <div style="background:rgba(0,180,204,0.15);border:1px solid rgba(0,180,204,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#80CBC4;font-weight:600">الضرب والقسمة السريعة</div>
+      <div style="background:rgba(0,180,204,0.15);border:1px solid rgba(0,180,204,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#80CBC4;font-weight:600">الحساب الذهني</div>
+      <div style="background:rgba(0,180,204,0.15);border:1px solid rgba(0,180,204,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#80CBC4;font-weight:600">التقدير السريع</div>
+    </div>
+  </div>
+  <div style="background:rgba(0,180,204,0.2);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(178,235,242,0.6)">تابع للباب الأول</div>
+    <div style="font-size:11px;font-weight:700;color:#00B4CC">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: جدول الضرب ══ */
+{ label:"جدول الضرب", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#0D4F5C">
+    <div class="sec-hdr-txt">١ — جدول الضرب حتى ١٢</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div style="padding:0 22px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    ضرورة أساسية لتسريع <strong style="color:#00B4CC">كل</strong> العمليات الحسابية — أي مسألة تعتمد عليه.
+  </div>
+  <div style="margin:14px 20px;background:#0D4F5C;border-radius:12px;padding:16px 18px">
+    <div style="font-size:12px;font-weight:800;color:#F5A623;margin-bottom:12px;text-align:center">الأعداد الأكثر ظهوراً في القدرات</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+      ${[[7,8,'٥٦'],[7,9,'٦٣'],[7,12,'٨٤'],[8,9,'٧٢'],
+         [8,11,'٨٨'],[9,9,'٨١'],[9,11,'٩٩'],[9,12,'١٠٨'],
+         [11,11,'١٢١'],[11,12,'١٣٢'],[12,12,'١٤٤'],[6,8,'٤٨']].map(([a,b,res])=>`
+        <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:8px 4px;text-align:center">
+          <div style="font-size:11px;color:#80CBC4;margin-bottom:2px">${a} × ${b}</div>
+          <div style="font-size:15px;font-weight:900;color:#F5A623">${res}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:5px">💡 لماذا حتى ١٢ فقط؟</div>
+    <div style="font-size:12px;color:#9B6000;line-height:1.8">معظم أسئلة القدرات تعتمد على ضرب الأعداد من ٢ إلى ١٢ — إتقانها يوفّر ثوانٍ ثمينة في كل سؤال</div>
+  </div>
+</div>
+`},
+
+/* ══ 3: الضرب في 10 ══ */
+{ label:"الضرب في ١٠", bg:"#F4F7F9", html:`
+<div class="page-gray">
+  <div class="sec-hdr" style="background:#E8512B">
+    <div class="sec-hdr-txt">٢ — الضرب والقسمة في ١٠ ومضاعفاتها</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div class="rule-card" style="background:#E0F7FA;border-color:#00B4CC">
+    <div style="font-size:13px;font-weight:800;color:#006064;margin-bottom:8px">الضرب في ١٠ — ١٠٠ — ١٠٠٠</div>
+    <div style="font-size:12.5px;color:#00838F;line-height:2">
+      في ١٠ ← أضف <strong>صفراً واحداً</strong> على اليمين<br/>
+      في ١٠٠ ← أضف <strong>صفرين</strong><br/>
+      في ١٠٠٠ ← أضف <strong>ثلاثة أصفار</strong>
+    </div>
+    <div style="background:rgba(0,0,0,0.05);border-radius:8px;padding:12px 14px;margin-top:10px;display:flex;flex-direction:column;gap:6px">
+      <div class="math-line" style="color:#006064">٧ × ١٠ = <strong style="color:#E8512B">٧٠</strong></div>
+      <div class="math-line" style="color:#006064">١٢ × ١٠٠ = <strong style="color:#E8512B">١٢٠٠</strong></div>
+      <div class="math-line" style="color:#006064">٣٫٥ × ١٠٠٠ = <strong style="color:#E8512B">٣٥٠٠</strong></div>
+    </div>
+  </div>
+  <div class="rule-card" style="background:#FFF8E7;border-color:#F5A623">
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:8px">القسمة على ١٠ — ١٠٠ — ١٠٠٠</div>
+    <div style="font-size:12.5px;color:#9B6000;line-height:2">
+      على ١٠ ← حرّك الفاصلة <strong>مكاناً واحداً</strong> لليسار<br/>
+      على ١٠٠ ← حرّك الفاصلة <strong>مكانين</strong> لليسار<br/>
+      على ١٠٠٠ ← حرّك الفاصلة <strong>ثلاثة أماكن</strong> لليسار
+    </div>
+    <div style="background:rgba(0,0,0,0.05);border-radius:8px;padding:12px 14px;margin-top:10px;display:flex;flex-direction:column;gap:6px">
+      <div class="math-line" style="color:#7A4800">٥٤٠ ÷ ١٠ = <strong style="color:#E8512B">٥٤</strong></div>
+      <div class="math-line" style="color:#7A4800">٥٤٠ ÷ ١٠٠ = <strong style="color:#E8512B">٥٫٤</strong></div>
+      <div class="math-line" style="color:#7A4800">٣٥٠٠ ÷ ١٠٠٠ = <strong style="color:#E8512B">٣٫٥</strong></div>
+    </div>
+  </div>
+  <div style="margin:0 20px;background:#0D4F5C;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:12px;color:#B2EBF2;line-height:1.8">مع الأعداد العشرية: حرّك الفاصلة أولاً ثم أضف أصفاراً</div>
+    <div style="font-size:14px;font-weight:700;color:#F5A623;margin-top:6px">٣٫٧ × ١٠ = <strong>٣٧</strong> &nbsp;|&nbsp; ٤٫٢ ÷ ١٠٠ = <strong>٠٫٠٤٢</strong></div>
+  </div>
+</div>
+`},
+
+/* ══ 4: الحساب الذهني ══ */
+{ label:"الحساب الذهني", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">٣ — الحساب الذهني السريع</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    فكّر دائماً: <strong style="color:#7B2D8B">هل يمكن حلها ذهنياً بسرعة؟</strong><br/>إذا تعقّدت → انتقل للكتابة المنظمة.
+  </div>
+  <div class="cmp-wrap">
+    <div class="cmp-head">
+      <div class="cmp-hd" style="background:#00B4CC">⚡ طريقة الاختصار</div>
+      <div class="cmp-hd" style="background:#7B8FA1">📚 الطريقة التقليدية</div>
+    </div>
+    <div style="background:#E0F7FA;padding:8px 14px;text-align:center;font-size:14px;font-weight:800;color:#006064">٣٩ × ٦</div>
+    <div class="cmp-row">
+      <div class="cmp-cell" style="background:#E0F7FA;color:#006064;font-size:12px;line-height:2">
+        ٣٩ = ٤٠ − ١<br/>
+        (٤٠ − ١) × ٦<br/>
+        ٤٠ × ٦ = ٢٤٠<br/>
+        ١ × ٦ = ٦<br/>
+        <strong>٢٤٠ − ٦ = ٢٣٤</strong>
+      </div>
+      <div class="cmp-cell" style="background:#F5F5F5;color:#888;font-size:16px;line-height:2.2">
+        ٣٩<br/>× ٦<br/>──<br/><strong>٢٣٤</strong>
+      </div>
+    </div>
+  </div>
+  <div class="cmp-wrap" style="margin-top:10px">
+    <div style="background:#FFF8E7;padding:8px 14px;text-align:center;font-size:14px;font-weight:800;color:#7A4800">٩٩ × ٧</div>
+    <div class="cmp-row">
+      <div class="cmp-cell" style="background:#E0F7FA;color:#006064;font-size:12px;line-height:2">
+        ٩٩ = ١٠٠ − ١<br/>
+        (١٠٠ − ١) × ٧<br/>
+        ١٠٠ × ٧ = ٧٠٠<br/>
+        ١ × ٧ = ٧<br/>
+        <strong>٧٠٠ − ٧ = ٦٩٣</strong>
+      </div>
+      <div class="cmp-cell" style="background:#F5F5F5;color:#888;font-size:16px;line-height:2.2">
+        ٩٩<br/>× ٧<br/>──<br/><strong>٦٩٣</strong>
+      </div>
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:#E0F7FA;border-radius:10px;padding:11px 16px;text-align:center;font-size:12px;font-weight:700;color:#006064">
+    القاعدة: قرّب العدد لأقرب ١٠ أو ١٠٠ ثم اطرح الفرق
+  </div>
+</div>
+`},
+
+/* ══ 5: اختصار القسمة ══ */
+{ label:"اختصار القسمة", bg:"#F4F7F9", html:`
+<div class="page-gray">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">٤ — اختصار القسمة بالعوامل</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    عندما يكون المقسوم كبيراً — حلّله إلى عوامل تُقسم مباشرة.
+  </div>
+  ${[
+    ['١','١٨٠ ÷ ١٢','١٢ × ١٥ = ١٨٠','١٨٠ ÷ ١٢ = ١٥'],
+    ['٢','١٤٤ ÷ ١٦','١٦ × ٩ = ١٤٤','١٤٤ ÷ ١٦ = ٩'],
+    ['٣','٣٦٠ ÷ ٢٤','٢٤ × ١٥ = ٣٦٠','٣٦٠ ÷ ٢٤ = ١٥'],
+  ].map(([n,expr,factor,result])=>`
+    <div style="margin:0 20px 10px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
+      <div style="display:flex;align-items:center;justify-content:space-between;direction:rtl;margin-bottom:8px">
+        <div style="font-size:11px;color:#7B8FA1;font-weight:600">مثال ${n}</div>
+        <div style="font-size:16px;font-weight:800;color:#1565C0">${expr}</div>
+      </div>
+      <div style="background:#E3F2FD;border-radius:8px;padding:10px 14px;text-align:center">
+        <div style="font-size:12px;color:#1565C0;font-weight:600;margin-bottom:6px">نعرف أن: <span style="font-size:14px;font-weight:800;color:#0D47A1">${factor}</span></div>
+        <div style="font-size:11px;color:#7B8FA1;margin:2px 0">↓ إذن</div>
+        <div style="font-size:16px;font-weight:900;color:#1565C0">${result} ✓</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:0 20px;background:#0D4F5C;border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:#B2EBF2;line-height:1.8;font-weight:600">
+    لا تضيع وقتك بالقسمة الطويلة — <span style="color:#F5A623">حلّل العدد ذهنياً أولاً</span>
+  </div>
+</div>
+`},
+
+/* ══ 6: حيلة قرب 100 ══ */
+{ label:"حيلة قرب ١٠٠", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#E8512B">
+    <div class="sec-hdr-txt">٥ — ضرب الأعداد القريبة من ١٠٠</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    حيلة ذكية لضرب عددين قريبين من ١٠٠ في ثوانٍ — بدون ضرب تقليدي.
+  </div>
+  <div class="trick-box">
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:12px;text-align:center">⚡ خطوات الحيلة — مثال: ٩٧ × ٩٨</div>
+    <div class="trick-step">
+      <div class="trick-num">١</div>
+      <div class="trick-text">اجد فرق كل عدد عن ١٠٠<br/>
+        <strong>١٠٠ − ٩٧ = ٣ &nbsp;|&nbsp; ١٠٠ − ٩٨ = ٢</strong>
+      </div>
+    </div>
+    <div class="trick-step">
+      <div class="trick-num">٢</div>
+      <div class="trick-text">اطرح فرق أحدهما من العدد الآخر — هذا هو صدر الجواب<br/>
+        <strong>٩٧ − ٢ = ٩٥ &nbsp;(أو: ٩٨ − ٣ = ٩٥)</strong>
+      </div>
+    </div>
+    <div class="trick-step">
+      <div class="trick-num">٣</div>
+      <div class="trick-text">اضرب الفرقين ببعض — هذا هو ذيل الجواب<br/>
+        <strong>٣ × ٢ = ٠٦</strong>
+      </div>
+    </div>
+    <div class="trick-step" style="margin-bottom:0">
+      <div class="trick-num">٤</div>
+      <div class="trick-text">ركّب الجواب: صدر ثم ذيل</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:12px;margin-top:10px;text-align:center;font-size:18px;font-weight:900;color:#fff">
+      ٩٧ × ٩٨ = <span style="color:#F5A623">٩٥٠٦</span> ✓
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:#F4F7F9;border-radius:12px;padding:14px 16px">
+    <div style="font-size:12px;font-weight:800;color:#0D4F5C;margin-bottom:8px;text-align:center">جرّب بنفسك: ٩٦ × ٩٥</div>
+    <div style="font-size:12px;color:#7B8FA1;line-height:2;text-align:right">
+      ١٠٠ − ٩٦ = ٤ &nbsp;|&nbsp; ١٠٠ − ٩٥ = ٥<br/>
+      ٩٦ − ٥ = ٩١ (الصدر)<br/>
+      ٤ × ٥ = ٢٠ (الذيل)<br/>
+      <strong style="color:#0D4F5C;font-size:14px">٩٦ × ٩٥ = <span style="color:#E8512B">٩١٢٠</span> ✓</strong>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 7: قابلية القسمة ══ */
+{ label:"قابلية القسمة", bg:"#F4F7F9", html:`
+<div class="page-gray">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">٦ — قابلية القسمة بدون حساب</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    اعرف إذا كان العدد يقبل القسمة <strong style="color:#2E7D32">قبل أن تقسم</strong>.
+  </div>
+  ${[
+    ['٢','#E8512B','العدد زوجي — ينتهي بـ ٠ أو ٢ أو ٤ أو ٦ أو ٨','مثال: ٣٤٨ ÷ ٢ ✓ لأن ٨ زوجي'],
+    ['٣','#1565C0','مجموع أرقامه يقبل القسمة على ٣','مثال: ١٢٣ ← ١+٢+٣=٦ ÷ ٣ ✓'],
+    ['٥','#2E7D32','ينتهي بـ ٠ أو ٥','مثال: ٣٤٥ ÷ ٥ ✓  |  ٣٤٢ ÷ ٥ ✗'],
+    ['٩','#7B2D8B','مجموع أرقامه يقبل القسمة على ٩','مثال: ٢٧٩ ← ٢+٧+٩=١٨ ÷ ٩ ✓'],
+    ['١٠','#E65100','ينتهي بـ ٠','مثال: ٤٥٠ ÷ ١٠ ✓  |  ٤٥١ ÷ ١٠ ✗'],
+  ].map(([num,color,rule,ex])=>`
+    <div class="div-row">
+      <div class="div-num" style="background:${color}">${num}</div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;color:#1A2533;font-weight:600">${rule}</div>
+        <div style="font-size:11px;color:#7B8FA1;margin-top:2px">${ex}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:8px 20px 0;background:#0D4F5C;border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:#B2EBF2;font-weight:600;line-height:1.8">
+    هذه القواعد تساعدك على <span style="color:#F5A623">حذف البدائل الخاطئة</span> بسرعة دون حساب
+  </div>
+</div>
+`},
+
+/* ══ 8: التقدير السريع ══ */
+{ label:"التقدير السريع", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#00B4CC">
+    <div class="sec-hdr-txt">٧ — التقدير قبل الحل</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    قبل أن تحل — <strong style="color:#00B4CC">قدّر الجواب تقريباً</strong>. هذه المهارة تختصر نصف الوقت.
+  </div>
+  <div class="est-step">
+    <div class="est-icon" style="background:#E0F7FA">🎯</div>
+    <div>
+      <div style="font-size:13px;font-weight:800;color:#1A2533;margin-bottom:3px">حذف البدائل الخاطئة</div>
+      <div style="font-size:12px;color:#7B8FA1;line-height:1.7">إذا قدّرت الجواب ≈ ٥٠، تحذف فوراً أي بديل أكبر من ١٠٠ أو أقل من ١٠</div>
+    </div>
+  </div>
+  <div class="est-step">
+    <div class="est-icon" style="background:#FFF8E7">✅</div>
+    <div>
+      <div style="font-size:13px;font-weight:800;color:#1A2533;margin-bottom:3px">التحقق من منطقية الجواب</div>
+      <div style="font-size:12px;color:#7B8FA1;line-height:1.7">بعد الحل — قارن مع تقديرك. إذا الجواب بعيد جداً ← راجع الحل</div>
+    </div>
+  </div>
+  <div class="est-step">
+    <div class="est-icon" style="background:#F3E5F5">⚡</div>
+    <div>
+      <div style="font-size:13px;font-weight:800;color:#1A2533;margin-bottom:3px">طريقة التقدير</div>
+      <div style="font-size:12px;color:#7B8FA1;line-height:1.7">قرّب الأعداد لأقرب ١٠ أو ١٠٠ وأجرِ العملية ذهنياً</div>
+    </div>
+  </div>
+  <div style="margin:0 20px;background:#F4F7F9;border-radius:12px;padding:14px 16px">
+    <div style="font-size:12px;font-weight:800;color:#0D4F5C;margin-bottom:10px;text-align:center">مثال عملي</div>
+    <div style="font-size:16px;font-weight:800;color:#1A2533;text-align:center;margin-bottom:10px">٤٨٧ × ٣٢ = ؟</div>
+    <div style="font-size:12px;color:#7B8FA1;line-height:2.1;text-align:right">
+      التقدير: ٥٠٠ × ٣٠ = ١٥٬٠٠٠<br/>
+      إذن الجواب قريب من <strong style="color:#00B4CC">١٥٬٠٠٠</strong><br/>
+      أي بديل أقل من ٥٬٠٠٠ أو أكثر من ٢٥٬٠٠٠ → خاطئ فوراً
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 9: الملخص ══ */
+{ label:"الملخص", bg:"#1A0533", html:`
+<div style="background:linear-gradient(160deg,#1A0533,#0D4F5C);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#0D4F5C">ملخص — روح الكتاب</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#0D4F5C;flex-shrink:0"></div>
+  </div>
+  ${[
+    ['جدول الضرب حتى ١٢','أساس كل عملية حسابية في الاختبار'],
+    ['الضرب والقسمة في ١٠ ومضاعفاتها','أضف أصفاراً أو حرّك الفاصلة فقط'],
+    ['الحساب الذهني بالتقريب','قرّب لأقرب ١٠ أو ١٠٠ ثم اطرح الفرق'],
+    ['اختصار القسمة بالعوامل','حلّل العدد ذهنياً بدلاً من القسمة الطويلة'],
+    ['ضرب الأعداد القريبة من ١٠٠','حيلة الفرق عن ١٠٠ في ثوانٍ'],
+    ['قابلية القسمة','اعرف قبل أن تقسم — احذف البدائل الخاطئة'],
+    ['التقدير قبل الحل','قدّر أولاً واحذف البدائل البعيدة فوراً'],
+  ].map(([title,desc])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#E0F7FA">${title}</div>
+        <div style="font-size:11px;color:rgba(178,235,242,0.6);margin-top:2px">${desc}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#0D4F5C;line-height:1.8">
+      من أتقن هذه المهارات السبع —<br/>أصبح يفكر <strong>أقل</strong> ويحل <strong>أسرع</strong>.
+    </div>
+  </div>
+</div>
+`},
+
+];
+
+let current = 0;
+function render() {
+  const p = PAGES[current];
+  const wrap = document.getElementById('pageWrap');
+  wrap.innerHTML = p.html + `<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none'; wrap.offsetHeight; wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent = p.label + '  ' + (current+1) + '/' + PAGES.length;
+  document.getElementById('btnPrev').disabled = current===0;
+  document.getElementById('btnNext').disabled = current===PAGES.length-1;
+  const dots = document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

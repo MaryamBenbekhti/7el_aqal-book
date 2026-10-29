@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | السرعة والمسافة والزمن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;}
+  .dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+  .pw{background:#fff;min-height:680px;padding-bottom:28px}
+  .pg{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:15px;font-weight:800;color:#fff}
+  .sec-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .sum-row{margin:0 20px 8px;background:rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;direction:rtl}
+  .sum-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;flex-shrink:0}
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1}
+  .frac .t{font-size:14px;font-weight:900;padding:0 4px;border-bottom:2.5px solid currentColor;line-height:1.4;text-align:center;min-width:16px}
+  .frac .b{font-size:14px;font-weight:900;padding:0 4px;line-height:1.4;text-align:center;min-width:16px}
+  .q-card{margin:0 20px 10px;border-radius:12px;padding:14px 16px;border:2px solid #E3F2FD;background:#F8FBFF}
+  .q-text{font-size:13px;font-weight:700;color:#1A2533;margin-bottom:10px;line-height:2}
+  .q-opts{display:flex;flex-direction:column;gap:6px}
+  .q-opt{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:right;border:1.5px solid #E0E0E0;background:#F4F7F9;color:#1A2533;transition:all .2s}
+  .q-opt.correct{background:#E8F5E9;border-color:#2E7D32;color:#1B5E20;cursor:default}
+  .q-opt.wrong{background:#FFEBEE;border-color:#C62828;color:#B71C1C;text-decoration:line-through;cursor:default}
+  .q-explain{background:#E8F5E9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:#1B5E20;line-height:2;display:none}
+  .show-btn{margin-top:8px;width:100%;padding:8px;background:#E3F2FD;border:1.5px dashed #1565C0;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;color:#1565C0;cursor:pointer}
+  .ex-card{margin:0 20px 10px;border-radius:12px;padding:13px 15px}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+function fr(t,b,c='#1565C0'){
+  return `<span class="frac" style="color:${c}"><span class="t">${t}</span><span class="b">${b}</span></span>`;
+}
+
+const QDATA=[
+  {correct:1, explain:'م = س × ز = ٨٠ × ٢٫٥ = ٢٠٠ كم ✓'},
+  {correct:2, explain:'س = م ÷ ز = ١٥٠ ÷ ٣ = ٥٠ كم/س ✓'},
+  {correct:0, explain:'ز = م ÷ س = ٢٤٠ ÷ ٨٠ = ٣ ساعات ✓'},
+  {correct:3, explain:'٧٢ ÷ ٣٫٦ = ٢٠ م/ث ✓'},
+  {correct:1, explain:'متعاكسان: ٦٠+٩٠=١٥٠ | ز = ٣٠٠÷١٥٠ = ٢ ساعة ✓'},
+  {correct:2, explain:'نفس الاتجاه: الفرق=١٢٠−٩٠=٣٠ | ز=٩٠÷٣٠=٣ ساعات ✓'},
+  {correct:0, explain:'المسافة=٦٠×١=٦٠ كم | الفرق=١٢٠−٦٠=٦٠ | ز=٦٠÷٦٠=١ ساعة ✓'},
+  {correct:3, explain:'السرعة المتوسطة = (٢×٦٠×٤٠)÷(٦٠+٤٠) = ٤٨٠٠÷١٠٠ = ٤٨ كم/س ✓'},
+  {correct:1, explain:'م الكلية=٨٠+٤٠=١٢٠ | ز الكلي=٨٠÷٤٠+٤٠÷٨٠=٢+٠٫٥=٢٫٥ | ٢٫٥ ÷ = ٤٨ كم/س ✓'},
+  {correct:2, explain:'ز=م÷س | ١٨٠÷٦٠=٣ ساعات → وصل الساعة ٣+٩=١٢ ظهراً ✓'},
+];
+
+function revealQ(qi){
+  const{correct,explain}=QDATA[qi];
+  document.querySelectorAll(`#q${qi}opts .q-opt`).forEach((o,i)=>{
+    o.classList.add(i===correct?'correct':'wrong');
+    o.onclick=null;
+  });
+  const exp=document.getElementById(`q${qi}exp`);
+  exp.innerHTML='💡 '+explain;
+  exp.style.display='block';
+  const btn=document.getElementById(`q${qi}btn`);
+  if(btn)btn.style.display='none';
+}
+function pickQ(qi){revealQ(qi)}
+
+const PAGES=[
+
+/* ══ 1: COVER ══ */
+{label:"الغلاف",bg:"#0D2B4F",html:`
+<div style="background:linear-gradient(160deg,#0D2B4F,#1565C0);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(21,101,192,0.2);bottom:20%;right:-50px"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(245,166,35,0.07);top:15%;left:-30px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#0D2B4F;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>فصل خاص</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">تابع للباب الخامس</div>
+    <div style="font-size:52px;font-weight:900;color:#F5A623;text-align:center;margin-bottom:8px">🚗</div>
+    <div style="font-family:'Amiri',serif;font-size:30px;color:#fff;font-weight:700;text-align:center;line-height:1.5">السرعة والمسافة<br/>والزمن</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:13px;font-weight:900;color:#F5A623;text-align:center;margin-bottom:6px;letter-spacing:1px">م = س × ز</div>
+    <div style="font-size:12.5px;color:rgba(178,235,242,0.9);text-align:center;line-height:2;padding:0 16px">
+      من يفهم هذا المثلث —<br/>يحل <strong style="color:#F5A623">كل مسائل السرعة</strong> في ثوانٍ.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['المثلث السحري','التحويل','السرعة النسبية','زمن اللحاق','السرعة المتوسطة'].map(t=>`
+        <div style="background:rgba(21,101,192,0.25);border:1px solid rgba(100,160,255,0.4);border-radius:20px;padding:5px 14px;font-size:11px;color:#B2EBF2;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.25);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(178,235,242,0.5)">الباب الخامس</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: المثلث السحري ══ */
+{label:"المثلث السحري",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">⭐ المثلث السحري م = س × ز</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- المثلث -->
+  <div style="margin:0 20px 16px;background:#0D4F5C;border-radius:16px;padding:20px">
+    <div style="text-align:center;margin-bottom:12px">
+      <!-- م في القمة -->
+      <div style="display:inline-flex;width:90px;height:90px;border-radius:50%;background:#F5A623;align-items:center;justify-content:center;flex-direction:column;margin-bottom:8px">
+        <div style="font-size:11px;color:#0D4F5C;font-weight:700">المسافة</div>
+        <div style="font-size:28px;font-weight:900;color:#0D4F5C">م</div>
+      </div>
+      <div style="width:80%;height:3px;background:#F5A623;margin:8px auto;border-radius:2px"></div>
+      <!-- س و ز في الأسفل -->
+      <div style="display:flex;justify-content:space-around;align-items:center">
+        <div style="width:80px;height:80px;border-radius:50%;background:#E8512B;display:flex;align-items:center;justify-content:center;flex-direction:column">
+          <div style="font-size:10px;color:#fff;font-weight:700">السرعة</div>
+          <div style="font-size:26px;font-weight:900;color:#fff">س</div>
+        </div>
+        <div style="font-size:24px;color:#F5A623;font-weight:900">×</div>
+        <div style="width:80px;height:80px;border-radius:50%;background:#00B4CC;display:flex;align-items:center;justify-content:center;flex-direction:column">
+          <div style="font-size:10px;color:#fff;font-weight:700">الزمن</div>
+          <div style="font-size:26px;font-weight:900;color:#fff">ز</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- القوانين الثلاثة -->
+  <div style="margin:0 20px;display:flex;flex-direction:column;gap:8px">
+    ${[
+      {hide:'م',law:'م = س × ز',ex:'سرعة ٨٠ × ٢ ساعة = ١٦٠ كم',color:'#F5A623',bg:'#FFF8E7'},
+      {hide:'س',law:'س = م ÷ ز',ex:'٩٠ كم في ٣ ساعات = ٣٠ كم/س',color:'#E8512B',bg:'#FBE9E7'},
+      {hide:'ز',law:'ز = م ÷ س',ex:'١٨٠ كم بسرعة ٦٠ = ٣ ساعات',color:'#00B4CC',bg:'#E0F7FA'},
+    ].map(({hide,law,ex,color,bg})=>`
+      <div style="background:${bg};border-radius:10px;padding:11px 14px">
+        <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:4px">🔍 غطِّ: ${hide}</div>
+        <div style="font-size:14px;font-weight:900;color:#1A2533;margin-bottom:4px">${law}</div>
+        <div style="font-size:11.5px;color:#7B8FA1">${ex}</div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+`},
+
+/* ══ 3: التحويل بين الوحدات ══ */
+{label:"تحويل الوحدات",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">تحويل الوحدات</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- وحدات الزمن -->
+  <div style="margin:0 20px 12px;background:#FFF8E7;border:2px solid #F5A623;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#7A4800;margin-bottom:8px">⏱ وحدات الزمن</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${[['١ ساعة','٦٠ دقيقة'],['١ دقيقة','٦٠ ثانية'],['١ ساعة','٣٦٠٠ ثانية'],['نصف ساعة','٣٠ دقيقة']].map(([a,b])=>`
+        <div style="background:rgba(245,166,35,0.1);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;font-weight:700;color:#E8512B">${b}</div>
+          <div style="font-size:12px;color:#7A4800">${a} =</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <!-- تحويل السرعة -->
+  <div style="margin:0 20px 12px;background:#E3F2FD;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:10px">🚗 تحويل السرعة</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:#1565C0;border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:#B2EBF2;margin-bottom:6px">كم/س ← م/ث</div>
+        <div style="font-size:18px;font-weight:900;color:#F5A623">÷ ٣٫٦</div>
+      </div>
+      <div style="background:#0D47A1;border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:#B2EBF2;margin-bottom:6px">م/ث ← كم/س</div>
+        <div style="font-size:18px;font-weight:900;color:#F5A623">× ٣٫٦</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;background:rgba(255,255,255,0.5);border-radius:8px;padding:10px 12px;font-size:13px;color:#0D47A1;font-weight:700;text-align:right;line-height:2">
+      مثال: ٧٢ كم/س = ٧٢ ÷ ٣٫٦ = <strong style="color:#E8512B">٢٠ م/ث</strong> ✓<br/>
+      مثال: ١٥ م/ث = ١٥ × ٣٫٦ = <strong style="color:#E8512B">٥٤ كم/س</strong> ✓
+    </div>
+  </div>
+
+  <!-- تحويل الزمن لساعات -->
+  <div style="margin:0 20px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">⚡ تحويل الزمن لساعات (مهم!)</div>
+    <div style="font-size:12.5px;color:#1A2533;line-height:2.2;text-align:right">
+      ٣٠ دقيقة = ${fr('١','٢','#2E7D32')} ساعة = ٠٫٥<br/>
+      ٢٠ دقيقة = ${fr('١','٣','#2E7D32')} ساعة ≈ ٠٫٣٣<br/>
+      ٤٥ دقيقة = ${fr('٣','٤','#2E7D32')} ساعة = ٠٫٧٥<br/>
+      ٩٠ دقيقة = ١٫٥ ساعة
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 4: السرعة النسبية ══ */
+{label:"السرعة النسبية",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">السرعة النسبية</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:14px 16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:rgba(232,81,43,0.2);border:2px solid #E8512B;border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:28px;margin-bottom:4px">↑↓</div>
+        <div style="font-size:12px;font-weight:800;color:#FFAB91;margin-bottom:6px">اتجاهان متعاكسان</div>
+        <div style="font-size:14px;font-weight:900;color:#F5A623">س₁ + س₂</div>
+        <div style="font-size:10px;color:#B2EBF2;margin-top:4px">يقتربان من بعض</div>
+      </div>
+      <div style="background:rgba(0,180,204,0.2);border:2px solid #00B4CC;border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:28px;margin-bottom:4px">→→</div>
+        <div style="font-size:12px;font-weight:800;color:#80CBC4;margin-bottom:6px">نفس الاتجاه</div>
+        <div style="font-size:14px;font-weight:900;color:#F5A623">س₁ − س₂</div>
+        <div style="font-size:10px;color:#B2EBF2;margin-top:4px">أحدهما يلاحق الآخر</div>
+      </div>
+    </div>
+  </div>
+
+  ${[
+    {type:'↑↓ متعاكسان',
+     q:'سيارتان بسرعة ٨٠ و١٠٠ كم/س تسيران نحو بعض وبينهما ٣٠٠ كم',
+     steps:['السرعة النسبية = ٨٠+١٠٠ = ١٨٠ كم/س','ز الالتقاء = ٣٠٠÷١٨٠ ≈ ١٫٦٧ ساعة (ساعة و٤٠ د)'],
+     color:'#E8512B',bg:'#FBE9E7'},
+    {type:'→→ نفس الاتجاه',
+     q:'قطار بسرعة ١٢٠ يلاحق آخر بسرعة ٩٠ كم/س وبينهما ٩٠ كم',
+     steps:['السرعة النسبية = ١٢٠−٩٠ = ٣٠ كم/س','ز اللحاق = ٩٠÷٣٠ = ٣ ساعات ✓'],
+     color:'#00B4CC',bg:'#E0F7FA'},
+    {type:'→→ انطلاق متأخر',
+     q:'سيارة بسرعة ٦٠ كم/س تنطلق، وبعد ساعة تنطلق أخرى بسرعة ١٢٠ كم/س — متى تلحق؟',
+     steps:['المسافة الفاصلة = ٦٠×١ = ٦٠ كم','الفرق = ١٢٠−٦٠ = ٦٠ كم/س','ز اللحاق = ٦٠÷٦٠ = ١ ساعة ✓'],
+     color:'#7B2D8B',bg:'#F3E5F5'},
+  ].map(({type,q,steps,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 12px;font-size:12px;color:${color};font-weight:600;line-height:2.2">${steps.join('<br/>')}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 5: السرعة المتوسطة ══ */
+{label:"السرعة المتوسطة",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">السرعة المتوسطة ⚠️</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
+    <div style="font-size:12px;color:#B2EBF2;margin-bottom:8px">القانون العام</div>
+    <div style="font-size:14px;font-weight:800;color:#F5A623;line-height:2.2">
+      السرعة المتوسطة = ${fr('المسافة الكلية','الزمن الكلي','#F5A623')}
+    </div>
+    <div style="font-size:11px;color:#B2EBF2;margin-top:6px">⚠️ ليست متوسط السرعتين الحسابي!</div>
+  </div>
+
+  <!-- حالة خاصة -->
+  <div style="margin:0 20px 12px;background:#FFEBEE;border:2px solid #C62828;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#C62828;margin-bottom:8px">⭐ حالة خاصة: المسافتان متساويتان (ذهاب وعودة)</div>
+    <div style="font-size:15px;font-weight:900;color:#C62828;text-align:center;margin:8px 0">
+      س م = ${fr('٢ × س₁ × س₂','س₁ + س₂','#C62828')}
+    </div>
+    <div style="font-size:11.5px;color:#7B8FA1;text-align:right;line-height:1.8">هذا القانون يُختصر من القانون العام عندما تكون مسافة الذهاب = مسافة العودة</div>
+  </div>
+
+  ${[
+    {type:'ذهاب وعودة (المسافتان متساويتان)',
+     q:'سيارة ذهبت بسرعة ٦٠ كم/س وعادت بسرعة ٤٠ كم/س — ما السرعة المتوسطة؟',
+     sol:'(٢×٦٠×٤٠) ÷ (٦٠+٤٠) = ٤٨٠٠ ÷ ١٠٠ = <strong style="color:#E8512B">٤٨ كم/س</strong> ✓',
+     warn:'⚠️ ليست (٦٠+٤٠)÷٢ = ٥٠ !',color:'#C62828',bg:'#FFEBEE'},
+    {type:'مسافتان مختلفتان',
+     q:'قطع شخص ٨٠ كم بسرعة ٤٠ كم/س ثم ٤٠ كم بسرعة ٨٠ كم/س',
+     sol:'م الكلية=١٢٠ كم | ز الكلي=٨٠÷٤٠+٤٠÷٨٠=٢+٠٫٥=٢٫٥ ساعة<br/>السرعة المتوسطة = ١٢٠ ÷ ٢٫٥ = <strong style="color:#E8512B">٤٨ كم/س</strong> ✓',
+     warn:'',color:'#1565C0',bg:'#E3F2FD'},
+  ].map(({type,q,sol,warn,color,bg})=>`
+    <div class="ex-card" style="background:${bg}">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:5px">${type}</div>
+      <div style="font-size:12.5px;font-weight:700;color:#1A2533;margin-bottom:8px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 12px;font-size:12px;color:${color};font-weight:600;line-height:2">${sol}</div>
+      ${warn?`<div style="font-size:11px;color:#C62828;margin-top:6px;font-weight:700">${warn}</div>`:''}
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 6: مسائل متنوعة ══ */
+{label:"مسائل القدرات",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">مسائل تتكرر في القدرات</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    هذه الأنواع <strong style="color:#2E7D32">تظهر باستمرار</strong> — احفظ طريقة حلها.
+  </div>
+
+  ${[
+    {type:'وقت وصول',
+     q:'سيارة انطلقت الساعة ٩ صباحاً بسرعة ٦٠ كم/س لقطع ١٨٠ كم — متى تصل؟',
+     sol:'ز = ١٨٠÷٦٠ = ٣ ساعات | ٩ صباحاً + ٣ = <strong style="color:#2E7D32">١٢ ظهراً ✓</strong>',
+     color:'#2E7D32',bg:'#E8F5E9'},
+    {type:'نقطة الالتقاء',
+     q:'سيارتان بينهما ٤٠٠ كم تسيران نحو بعض بسرعة ٩٠ و١١٠ كم/س — متى وأين يلتقيان؟',
+     sol:'ز = ٤٠٠÷(٩٠+١١٠) = ٤٠٠÷٢٠٠ = ٢ ساعة<br/>م الأولى = ٩٠×٢ = ١٨٠ كم من موقعها | م الثانية = ١١٠×٢ = ٢٢٠ كم ✓',
+     color:'#1565C0',bg:'#E3F2FD'},
+    {type:'مسألة التقدم',
+     q:'يمشي أحمد بسرعة ٥ كم/س وسالم بسرعة ٧ كم/س في نفس الاتجاه، بينهما ٦ كم — بعد كم ساعة يلحق سالم؟',
+     sol:'الفرق = ٧−٥ = ٢ كم/س<br/>ز = ٦÷٢ = <strong style="color:#E8512B">٣ ساعات ✓</strong>',
+     color:'#E8512B',bg:'#FBE9E7'},
+    {type:'إيجاد السرعة',
+     q:'سيارة وقطار انطلقا معاً، القطار بسرعة ١٢٠ كم/س وبعد ساعتين تقدم القطار ٤٠ كم — ما سرعة السيارة؟',
+     sol:'م القطار=١٢٠×٢=٢٤٠ | م السيارة=٢٤٠−٤٠=٢٠٠<br/>س السيارة = ٢٠٠÷٢ = <strong style="color:#7B2D8B">١٠٠ كم/س ✓</strong>',
+     color:'#7B2D8B',bg:'#F3E5F5'},
+  ].map(({type,q,sol,color,bg})=>`
+    <div class="ex-card" style="background:${bg};margin-bottom:8px">
+      <div style="font-size:11px;font-weight:800;color:${color};margin-bottom:4px">${type}</div>
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:6px;line-height:1.7">${q}</div>
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:7px 11px;font-size:11.5px;color:${color};font-weight:600;line-height:2">${sol}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 7: تدريبات ١-٥ ══ */
+{label:"تدريبات ١-٥",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#1565C0">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:0,q:'سيارة سرعتها ٨٠ كم/س تسير ٢٫٥ ساعة — كم المسافة؟',
+     opts:['١٦٠ كم','٢٠٠ كم','١٨٠ كم','٢٤٠ كم']},
+    {qi:1,q:'قطعت دراجة ١٥٠ كم في ٣ ساعات — ما سرعتها؟',
+     opts:['٤٥ كم/س','٤٠ كم/س','٥٠ كم/س','٦٠ كم/س']},
+    {qi:2,q:'سيارة تقطع ٢٤٠ كم بسرعة ٨٠ كم/س — كم الزمن؟',
+     opts:['٣ ساعات','٢ ساعة','٤ ساعات','٢٫٥ ساعة']},
+    {qi:3,q:'ما يعادل ٧٢ كم/س بالمتر في الثانية؟',
+     opts:['١٨ م/ث','١٥ م/ث','٢٠ م/ث','٢٥ م/ث']},
+    {qi:4,q:'سيارتان بينهما ٣٠٠ كم تسيران نحو بعض بسرعة ٦٠ و٩٠ كم/س — بعد كم ساعة يلتقيان؟',
+     opts:['٣ ساعات','٢ ساعة','٢٫٥ ساعة','٤ ساعات']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['١','٢','٣','٤','٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 8: تدريبات ٦-١٠ ══ */
+{label:"تدريبات ٦-١٠",bg:"#fff",html:`
+<div class="pw">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+    {qi:5,q:'قطار بسرعة ١٢٠ كم/س يلاحق آخر بسرعة ٩٠ كم/س وبينهما ٩٠ كم — بعد كم ساعة يلحق؟',
+     opts:['٢ ساعة','٤ ساعات','٣ ساعات','٥ ساعات']},
+    {qi:6,q:'سيارة انطلقت بسرعة ٦٠ كم/س، وبعد ساعة انطلقت أخرى بسرعة ١٢٠ كم/س — بعد كم ساعة تلحق الثانية بالأولى؟',
+     opts:['١ ساعة','٢ ساعة','٣ ساعات','٠٫٥ ساعة']},
+    {qi:7,q:'سيارة ذهبت بسرعة ٦٠ كم/س وعادت بسرعة ٤٠ كم/س — ما السرعة المتوسطة؟',
+     opts:['٥٠ كم/س','٤٥ كم/س','٤٨ كم/س','٥٥ كم/س']},
+    {qi:8,q:'قطع شخص ٨٠ كم بسرعة ٤٠ كم/س ثم ٤٠ كم بسرعة ٨٠ كم/س — ما السرعة المتوسطة؟',
+     opts:['٦٠ كم/س','٤٨ كم/س','٥٠ كم/س','٥٥ كم/س']},
+    {qi:9,q:'سيارة انطلقت الساعة ٩ صباحاً بسرعة ٦٠ كم/س لقطع ١٨٠ كم — متى تصل؟',
+     opts:['١١ صباحاً','١٢ ظهراً','١ ظهراً','١٠ صباحاً']},
+  ].map(({qi,q,opts})=>`
+    <div class="q-card">
+      <div class="q-text">س${['٦','٧','٨','٩','١٠'][qi-5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o,oi)=>`<div class="q-opt" onclick="pickQ(${qi})">${['أ','ب','ج','د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+/* ══ 9: مسائل خاصة ══ */
+{label:"مسائل خاصة",bg:"#F4F7F9",html:`
+<div class="pg">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">مسائل خاصة تتكرر في القدرات</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <!-- مسائل القطار -->
+  <div style="margin:0 20px 10px;background:#FBE9E7;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px">🚂 مسائل القطار — عبور الجسر أو النفق</div>
+    <div style="background:#E8512B;border-radius:8px;padding:8px 12px;text-align:center;font-size:13px;font-weight:800;color:#fff;margin-bottom:8px">
+      المسافة = طول القطار + طول الجسر
+    </div>
+    ${[
+      {q:'قطار طوله ٢٠٠م بسرعة ٧٢ كم/س يعبر جسراً طوله ٨٠٠م — كم الزمن؟',
+       sol:'السرعة = ٧٢÷٣٫٦ = ٢٠ م/ث | المسافة = ٢٠٠+٨٠٠ = ١٠٠٠م | ز = ١٠٠٠÷٢٠ = <strong style="color:#E8512B">٥٠ ثانية ✓</strong>'},
+      {q:'قطاران طول كل منهما ٣٠٠م بسرعة ٩٠ و١٢٦ كم/س يسيران في اتجاهين متعاكسين — كم يستغرق مرور أحدهما بالآخر؟',
+       sol:'السرعة النسبية = ٩٠+١٢٦ = ٢١٦ كم/س = ٦٠ م/ث | المسافة = ٣٠٠+٣٠٠ = ٦٠٠م | ز = ٦٠٠÷٦٠ = <strong style="color:#E8512B">١٠ ثوانٍ ✓</strong>'},
+    ].map(({q,sol})=>`
+      <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 11px;margin-bottom:6px">
+        <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:5px;line-height:1.7">${q}</div>
+        <div style="font-size:11.5px;color:#BF360C;font-weight:600;line-height:1.9">${sol}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- مسائل الوقفات -->
+  <div style="margin:0 20px 10px;background:#E8F5E9;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px">⏸ مسائل مع وقفات (استراحة)</div>
+    <div style="background:#2E7D32;border-radius:8px;padding:8px 12px;text-align:center;font-size:13px;font-weight:800;color:#fff;margin-bottom:8px">
+      الزمن الكلي = زمن السير + زمن الوقفة
+    </div>
+    <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 11px">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:5px;line-height:1.7">سيارة تقطع ٢٤٠ كم بسرعة ٨٠ كم/س وتتوقف ٣٠ دقيقة — كم الزمن الكلي؟</div>
+      <div style="font-size:11.5px;color:#1B5E20;font-weight:600;line-height:2">
+        ز السير = ٢٤٠÷٨٠ = ٣ ساعات<br/>
+        ز الوقفة = ٣٠ دقيقة = ٠٫٥ ساعة<br/>
+        الزمن الكلي = ٣ + ٠٫٥ = <strong>٣٫٥ ساعة ✓</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- نقطة الالتقاء -->
+  <div style="margin:0 20px;background:#E3F2FD;border-radius:12px;padding:13px 15px">
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:8px">📍 نقطة الالتقاء — أين بالضبط؟</div>
+    <div style="background:rgba(255,255,255,0.6);border-radius:8px;padding:8px 11px">
+      <div style="font-size:12px;font-weight:700;color:#1A2533;margin-bottom:5px;line-height:1.7">سيارتان بينهما ٣٦٠ كم بسرعة ٨٠ و١٠٠ كم/س — أين نقطة الالتقاء من كل طرف؟</div>
+      <div style="font-size:11.5px;color:#0D47A1;font-weight:600;line-height:2">
+        ز الالتقاء = ٣٦٠÷(٨٠+١٠٠) = ٢ ساعة<br/>
+        م الأولى = ٨٠×٢ = <strong>١٦٠ كم من موقعها</strong><br/>
+        م الثانية = ١٠٠×٢ = <strong>٢٠٠ كم من موقعها ✓</strong><br/>
+        تحقق: ١٦٠+٢٠٠ = ٣٦٠ ✓
+      </div>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 10: الملخص ══ */
+
+{label:"⚡ فكِّر أقل — حُلَّ أسرع",bg:"#fff",html:`
+<div class="pw">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#1565C0,#1565C0CC);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#1565C0">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+
+  <div style="margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#1565C0">⚡ الحيلة السريعة</div>
+    </div>
+    
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">تطبيق م=س×ز خطوة خطوة</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#1565C0;font-weight:700;text-align:right;line-height:1.8">المثلث السحري: غطِّ المجهول → القانون فوراً</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">السرعة المتوسطة = (س₁+س₂)÷٢</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#1565C0;font-weight:700;text-align:right;line-height:1.8">ذهاب وعودة: ٢×س₁×س₂÷(س₁+س₂)</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">زمن اللحاق → حساب طويل</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#1565C0;font-weight:700;text-align:right;line-height:1.8">المسافة الفاصلة ÷ فرق السرعتين</div>
+      </div>
+  </div>
+
+  <div style="margin:0 20px;background:#1565C015;border:2px solid #1565C0;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#1565C0;margin-bottom:4px">💡 اللقطة الذهبية</div>
+    <div style="font-size:12px;color:#1A2533;font-weight:600;line-height:1.8">المثلث السحري: غطِّ المجهول → القانون فوراً</div>
+  </div>
+</div>
+`},
+{label:"الملخص",bg:"#0D2B4F",html:`
+<div style="background:linear-gradient(160deg,#0D2B4F,#1565C0);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#0D2B4F">ملخص السرعة والمسافة والزمن</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#0D2B4F;flex-shrink:0"></div>
+  </div>
+  ${[
+    ['م = س × ز','المثلث السحري — غطِّ المجهول'],
+    ['كم/س ← م/ث','اقسم على ٣٫٦'],
+    ['م/ث ← كم/س','اضرب في ٣٫٦'],
+    ['متعاكسان: السرعة النسبية','س₁ + س₂ (يقتربان)'],
+    ['نفس الاتجاه: السرعة النسبية','س₁ − س₂ (أحدهما يلاحق)'],
+    ['زمن اللحاق','المسافة الفاصلة ÷ الفرق بين السرعتين'],
+    ['زمن الالتقاء','المسافة بين الجسمين ÷ مجموع السرعتين'],
+    ['السرعة المتوسطة (ذهاب وعودة)','(٢×س₁×س₂) ÷ (س₁+س₂)'],
+    ['السرعة المتوسطة (عام)','المسافة الكلية ÷ الزمن الكلي'],
+  ].map(([t,d])=>`
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#E3F2FD">${t}</div>
+        <div style="font-size:11px;color:rgba(178,235,242,0.6);margin-top:2px">${d}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#0D2B4F;line-height:1.8">
+      السرعة المتوسطة ≠ متوسط السرعتين —<br/>هذا <strong>الفخ الأكثر شيوعاً</strong> في القدرات!
+    </div>
+  </div>
+</div>
+`},
+
+];
+
+function initExplains(){
+  QDATA.forEach((q,qi)=>{
+    const el=document.getElementById('q'+qi+'exp');
+    if(el) el.innerHTML='💡 '+q.explain;
+  });
+}
+let current=0;
+function render(){
+  const p=PAGES[current];
+  const wrap=document.getElementById('pageWrap');
+  wrap.innerHTML=p.html+`<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none';wrap.offsetHeight;wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent=p.label+'  '+(current+1)+'/'+PAGES.length;
+  document.getElementById('btnPrev').disabled=current===0;
+  document.getElementById('btnNext').disabled=current===PAGES.length-1;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+  initExplains();
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

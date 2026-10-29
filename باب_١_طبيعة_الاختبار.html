@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | الباب الأول</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#1e2a38;
+    font-family:'Tajawal',sans-serif;
+    direction:rtl;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px 12px;
+    gap:8px;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px;}
+  .nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;transition:opacity .2s;}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-label{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600}
+  .page-wrap{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease;}
+  .page-num-bar{text-align:center;padding:8px;font-size:11px;color:#7B8FA1;font-family:'Tajawal',sans-serif;}
+  .dots{display:flex;gap:6px;margin-top:4px}
+  .dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+  .dot.active{width:24px!important;background:#F5A623}
+
+  /* ── shared ── */
+  .page-white{background:#fff;min-height:680px;padding-bottom:28px}
+  .page-gray{background:#F4F7F9;min-height:680px;padding-bottom:28px}
+  .page-dark{background:#0D4F5C;min-height:680px;padding-bottom:28px}
+
+  .sec-hdr{margin:24px 20px 16px;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+  .sec-hdr-txt{font-size:16px;font-weight:800;color:#fff}
+  .sec-hdr-dot{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+
+  .gold-divider{width:80px;height:3px;background:#F5A623;border-radius:2px;margin:18px auto}
+  .teal-divider{width:60px;height:3px;background:#00B4CC;border-radius:2px;margin:16px auto}
+
+  /* ── PAGE 1: Chapter cover ── */
+  .ch-cover{background:#0D4F5C;min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .ch-cover-circle{position:absolute;border-radius:50%;background:#0A3D48}
+  .ch-cover-top{background:#F5A623;padding:11px 20px;text-align:center;font-weight:700;font-size:11px;color:#0D4F5C;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center}
+  .ch-cover-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2}
+  .ch-badge{background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.25);border-radius:50px;padding:8px 24px;font-size:12px;color:#B2EBF2;font-weight:600;margin-bottom:20px}
+  .ch-num{font-family:'Amiri',serif;font-size:80px;color:rgba(0,180,204,0.2);line-height:1;position:absolute;top:80px;left:20px;font-weight:700}
+  .ch-title-main{font-family:'Amiri',serif;font-size:34px;color:#fff;font-weight:700;text-align:center;line-height:1.4}
+  .ch-title-main span{color:#F5A623}
+  .ch-divider{width:50%;height:2px;background:linear-gradient(to left,transparent,#00B4CC,transparent);margin:18px auto}
+  .ch-desc{font-size:13px;color:#B2EBF2;text-align:center;line-height:1.9;padding:0 16px}
+  .ch-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px}
+  .ch-tag{background:rgba(0,180,204,0.15);border:1px solid rgba(0,180,204,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#80CBC4;font-weight:600}
+  .ch-cover-bot{background:#00B4CC;padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+
+  /* ── PAGE 2: What is it ── */
+  .what-intro{padding:0 22px;font-size:13.5px;color:#1A2533;line-height:2.1;text-align:right}
+  .what-intro .hl{color:#00B4CC;font-weight:700}
+  .what-intro .hl2{color:#E8512B;font-weight:700}
+
+  .info-card{margin:14px 20px;border-radius:12px;padding:16px 18px;direction:rtl}
+  .info-card-title{font-size:13px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .info-card-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .info-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;direction:rtl}
+  .info-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+  .info-text{font-size:12.5px;color:#1A2533;line-height:1.7;flex:1;text-align:right}
+
+  /* ── PAGE 3: Goals ── */
+  .goal-card{margin:0 20px 12px;border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px;direction:rtl}
+  .goal-num{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0}
+  .goal-title{font-size:13.5px;font-weight:800;color:#1A2533;margin-bottom:4px}
+  .goal-desc{font-size:12px;color:#7B8FA1;line-height:1.6}
+
+  /* ── PAGE 4: Questions count ── */
+  .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px 14px}
+  .stat-card{border-radius:12px;padding:16px 14px;text-align:center}
+  .stat-num{font-family:'Amiri',serif;font-size:36px;font-weight:700;line-height:1}
+  .stat-label{font-size:11px;font-weight:600;margin-top:6px;line-height:1.5}
+
+  .time-strip{margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:14px;direction:rtl}
+  .time-icon{font-size:28px;flex-shrink:0}
+  .time-title{font-size:13px;font-weight:800;color:#F5A623;margin-bottom:4px}
+  .time-desc{font-size:12px;color:#B2EBF2;line-height:1.6}
+
+  .types-box{margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:12px;padding:14px 18px}
+  .types-title{font-size:12px;font-weight:800;color:#7A4800;margin-bottom:8px;text-align:center}
+  .types-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .type-tag{background:#F5A623;border-radius:16px;padding:4px 12px;font-size:11px;color:#0D4F5C;font-weight:700}
+
+  /* ── PAGE 5: Distribution chart ── */
+  .dist-title{text-align:center;font-size:15px;font-weight:800;color:#0D4F5C;margin:0 20px 16px;padding-top:4px}
+  .dist-row{margin:0 20px 10px;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+  .dist-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;direction:rtl}
+  .dist-label{font-size:12.5px;font-weight:700;color:#1A2533}
+  .dist-pct{font-size:14px;font-weight:900;border-radius:20px;padding:3px 12px;color:#fff}
+  .dist-bar-wrap{height:8px;background:#F0F0F0;margin:0 16px 12px;border-radius:4px}
+  .dist-bar{height:8px;border-radius:4px;transition:width .6s ease}
+
+  .dist-total{margin:0 20px;background:#0D4F5C;border-radius:10px;padding:12px 18px;text-align:center;font-size:12px;color:#B2EBF2;font-weight:600}
+  .dist-total span{color:#F5A623;font-weight:800}
+
+  /* ── PAGE 6: Time management ── */
+  .rule-banner{margin:0 20px 16px;background:linear-gradient(135deg,#0D4F5C,#00B4CC);border-radius:12px;padding:18px 20px;text-align:center}
+  .rule-icon{font-size:32px;margin-bottom:8px}
+  .rule-title{font-family:'Amiri',serif;font-size:18px;color:#F5A623;font-weight:700}
+  .rule-sub{font-size:12px;color:#E0F7FA;margin-top:6px;line-height:1.7}
+
+  .time-step{margin:0 20px 10px;background:#F4F7F9;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;direction:rtl}
+  .time-step-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .time-step-title{font-size:13px;font-weight:800;color:#1A2533;margin-bottom:3px}
+  .time-step-desc{font-size:11.5px;color:#7B8FA1;line-height:1.6}
+
+  .warning-box{margin:0 20px;background:#FFF3E0;border:2px solid #FF9800;border-radius:10px;padding:13px 16px;text-align:center}
+  .warning-main{font-size:13px;font-weight:800;color:#E65100}
+  .warning-sub{font-size:11.5px;color:#BF360C;margin-top:5px;line-height:1.6}
+
+  /* ── PAGE 7: Notes ── */
+  .note-card{margin:0 20px 12px;border-radius:12px;padding:15px 18px;display:flex;align-items:flex-start;gap:12px;direction:rtl;border-right:4px solid}
+  .note-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+  .note-title{font-size:13px;font-weight:800;margin-bottom:4px}
+  .note-desc{font-size:12px;line-height:1.7}
+
+  .summary-box{margin:0 20px;background:#0D4F5C;border-radius:12px;padding:16px 20px;text-align:center}
+  .summary-title{font-size:13px;font-weight:800;color:#F5A623;margin-bottom:10px}
+  .summary-points{display:flex;flex-direction:column;gap:7px}
+  .summary-point{font-size:12px;color:#E0F7FA;line-height:1.6;display:flex;align-items:center;gap:8px;direction:rtl;justify-content:flex-end}
+  .summary-point-dot{width:6px;height:6px;border-radius:50%;background:#00B4CC;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+</div>
+
+<div class="page-wrap" id="pageWrap"></div>
+<div class="dots" id="dots"></div>
+
+<script>
+const PAGES = [
+
+/* ══ 1: CHAPTER COVER ══ */
+{ label:"الغلاف", bg:"#0D4F5C", html:`
+<div class="ch-cover">
+  <div class="ch-cover-circle" style="width:180px;height:180px;bottom:28%;right:-50px;opacity:.2"></div>
+  <div class="ch-cover-circle" style="width:120px;height:120px;top:20%;left:-30px;opacity:.2"></div>
+  <div class="ch-cover-circle" style="width:90px;height:90px;bottom:12%;left:55%;opacity:.15"></div>
+  <div class="ch-cover-top">
+    <span>فكِّر أقل … حُلَّ أسرع</span>
+    <span>الباب الأول</span>
+  </div>
+  <div class="ch-cover-body">
+    <div class="ch-badge">الباب الأول من ثمانية</div>
+    <div class="ch-num">١</div>
+    <div class="ch-title-main">طبيعة اختبار<br/><span>القدرات الكمي</span></div>
+    <div class="ch-divider"></div>
+    <div class="ch-desc">قبل أن تحل أي سؤال — يجب أن تفهم طبيعة الميدان الذي ستخوض فيه.</div>
+    <div class="ch-tags">
+      <div class="ch-tag">٦٨ سؤالاً</div>
+      <div class="ch-tag">١٠٠ دقيقة</div>
+      <div class="ch-tag">٤ بدائل</div>
+      <div class="ch-tag">بدون حاسبة</div>
+    </div>
+  </div>
+  <div class="ch-cover-bot">
+    <div style="font-size:10px;color:rgba(13,79,92,0.8)">القسم الكمي</div>
+    <div style="font-size:11px;font-weight:700;color:#0D4F5C">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+/* ══ 2: ما هو الاختبار ══ */
+{ label:"ما هو؟", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#0D4F5C">
+    <div class="sec-hdr-txt">ما هو اختبار القدرات الكمي؟</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+  <div class="what-intro">
+    هو جزء من اختبار القدرات العامة يقيس القدرة على
+    <span class="hl">فهم وحل المسائل الرياضية</span>
+    — وليس حفظ القوانين فقط.
+  </div>
+
+  <div class="info-card" style="background:#E0F7FA;margin-top:14px">
+    <div class="info-card-title" style="color:#0D4F5C">
+      <div class="info-card-icon" style="background:#0D4F5C">🎯</div>
+      ماذا يركز عليه؟
+    </div>
+    <div class="info-row">
+      <div class="info-dot" style="background:#00B4CC"></div>
+      <div class="info-text">يركز على <strong>الاستدلال والتحليل</strong> أكثر من الحفظ المباشر</div>
+    </div>
+    <div class="info-row">
+      <div class="info-dot" style="background:#00B4CC"></div>
+      <div class="info-text">لا يتطلب رياضيات متقدمة — يعتمد على <strong>أساسيات المرحلة الثانوية</strong></div>
+    </div>
+    <div class="info-row">
+      <div class="info-dot" style="background:#00B4CC"></div>
+      <div class="info-text">يختبر قدرتك على <strong>التفكير السريع</strong> تحت ضغط الزمن</div>
+    </div>
+  </div>
+
+  <div class="gold-divider"></div>
+
+  <div class="info-card" style="background:#FFF8E7;border:2px solid #F5A623">
+    <div class="info-card-title" style="color:#7A4800">
+      <div class="info-card-icon" style="background:#F5A623">💡</div>
+      الفرق الجوهري
+    </div>
+    <div style="font-size:12.5px;color:#5D3A00;line-height:1.9;text-align:right">
+      كثير من الطلاب يعتقدون أن اختبار القدرات = اختبار رياضيات صعب.
+      <br/>
+      الحقيقة: هو اختبار <strong style="color:#E8512B">تفكير ذكي وحل سريع</strong> — من يعرف الطريقة الصحيحة يفوق من يحفظ أكثر.
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 3: الأهداف ══ */
+{ label:"الأهداف", bg:"#F4F7F9", html:`
+<div class="page-gray">
+  <div class="sec-hdr" style="background:#E8512B">
+    <div class="sec-hdr-txt">الهدف من الاختبار</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+
+  <div class="goal-card" style="background:#fff">
+    <div class="goal-num" style="background:#00B4CC">١</div>
+    <div>
+      <div class="goal-title">قياس التحليل الكمي</div>
+      <div class="goal-desc">فهم العلاقات الرياضية وحلها — ليس مجرد تطبيق قانون محفوظ</div>
+    </div>
+  </div>
+
+  <div class="goal-card" style="background:#fff">
+    <div class="goal-num" style="background:#F5A623">٢</div>
+    <div>
+      <div class="goal-title">اختبار السرعة في الحل</div>
+      <div class="goal-desc">الزمن محدود وعدد الأسئلة كبير — السرعة جزء من التقييم</div>
+    </div>
+  </div>
+
+  <div class="goal-card" style="background:#fff">
+    <div class="goal-num" style="background:#7B2D8B">٣</div>
+    <div>
+      <div class="goal-title">تحديد الاستعداد الجامعي</div>
+      <div class="goal-desc">قياس مهارات المنطق والأرقام والتفكير الرياضي الأساسي</div>
+    </div>
+  </div>
+
+  <div style="margin:4px 20px 0;background:#0D4F5C;border-radius:12px;padding:16px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;color:#F5A623;font-weight:700;line-height:1.8">
+      "الاختبار لا يسألك ماذا تعرف — بل كيف تفكر"
+    </div>
+    <div style="font-size:11px;color:#B2EBF2;margin-top:6px">وهذا هو سر الفارق بين الطلاب</div>
+  </div>
+</div>
+`},
+
+/* ══ 4: عدد الأسئلة ══ */
+{ label:"الأسئلة", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#0D4F5C">
+    <div class="sec-hdr-txt">عدد الأسئلة وتوزيعها</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card" style="background:#E0F7FA">
+      <div class="stat-num" style="color:#0D4F5C">٦٨</div>
+      <div class="stat-label" style="color:#00838F">سؤالاً في القسم الكمي</div>
+    </div>
+    <div class="stat-card" style="background:#FFF8E7">
+      <div class="stat-num" style="color:#E65100">١٠٠</div>
+      <div class="stat-label" style="color:#BF360C">دقيقة للقسمين معاً</div>
+    </div>
+    <div class="stat-card" style="background:#F3E5F5">
+      <div class="stat-num" style="color:#6A1B9A">٤</div>
+      <div class="stat-label" style="color:#6A1B9A">بدائل لكل سؤال</div>
+    </div>
+    <div class="stat-card" style="background:#E8F5E9">
+      <div class="stat-num" style="color:#1B5E20">١.٥</div>
+      <div class="stat-label" style="color:#1B5E20">دقيقة متوسط كل سؤال</div>
+    </div>
+  </div>
+
+  <div class="time-strip">
+    <div class="time-icon">⏱</div>
+    <div>
+      <div class="time-title">الأسئلة البسيطة = وقت إضافي</div>
+      <div class="time-desc">بعض الأسئلة تحتاج أقل من دقيقة — هذا الفائض يُخصَّص للأسئلة الأصعب. ادّخر وقتك بذكاء.</div>
+    </div>
+  </div>
+
+  <div class="types-box" style="margin-top:12px">
+    <div class="types-title">🔢 أنواع المسائل في الاختبار</div>
+    <div class="types-row">
+      <div class="type-tag">جبر</div>
+      <div class="type-tag">هندسة</div>
+      <div class="type-tag">إحصاء</div>
+      <div class="type-tag">نسب</div>
+      <div class="type-tag">سرعة وزمن</div>
+      <div class="type-tag">كسور</div>
+      <div class="type-tag">احتمالات</div>
+    </div>
+  </div>
+</div>
+`},
+
+/* ══ 5: توزيع النسب ══ */
+{ label:"التوزيع", bg:"#F4F7F9", html:`
+<div class="page-gray">
+  <div class="sec-hdr" style="background:#00B4CC">
+    <div class="sec-hdr-txt">توزيع أسئلة الاختبار</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+
+  <div class="dist-row">
+    <div class="dist-header">
+      <div class="dist-pct" style="background:#E8512B">35%</div>
+      <div class="dist-label">الجبر والمعادلات</div>
+    </div>
+    <div class="dist-bar-wrap"><div class="dist-bar" style="width:35%;background:#E8512B"></div></div>
+  </div>
+
+  <div class="dist-row">
+    <div class="dist-header">
+      <div class="dist-pct" style="background:#7B2D8B">20%</div>
+      <div class="dist-label">الهندسة</div>
+    </div>
+    <div class="dist-bar-wrap"><div class="dist-bar" style="width:20%;background:#7B2D8B"></div></div>
+  </div>
+
+  <div class="dist-row">
+    <div class="dist-header">
+      <div class="dist-pct" style="background:#E65100">15%</div>
+      <div class="dist-label">الإحصاء والاحتمالات</div>
+    </div>
+    <div class="dist-bar-wrap"><div class="dist-bar" style="width:15%;background:#E65100"></div></div>
+  </div>
+
+  <div class="dist-row">
+    <div class="dist-header">
+      <div class="dist-pct" style="background:#1565C0">15%</div>
+      <div class="dist-label">النسب والسرعة والزمن والعمل</div>
+    </div>
+    <div class="dist-bar-wrap"><div class="dist-bar" style="width:15%;background:#1565C0"></div></div>
+  </div>
+
+  <div class="dist-row">
+    <div class="dist-header">
+      <div class="dist-pct" style="background:#2E7D32">15%</div>
+      <div class="dist-label">كسور ونسب مئوية ومتوسطات</div>
+    </div>
+    <div class="dist-bar-wrap"><div class="dist-bar" style="width:15%;background:#2E7D32"></div></div>
+  </div>
+
+  <div class="dist-total">
+    المجموع <span>100%</span> — الجبر هو الأعلى وزناً <span>35%</span> فلا تهمله
+  </div>
+</div>
+`},
+
+/* ══ 6: إدارة الوقت ══ */
+{ label:"إدارة الوقت", bg:"#fff", html:`
+<div class="page-white">
+  <div class="rule-banner">
+    <div class="rule-icon">🔑</div>
+    <div class="rule-title">"لا تقف طويلاً عند سؤال واحد"</div>
+    <div class="rule-sub">هذه القاعدة وحدها قد ترفع درجتك أكثر من ساعات الدراسة</div>
+  </div>
+
+  <div class="time-step">
+    <div class="time-step-icon" style="background:#E0F7FA">⏰</div>
+    <div>
+      <div class="time-step-title">إذا تجاوز السؤال دقيقتين</div>
+      <div class="time-step-desc">ولم تصل لحل واضح — ضع علامة عليه وانتقل فوراً</div>
+    </div>
+  </div>
+
+  <div class="time-step">
+    <div class="time-step-icon" style="background:#FFF8E7">📌</div>
+    <div>
+      <div class="time-step-title">ضع علامة على السؤال العالق</div>
+      <div class="time-step-desc">حتى ترجع له في نهاية الوقت إذا تبقى وقت</div>
+    </div>
+  </div>
+
+  <div class="time-step">
+    <div class="time-step-icon" style="background:#E8F5E9">🚀</div>
+    <div>
+      <div class="time-step-title">الأسئلة السهلة أولاً</div>
+      <div class="time-step-desc">ابدأ بما تعرفه — الثقة تبني زخماً يساعدك في الباقي</div>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warning-main">⚠️ السرعة في تجاوز الأسئلة العالقة</div>
+    <div class="warning-sub">جزء أصيل من البراعة التي يقيسها الاختبار — لا تنتظر الإلهام!</div>
+  </div>
+</div>
+`},
+
+/* ══ 7: ملاحظات هامة ══ */
+{ label:"ملاحظات", bg:"#fff", html:`
+<div class="page-white">
+  <div class="sec-hdr" style="background:#0D4F5C">
+    <div class="sec-hdr-txt">ملاحظات لا تنساها</div>
+    <div class="sec-hdr-dot"></div>
+  </div>
+
+  <div class="note-card" style="background:#E8F5E9;border-color:#2E7D32">
+    <div class="note-icon">🚫</div>
+    <div>
+      <div class="note-title" style="color:#1B5E20">بدون حاسبة</div>
+      <div class="note-desc" style="color:#2E7D32">الحل يجب أن يكون ذهنياً أو كتابياً — تدرّب على الحساب السريع في ذهنك</div>
+    </div>
+  </div>
+
+  <div class="note-card" style="background:#E0F7FA;border-color:#00B4CC">
+    <div class="note-icon">⚡</div>
+    <div>
+      <div class="note-title" style="color:#006064">الطريقة السريعة أهم</div>
+      <div class="note-desc" style="color:#00838F">التركيز على طرق الحل السريع أهم بكثير من الحل التفصيلي الطويل</div>
+    </div>
+  </div>
+
+  <div class="note-card" style="background:#FFF8E7;border-color:#F5A623">
+    <div class="note-icon">🔁</div>
+    <div>
+      <div class="note-title" style="color:#7A4800">التدريب هو السر</div>
+      <div class="note-desc" style="color:#9B6000">النجاح يعتمد على الممارسة الكثيرة والتدريب على نماذج حقيقية</div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <div class="summary-title">✅ ملخص الباب الأول</div>
+    <div class="summary-points">
+      <div class="summary-point"><span>الاختبار يقيس التفكير لا الحفظ</span><div class="summary-point-dot"></div></div>
+      <div class="summary-point"><span>٦٨ سؤال — دقيقة ونصف لكل سؤال</span><div class="summary-point-dot"></div></div>
+      <div class="summary-point"><span>الجبر ٣٥٪ — الأعلى وزناً</span><div class="summary-point-dot"></div></div>
+      <div class="summary-point"><span>لا تقف عند سؤال أكثر من دقيقتين</span><div class="summary-point-dot"></div></div>
+      <div class="summary-point"><span>التدريب المستمر هو الفيصل</span><div class="summary-point-dot"></div></div>
+    </div>
+  </div>
+</div>
+`},
+
+,
+
+/* ══ 8: الطالب الذكي vs الطالب العادي ══ */
+{ label:"الذكي vs العادي", bg:"#0D4F5C", html:`
+<div class="page-dark">
+  <div class="sec-hdr" style="background:#F5A623;margin-top:0">
+    <div class="sec-hdr-txt" style="color:#0D4F5C">الطالب الذكي vs الطالب العادي</div>
+    <div class="sec-hdr-dot" style="background:#0D4F5C"></div>
+  </div>
+
+  <div style="padding:0 20px 14px">
+
+    <!-- Header row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div style="background:#00B4CC;border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:22px">🚀</div>
+        <div style="font-size:13px;font-weight:900;color:#fff;margin-top:4px">الطالب الذكي</div>
+        <div style="font-size:10px;color:#E0F7FA;margin-top:2px">يفكر أقل — يحل أسرع</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.15)">
+        <div style="font-size:22px">🐢</div>
+        <div style="font-size:13px;font-weight:900;color:rgba(255,255,255,0.7);margin-top:4px">الطالب العادي</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px">يحفظ أكثر — يحل أبطأ</div>
+      </div>
+    </div>
+
+    <!-- Comparison rows -->
+    ${[
+      ["يبدأ بالأسئلة الأسهل أولاً",        "يحل بالترتيب من أول سؤال"],
+      ["يتجاوز السؤال الصعب ويعود له",       "يقف عند السؤال الصعب طويلاً"],
+      ["يستخدم الحيلة السريعة",              "يحسب بالطريقة التقليدية الطويلة"],
+      ["يوفّر الوقت للأسئلة الأصعب",        "يفقد الوقت في الحساب المطوّل"],
+      ["يخرج وعنده وقت للمراجعة",           "يخرج والوقت انتهى قبله"],
+    ].map(([smart, avg]) => `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+        <div style="background:rgba(0,180,204,0.15);border:1px solid rgba(0,180,204,0.3);border-radius:8px;padding:10px 12px;text-align:center;font-size:11.5px;color:#E0F7FA;font-weight:600;line-height:1.5">${smart}</div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;text-align:center;font-size:11.5px;color:rgba(255,255,255,0.45);line-height:1.5">${avg}</div>
+      </div>
+    `).join('')}
+
+    <!-- CTA -->
+    <div style="background:#F5A623;border-radius:12px;padding:16px 18px;text-align:center;margin-top:8px">
+      <div style="font-family:'Amiri',serif;font-size:16px;font-weight:700;color:#0D4F5C;line-height:1.8">
+        هذا الكتاب يحوّلك من الطالب العادي<br/>إلى الطالب الذكي — باب باب.
+      </div>
+    </div>
+
+  </div>
+</div>
+`},
+
+];
+
+let current = 0;
+function render() {
+  const p = PAGES[current];
+  const wrap = document.getElementById('pageWrap');
+  wrap.innerHTML = p.html + `<div class="page-num-bar" style="background:${p.bg}">${current+1}</div>`;
+  wrap.style.animation='none'; wrap.offsetHeight; wrap.style.animation='fadeUp .35s ease';
+  document.getElementById('navLabel').textContent = p.label + '  ' + (current+1) + '/' + PAGES.length;
+  document.getElementById('btnPrev').disabled = current===0;
+  document.getElementById('btnNext').disabled = current===PAGES.length-1;
+  const dots = document.getElementById('dots');
+  dots.innerHTML='';
+  PAGES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.style.width=i===current?'24px':'8px';
+    d.onclick=()=>{current=i;render()};
+    dots.appendChild(d);
+  });
+}
+function changePage(dir){current=Math.max(0,Math.min(PAGES.length-1,current+dir));render();}
+render();
+</script>
+</body>
+</html>

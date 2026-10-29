@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فكِّر أقل … حُلَّ أسرع | ٥٠ فكرة للاختصار</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1e2a38;font-family:'Tajawal',sans-serif;direction:rtl;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px;gap:8px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.nb{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:500px;padding:10px 16px;background:rgba(255,255,255,0.08);border-radius:50px}
+.nb button{background:rgba(255,255,255,0.15);border:none;color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer}
+.nb button:disabled{opacity:.3;cursor:default}
+.nb span{color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;text-align:center}
+.pw{width:100%;max-width:500px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:fadeUp .35s ease}
+.pnb{text-align:center;padding:8px;font-size:11px;color:#7B8FA1}
+.dots{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center;max-width:500px}
+.dot{height:8px;border-radius:4px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.25)}
+.dot.active{width:24px!important;background:#F5A623}
+.sh{margin:18px 20px 10px;border-radius:10px;padding:12px 17px;display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.sh span{font-size:14px;font-weight:800;color:#fff}
+.sd{width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0}
+.card{margin:0 20px 8px;border-radius:12px;padding:11px 14px}
+.tip{display:flex;align-items:center;gap:10px;margin-bottom:7px;direction:rtl}
+.tip-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0}
+.tip-txt{font-size:12.5px;color:#1A2533;line-height:1.7;flex:1;text-align:right}
+.tip-ex{font-size:11px;color:#7B8FA1;margin-top:2px}
+svg text{font-family:'Tajawal',sans-serif}
+</style>
+</head>
+<body>
+<div class="nb">
+  <button id="bn" onclick="cp(1)">التالي ←</button>
+  <span id="nl"></span>
+  <button id="bp" onclick="cp(-1)">→ السابق</button>
+</div>
+<div class="pw" id="pw"></div>
+<div class="dots" id="dots"></div>
+<div id="pg0" data-label="الغلاف" data-bg="#0D1B2E" style="display:none"><div style="background:linear-gradient(160deg,#0D1B2E,#1A2E4A);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(245,166,35,0.04);top:-80px;left:-80px"></div>
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(245,166,35,0.06);bottom:-40px;right:-40px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-size:11px;font-weight:700;color:#0D1B2E;display:flex;justify-content:space-between;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>الخاتمة</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;position:relative;z-index:2">
+    <div style="font-size:52px;margin-bottom:12px;animation:pulse 2s infinite">⚡</div>
+    <div style="font-family:serif;font-size:30px;color:#F5A623;font-weight:700;text-align:center;line-height:1.4;margin-bottom:8px">٥٠ فكرة للاختصار</div>
+    <div style="font-size:16px;color:#fff;font-weight:700;text-align:center;margin-bottom:16px">في اختبار القدرات</div>
+    <div style="width:60%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin-bottom:20px"></div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.75);text-align:center;line-height:2.2;padding:0 10px">
+      الطالب <strong style="color:#F5A623">المتوسط</strong> يحل<br/>
+      الطالب <strong style="color:#F5A623">المتفوق</strong> يختصر
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px"><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">الضرب الذكي</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">النسب المئوية</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">المقارنات</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">التناسب</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">الأسس والجذور</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">الهندسة</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">اختيارات ذكية</div><div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:5px 14px;font-size:11px;color:#F5A623;font-weight:600">الأنماط</div>
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.3);padding:11px 20px;text-align:center;font-size:11px;color:#F5A623;font-weight:700;position:relative;z-index:2">
+    🔥 راجع هذه الصفحة قبل الاختبار مباشرة
+  </div>
+</div></div>
+<div id="pg1" data-label="الضرب الذكي" data-bg="#fff" style="display:none"><div style="background:#fff;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#E65100"><span>⚡ الضرب الذكي</span><div class="sd"></div></div>
+  <div class="card" style="background:#FBE9E7">
+    <div class="tip"><div class="tip-num" style="background:#F5A623">١</div><div class="tip-txt"><strong style="color:#F5A623">٢٥ × عدد</strong><br/><span style="color:#555">اقسم العدد على ٤ ثم × ١٠٠</span><div class="tip-ex">مثال: ٢٥×١٦ = (١٦÷٤)×١٠٠ = ٤٠٠</div></div></div><div class="tip"><div class="tip-num" style="background:#E8512B">٢</div><div class="tip-txt"><strong style="color:#E8512B">٥٠ × عدد</strong><br/><span style="color:#555">نصف العدد × ١٠٠</span><div class="tip-ex">مثال: ٥٠×١٨ = ٩×١٠٠ = ٩٠٠</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٣</div><div class="tip-txt"><strong style="color:#1565C0">٩٩ × عدد</strong><br/><span style="color:#555">(١٠٠×العدد) − العدد</span><div class="tip-ex">مثال: ٩٩×٧ = ٧٠٠−٧ = ٦٩٣</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٤</div><div class="tip-txt"><strong style="color:#2E7D32">١٠١ × عدد</strong><br/><span style="color:#555">(١٠٠×العدد) + العدد</span><div class="tip-ex">مثال: ١٠١×٦ = ٦٠٠+٦ = ٦٠٦</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٥</div><div class="tip-txt"><strong style="color:#7B2D8B">١١ × عددان</strong><br/><span style="color:#555">اجمع الرقمين في الوسط</span><div class="tip-ex">مثال: ١١×٢٣ = ٢٥٣ (٢+٣=٥ في الوسط)</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٦</div><div class="tip-txt"><strong style="color:#C62828">فرق المربعين</strong><br/><span style="color:#555">(أ+ب)(أ−ب) = أ²−ب²</span><div class="tip-ex">مثال: ٥١×٤٩ = (٥٠+١)(٥٠−١) = ٢٤٩٩</div></div></div>
+  </div>
+</div></div>
+<div id="pg2" data-label="النسب والمقارنات" data-bg="#F4F7F9" style="display:none"><div style="background:#F4F7F9;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#1565C0"><span>⚡ النسب المئوية والمقارنات</span><div class="sd"></div></div>
+  <div class="card" style="background:#E3F2FD">
+    <div style="font-size:12px;font-weight:800;color:#0D47A1;margin-bottom:8px">النسب المئوية السريعة</div>
+    <div class="tip"><div class="tip-num" style="background:#1565C0">١</div><div class="tip-txt"><strong style="color:#1565C0">١٠٪ من عدد</strong> — اقسمه على ١٠<div class="tip-ex">مثال: ١٠٪ من ٣٥٠ = ٣٥</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٢</div><div class="tip-txt"><strong style="color:#2E7D32">٥٪ من عدد</strong> — نصف ١٠٪<div class="tip-ex">مثال: ٥٪ من ٢٠٠ = ١٠</div></div></div><div class="tip"><div class="tip-num" style="background:#E65100">٣</div><div class="tip-txt"><strong style="color:#E65100">٢٥٪ من عدد</strong> — اقسمه على ٤<div class="tip-ex">مثال: ٢٥٪ من ٨٠ = ٢٠</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٤</div><div class="tip-txt"><strong style="color:#7B2D8B">٧٥٪ من عدد</strong> — ٣ أرباع | أو ١ − ٢٥٪<div class="tip-ex">مثال: ٧٥٪ من ٨٠ = ٦٠</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٥</div><div class="tip-txt"><strong style="color:#C62828">٣٣٪ من عدد</strong> — اقسمه على ٣<div class="tip-ex">مثال: ٣٣٪ من ٩٠ ≈ ٣٠</div></div></div>
+  </div>
+  <div class="card" style="background:#FBE9E7">
+    <div style="font-size:12px;font-weight:800;color:#BF360C;margin-bottom:8px">المقارنات الذكية</div>
+    <div class="tip"><div class="tip-num" style="background:#E65100">١</div><div class="tip-txt"><strong style="color:#E65100">مقارنة كسور</strong> — ضرب تبادلي أ×د مقابل ب×ج<div class="tip-ex">مثال: ٣/٤ مقابل ٢/٣: ٩>٨ → ٣/٤ أكبر</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٢</div><div class="tip-txt"><strong style="color:#1565C0">مقارنة جذور</strong> — قارن الأعداد تحت الجذر مباشرة<div class="tip-ex">مثال: <span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ > <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ لأن ٥٠>٤٩</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٣</div><div class="tip-txt"><strong style="color:#2E7D32">نفس البسط</strong> — الأصغر مقاماً هو الأكبر<div class="tip-ex">مثال: ٣/٥ > ٣/٧ لأن ٥ < ٧</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٤</div><div class="tip-txt"><strong style="color:#7B2D8B">نسبة التغير</strong> — (جديد−قديم)÷قديم × ١٠٠<div class="tip-ex">مثال: ٢٢٠ إلى ٢٧٠ → زيادة ٢٢٫٧٪</div></div></div>
+  </div>
+</div></div>
+<div id="pg3" data-label="الجذور والأسس" data-bg="#fff" style="display:none"><div style="background:#fff;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#7B2D8B"><span>⚡ الجذور والأسس</span><div class="sd"></div></div>
+  <div class="card" style="background:#F3E5F5">
+    <div class="tip"><div class="tip-num" style="background:#7B2D8B">١</div><div class="tip-txt"><strong style="color:#7B2D8B"><span style="display:inline-block;transform:scaleX(-1)">√</span>(أ×ب)</strong> — = <span style="display:inline-block;transform:scaleX(-1)">√</span>أ × <span style="display:inline-block;transform:scaleX(-1)">√</span>ب<div class="tip-ex">مثال: <span style="display:inline-block;transform:scaleX(-1)">√</span>٧٢ = <span style="display:inline-block;transform:scaleX(-1)">√</span>٣٦×<span style="display:inline-block;transform:scaleX(-1)">√</span>٢ = ٦<span style="display:inline-block;transform:scaleX(-1)">√</span>٢</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٢</div><div class="tip-txt"><strong style="color:#C62828"><span style="display:inline-block;transform:scaleX(-1)">√</span>عدد قريب من مربع</strong> — قرّب للأقرب<div class="tip-ex">مثال: <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٨ ≈ <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ = ٧</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٣</div><div class="tip-txt"><strong style="color:#1565C0">مقارنة جذور</strong> — قارن الأعداد مباشرة<div class="tip-ex">مثال: <span style="display:inline-block;transform:scaleX(-1)">√</span>١٠٠ > <span style="display:inline-block;transform:scaleX(-1)">√</span>٨١ لأن ١٠٠>٨١</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٤</div><div class="tip-txt"><strong style="color:#2E7D32">الأس السالب</strong> — = مقلوب وليس سالباً<div class="tip-ex">مثال: ٢⁻³ = ١/٨ لا يساوي −٨</div></div></div><div class="tip"><div class="tip-num" style="background:#E65100">٥</div><div class="tip-txt"><strong style="color:#E65100">أس الصفر</strong> — أي عدد ≠ ٠ مرفوع للصفر = ١<div class="tip-ex">مثال: ٩٩⁰ = ١</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٦</div><div class="tip-txt"><strong style="color:#7B2D8B">ضرب الأسس</strong> — نفس الأساس → اجمع الأسس<div class="tip-ex">مثال: ٢³×٢⁴ = ٢⁷ = ١٢٨</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٧</div><div class="tip-txt"><strong style="color:#C62828">قسمة الأسس</strong> — نفس الأساس → اطرح الأسس<div class="tip-ex">مثال: ٣⁵÷٣² = ٣³ = ٢٧</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٨</div><div class="tip-txt"><strong style="color:#1565C0">رفع أس لأس</strong> — اضرب الأسين<div class="tip-ex">مثال: (٢³)² = ٢⁶ = ٦٤</div></div></div>
+  </div>
+</div></div>
+<div id="pg4" data-label="التناسب والمسائل اللفظية" data-bg="#F4F7F9" style="display:none"><div style="background:#F4F7F9;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#E65100"><span>⚡ التناسب والمسائل اللفظية</span><div class="sd"></div></div>
+  <div class="card" style="background:#FBE9E7">
+    <div style="font-size:12px;font-weight:800;color:#BF360C;margin-bottom:8px">التناسب</div>
+    <div class="tip"><div class="tip-num" style="background:#E65100">١</div><div class="tip-txt"><strong style="color:#E65100">طردي</strong> — زاد أحدهما → زاد الآخر | أ÷ب=ج÷د<div class="tip-ex">مثال: ٣ أقلام بـ١٥ → ٧ أقلام بـ٣٥</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٢</div><div class="tip-txt"><strong style="color:#C62828">عكسي</strong> — زاد أحدهما → نقص الآخر | أ×ب=ج×د<div class="tip-ex">مثال: ٣ عمال×١٢ يوم = ٦×٦ أيام</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٣</div><div class="tip-txt"><strong style="color:#1565C0">المثلث السحري</strong> — غطِّ المجهول → القانون يظهر<div class="tip-ex">مثال: م=س×ز → غطِّ م: م=س×ز</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٤</div><div class="tip-txt"><strong style="color:#2E7D32">نسبة مئوية</strong> — ×(١+٪) للزيادة | ×(١−٪) للنقص<div class="tip-ex">مثال: زيادة ٢٠٪: ×١٫٢ | نقص ٢٠٪: ×٠٫٨</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٥</div><div class="tip-txt"><strong style="color:#7B2D8B">التغير المتسلسل</strong> — زيادة٢٠٪ ثم نقص٢٠٪ ≠ صفر<div class="tip-ex">مثال: ١٠٠×١٫٢×٠٫٨=٩٦ → نقص ٤٪</div></div></div>
+  </div>
+  <div class="card" style="background:#E3F2FD">
+    <div style="font-size:12px;font-weight:800;color:#0D47A1;margin-bottom:8px">الكلمات المفتاحية</div>
+    <div class="tip"><div class="tip-num" style="background:#E8512B">١</div><div class="tip-txt"><strong style="color:#E8512B">أكثر من</strong> — = جمع<div class="tip-ex">مثال: عدد أكثر من ٥ بـ٣: العدد=٨</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٢</div><div class="tip-txt"><strong style="color:#1565C0">أقل من</strong> — = طرح<div class="tip-ex">مثال: عدد أقل من ١٠ بـ٤: العدد=٦</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٣</div><div class="tip-txt"><strong style="color:#2E7D32">ضعف</strong> — = ×٢<div class="tip-ex">مثال: ضعف ٧ = ١٤</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٤</div><div class="tip-txt"><strong style="color:#7B2D8B">ثلاثة أمثال</strong> — = ×٣<div class="tip-ex">مثال: ثلاثة أمثال ٥ = ١٥</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٥</div><div class="tip-txt"><strong style="color:#C62828">نصف</strong> — = ÷٢<div class="tip-ex">مثال: نصف ١٨ = ٩</div></div></div><div class="tip"><div class="tip-num" style="background:#E65100">٦</div><div class="tip-txt"><strong style="color:#E65100">جرّب الخيارات</strong> — عوّض وتحقق — أسرع من المعادلة<div class="tip-ex">مثال: جرّب الأوسط أولاً دائماً</div></div></div>
+  </div>
+</div></div>
+<div id="pg5" data-label="المتتابعات والإحصاء" data-bg="#fff" style="display:none"><div style="background:#fff;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#1565C0"><span>⚡ المتتابعات والإحصاء</span><div class="sd"></div></div>
+  <div class="card" style="background:#E8EAF6">
+    <div style="font-size:12px;font-weight:800;color:#1A237E;margin-bottom:8px">المتتابعات</div>
+    <div class="tip"><div class="tip-num" style="background:#1565C0">١</div><div class="tip-txt"><strong style="color:#1565C0">حسابية</strong> — الفرق ثابت | حₙ=أ+(ن−١)×د<div class="tip-ex">مثال: ٢،٥،٨: د=٣ | الحد العاشر=٢+٩×٣=٢٩</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٢</div><div class="tip-txt"><strong style="color:#7B2D8B">هندسية</strong> — النسبة ثابتة | حₙ=أ×رⁿ⁻¹<div class="tip-ex">مثال: ٢،٦،١٨: ر=٣ | الحد الخامس=١٦٢</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٣</div><div class="tip-txt"><strong style="color:#2E7D32">غاوس</strong> — م=ن÷٢×(أول+آخر)<div class="tip-ex">مثال: ١+٢+...+١٠٠ = ٥٠×١٠١ = ٥٠٥٠</div></div></div><div class="tip"><div class="tip-num" style="background:#E65100">٤</div><div class="tip-txt"><strong style="color:#E65100">الدوريات</strong> — رقم الحد ÷ طول الدورة → الباقي<div class="tip-ex">مثال: ح₁₄ في ٢،٤،٦،٢،٤،٦: ١٤÷٣ باقي٢ = ٤</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٥</div><div class="tip-txt"><strong style="color:#C62828">مربعات</strong> — ١،٤،٩،١٦ = ن²<div class="tip-ex">مثال: الحد الثامن = ٦٤</div></div></div>
+  </div>
+  <div class="card" style="background:#FBE9E7">
+    <div style="font-size:12px;font-weight:800;color:#BF360C;margin-bottom:8px">الإحصاء السريع</div>
+    <div class="tip"><div class="tip-num" style="background:#E65100">١</div><div class="tip-txt"><strong style="color:#E65100">المتوسط السريع</strong> — قيم منتظمة → (أول+آخر)÷٢<div class="tip-ex">مثال: ٢،٤،٦،٨،١٠: متوسط=(٢+١٠)÷٢=٦</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٢</div><div class="tip-txt"><strong style="color:#1565C0">إضافة قيمة</strong> — أعلى من المتوسط → يزيد<div class="tip-ex">مثال: متوسط=١٠، أضيف ١٥ → المتوسط يزيد</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٣</div><div class="tip-txt"><strong style="color:#2E7D32">الوسيط</strong> — رتّب أولاً ثم خذ الوسطى<div class="tip-ex">مثال: ٩،٤،٧،٥،٨ → ٤،٥،٧،٨،٩ → وسيط=٧</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٤</div><div class="tip-txt"><strong style="color:#7B2D8B">المنوال</strong> — الأكثر تكراراً مباشرة<div class="tip-ex">مثال: ٣،٥،٥،٧،٥ → منوال=٥</div></div></div>
+  </div>
+</div></div>
+<div id="pg6" data-label="الهندسة والاحتمالات" data-bg="#F4F7F9" style="display:none"><div style="background:#F4F7F9;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#2E7D32"><span>⚡ الهندسة والاحتمالات</span><div class="sd"></div></div>
+  <div class="card" style="background:#E8F5E9">
+    <div style="font-size:12px;font-weight:800;color:#1B5E20;margin-bottom:8px">الهندسة</div>
+    <div class="tip"><div class="tip-num" style="background:#E65100">١</div><div class="tip-txt"><strong style="color:#E65100">المربع</strong> — مساحة=ض² | قطر=ض×{RT}٢ | مح=٤ض<div class="tip-ex">مثال: ض=٦: م=٣٦، قطر=٦{RT}٢</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٢</div><div class="tip-txt"><strong style="color:#1565C0">المستطيل</strong> — قطر={RT}(ط²+ع²) | م=ط×ع<div class="tip-ex">مثال: ط=٣،ع=٤: قطر=٥</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٣</div><div class="tip-txt"><strong style="color:#7B2D8B">الدائرة</strong> — اترك الجواب بـ ط | م=طنق²<div class="tip-ex">مثال: نق=٥: م=٢٥ط</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٤</div><div class="tip-txt"><strong style="color:#2E7D32">المظلل</strong> — كبير−صغير | أو جمع الأجزاء<div class="tip-ex">مثال: م.مربع−م.دائرة</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٥</div><div class="tip-txt"><strong style="color:#C62828">المثلث القائم</strong> — ثلاثيات فيثاغورس: ٣،٤،٥ | ٥،١٢،١٣<div class="tip-ex">مثال: ساقان ٦،٨ → وتر=١٠</div></div></div><div class="tip"><div class="tip-num" style="background:#E65100">٦</div><div class="tip-txt"><strong style="color:#E65100">الزاوية الخارجية</strong> — = مجموع الزاويتين البعيدتين<div class="tip-ex">مثال: زاويتان ٥٠+٧٠ → خارجية=١٢٠</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٧</div><div class="tip-txt"><strong style="color:#1565C0">المتقابلة بالرأس</strong> — = نفس القيمة مباشرة<div class="tip-ex">مثال: تقاطع: زاوية=٤٠ → مقابلها=٤٠</div></div></div>
+  </div>
+  <div class="card" style="background:#F3E5F5">
+    <div style="font-size:12px;font-weight:800;color:#4A148C;margin-bottom:8px">الاحتمالات</div>
+    <div class="tip"><div class="tip-num" style="background:#7B2D8B">١</div><div class="tip-txt"><strong style="color:#7B2D8B">قانون الاحتمال</strong> — المطلوب÷الإجمالي<div class="tip-ex">مثال: نرد: P(زوجي)=٣/٦=١/٢</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٢</div><div class="tip-txt"><strong style="color:#C62828">النقيض</strong> — ب(لا أ)=١−ب(أ)<div class="tip-ex">مثال: P(لا فوز)=١−P(فوز)</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٣</div><div class="tip-txt"><strong style="color:#2E7D32">مستقلان (و)</strong> — ب(أ وب)=ب(أ)×ب(ب)<div class="tip-ex">مثال: نرد+عملة: ١/٦×١/٢=١/١٢</div></div></div><div class="tip"><div class="tip-num" style="background:#E65100">٤</div><div class="tip-txt"><strong style="color:#E65100">مبدأ العد</strong> — م×ن<div class="tip-ex">مثال: ٣ قمصان و٤ بناطيل = ١٢ تنسيقاً</div></div></div>
+  </div>
+</div></div>
+<div id="pg7" data-label="أفكار احترافية" data-bg="#fff" style="display:none"><div style="background:#fff;min-height:680px;padding-bottom:24px">
+  <div class="sh" style="background:#0D4F5C"><span>⚡ أفكار احترافية وخصائص الأعداد</span><div class="sd"></div></div>
+  <div class="card" style="background:#E0F2F1">
+    <div style="font-size:12px;font-weight:800;color:#004D40;margin-bottom:8px">أفكار احترافية 🏆</div>
+    <div class="tip"><div class="tip-num" style="background:#F5A623">١</div><div class="tip-txt"><strong style="color:#F5A623">راقب الخيارات أولاً</strong><br/><span style="color:#555">أحياناً الجواب واضح بدون حساب</span><div class="tip-ex">إذا ٣ خيارات خاطئة بوضوح → الرابع هو الجواب</div></div></div><div class="tip"><div class="tip-num" style="background:#E8512B">٢</div><div class="tip-txt"><strong style="color:#E8512B">ابدأ بالأوسط</strong><br/><span style="color:#555">جرّب الخيار الأوسط وقيّم</span><div class="tip-ex">الخيارات ٢،٤،٦،٨ → ابدأ بـ٤ أو ٦</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٣</div><div class="tip-txt"><strong style="color:#1565C0">السؤال الطويل = فكرة بسيطة</strong><br/><span style="color:#555">لا تتعقد | الفكرة غالباً واحدة</span><div class="tip-ex">اقرأ آخر السؤال أولاً</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٤</div><div class="tip-txt"><strong style="color:#2E7D32">إذا تعقدت → طريقة خاطئة</strong><br/><span style="color:#555">ارجع وجرّب طريقة أخرى</span><div class="tip-ex">المسألة البسيطة لا تحتاج صفحة حساب</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٥</div><div class="tip-txt"><strong style="color:#7B2D8B">التقريب للإجابة</strong><br/><span style="color:#555">قدِّر إذا الخيارات متباعدة</span><div class="tip-ex">٩٩×٩٩ ≈ ١٠٠٠٠ → أقرب خيار</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٦</div><div class="tip-txt"><strong style="color:#C62828">التحقق بالتعويض</strong><br/><span style="color:#555">عوّض جوابك في المسألة الأصلية</span><div class="tip-ex">أسرع من إعادة الحل من الصفر</div></div></div>
+  </div>
+  <div class="card" style="background:#FBE9E7">
+    <div style="font-size:12px;font-weight:800;color:#BF360C;margin-bottom:8px">خصائص الأعداد</div>
+    <div class="tip"><div class="tip-num" style="background:#E65100">١</div><div class="tip-txt"><strong style="color:#E65100">قابلية القسمة</strong> — مجموع الأرقام÷٣ → يقبل القسمة على ٣<div class="tip-ex">مثال: ١٢٣: ١+٢+٣=٦ → يقبل القسمة على ٣</div></div></div><div class="tip"><div class="tip-num" style="background:#1565C0">٢</div><div class="tip-txt"><strong style="color:#1565C0">ينتهي بـ ٠ أو ٥</strong> — يقبل القسمة على ٥<div class="tip-ex">مثال: ٣٥، ٩٠، ١٢٥</div></div></div><div class="tip"><div class="tip-num" style="background:#2E7D32">٣</div><div class="tip-txt"><strong style="color:#2E7D32">زوجي × أي عدد</strong> — = دائماً زوجي<div class="tip-ex">مثال: ٤×٧=٢٨ زوجي</div></div></div><div class="tip"><div class="tip-num" style="background:#7B2D8B">٤</div><div class="tip-txt"><strong style="color:#7B2D8B">فردي × فردي</strong> — = فردي دائماً<div class="tip-ex">مثال: ٣×٧=٢١ فردي</div></div></div><div class="tip"><div class="tip-num" style="background:#C62828">٥</div><div class="tip-txt"><strong style="color:#C62828">آحاد الضرب فقط</strong> — لإيجاد آحاد النتيجة<div class="tip-ex">مثال: ٧×٨ → آحاد=٦ فقط</div></div></div>
+  </div>
+</div></div>
+<div id="pg8" data-label="الخلاصة الذهبية" data-bg="#0D1B2E" style="display:none"><div style="background:linear-gradient(160deg,#0D1B2E,#1A2E4A);min-height:680px;padding-bottom:24px">
+  <div style="margin:22px 20px 14px;background:#F5A623;border-radius:10px;padding:13px 18px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <span style="font-size:15px;font-weight:800;color:#0D1B2E">🔥 الخلاصة الذهبية</span>
+    <span style="width:10px;height:10px;border-radius:50%;background:#0D1B2E;display:inline-block"></span>
+  </div>
+
+  <div style="margin:0 20px 10px;background:rgba(245,166,35,0.1);border:2px solid rgba(245,166,35,0.3);border-radius:12px;padding:14px 16px;text-align:center">
+    <div style="font-size:17px;font-weight:900;color:#F5A623;line-height:1.8">الطالب المتوسط يحل<br/>الطالب المتفوق <span style="color:#fff">يختصر</span></div>
+  </div>
+
+  <div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #F5A623"><div style="font-size:11px;font-weight:800;color:#F5A623;margin-bottom:4px">الضرب الذكي</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">٢٥×عدد → ÷٤×١٠٠ | ٩٩×عدد → ١٠٠×ع−ع | فرق المربعين</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #E8512B"><div style="font-size:11px;font-weight:800;color:#E8512B;margin-bottom:4px">النسب المئوية</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">١٠٪=÷١٠ | ٢٥٪=÷٤ | ٧٥٪=٣ أرباع | تغير متسلسل ≠ مجموع التغييرات</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #1565C0"><div style="font-size:11px;font-weight:800;color:#1565C0;margin-bottom:4px">المقارنات</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">كسور: ضرب تبادلي | جذور: قارن الأعداد | نفس البسط: الأصغر مقاماً أكبر</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #2E7D32"><div style="font-size:11px;font-weight:800;color:#2E7D32;margin-bottom:4px">التناسب</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">طردي: أ÷ب=ج÷د | عكسي: أ×ب=ج×د | جرّب الخيارات قبل المعادلة</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #7B2D8B"><div style="font-size:11px;font-weight:800;color:#7B2D8B;margin-bottom:4px">الأسس والجذور</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">ضرب الأسس→اجمع | قسمة→اطرح | رفع لأس→اضرب | أس صفر=١</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #00838F"><div style="font-size:11px;font-weight:800;color:#00838F;margin-bottom:4px">المتتابعات</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">فرق ثابت→حسابية | نسبة ثابتة→هندسية | غاوس للمجموع | دوري→باقي القسمة</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #E65100"><div style="font-size:11px;font-weight:800;color:#E65100;margin-bottom:4px">الهندسة</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">ثلاثيات فيثاغورس أولاً | المظلل=كبير−صغير | اترك ط كما هو</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #C62828"><div style="font-size:11px;font-weight:800;color:#C62828;margin-bottom:4px">الاحتمال</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">المطلوب÷الإجمالي | نقيض=١−ب | مستقلان: اضرب</div></div><div style="margin:0 20px 8px;background:rgba(255,255,255,0.06);border-radius:12px;padding:11px 15px;border-right:4px solid #F5A623"><div style="font-size:11px;font-weight:800;color:#F5A623;margin-bottom:4px">الأفكار الاحترافية</div><div style="font-size:12px;color:#E8EAF6;line-height:1.8">راقب الخيارات | ابدأ بالأوسط | تعقّد → طريقة خاطئة | قدِّر إذا الخيارات متباعدة</div></div>
+</div></div>
+<div id="pg9" data-label="تواصل معنا" data-bg="#0D1B2E" style="display:none"><div style="background:linear-gradient(160deg,#0D1B2E,#1A237E);min-height:680px;display:flex;flex-direction:column">
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-size:11px;font-weight:700;color:#0D1B2E;display:flex;justify-content:space-between">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>تواصل معنا</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px">
+    <div style="font-size:36px;margin-bottom:10px">📱</div>
+    <div style="font-family:serif;font-size:24px;color:#fff;font-weight:700;text-align:center;margin-bottom:5px">تابعنا للمزيد</div>
+    <div style="font-size:12px;color:rgba(197,202,233,0.8);text-align:center;margin-bottom:20px">حيل يومية واختصارات القدرات</div>
+    <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px">
+      <div style="background:linear-gradient(135deg,rgba(131,58,180,0.25),rgba(253,29,29,0.25),rgba(252,176,69,0.25));border:1.5px solid rgba(245,166,35,0.5);border-radius:14px;padding:13px 18px;display:flex;align-items:center;gap:14px">
+        <span style="font-size:26px">📸</span>
+        <div><div style="font-size:11px;font-weight:700;color:#F5A623">انستقرام</div><div style="font-size:16px;font-weight:900;color:#fff">@7el_aqal</div></div>
+      </div>
+      <div style="background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.2);border-radius:14px;padding:13px 18px;display:flex;align-items:center;gap:14px">
+        <span style="font-size:26px">📲</span>
+        <div><div style="font-size:11px;font-weight:700;color:#80CBC4">تيك توك</div><div style="font-size:16px;font-weight:900;color:#fff">@7el_aqal</div></div>
+      </div>
+      <div style="background:rgba(37,211,102,0.12);border:1.5px solid rgba(37,211,102,0.45);border-radius:14px;padding:13px 18px;display:flex;align-items:center;gap:14px">
+        <span style="font-size:26px">✈️</span>
+        <div><div style="font-size:11px;font-weight:700;color:#69F0AE">تيليغرام</div><div style="font-size:16px;font-weight:900;color:#fff">@H7el_aqal</div></div>
+      </div>
+      <div style="background:rgba(37,211,102,0.1);border:1.5px solid rgba(100,221,23,0.35);border-radius:14px;padding:13px 18px;display:flex;align-items:center;gap:14px">
+        <span style="font-size:26px">💬</span>
+        <div><div style="font-size:11px;font-weight:700;color:#A5D6A7">واتساب</div><div style="font-size:16px;font-weight:900;color:#fff">0590307732</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:13px 18px;display:flex;align-items:center;gap:14px">
+        <span style="font-size:26px">📧</span>
+        <div><div style="font-size:11px;font-weight:700;color:#90CAF9">إيميل</div><div style="font-size:14px;font-weight:800;color:#fff">7el.aqal@gmail.com</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.3);padding:14px 20px;text-align:center">
+    <div style="font-size:14px;font-weight:800;color:#F5A623;margin-bottom:4px">فكِّر أقل … حُلَّ أسرع ⚡</div>
+    <div style="font-size:11px;color:rgba(197,202,233,0.6)">رحلتك نحو التفوق في اختبار القدرات</div>
+  </div>
+</div></div>
+
+<script>
+var cur=0;
+var total=10;
+function render(){
+  var pg=document.getElementById('pg'+cur);
+  var lbl=pg.getAttribute('data-label');
+  var bg=pg.getAttribute('data-bg');
+  var h=pg.innerHTML;
+  var w=document.getElementById('pw');
+  w.innerHTML=h+'<div style="text-align:center;padding:8px;font-size:11px;color:#7B8FA1;background:'+bg+'">'+(cur+1)+'</div>';
+  w.style.animation='none';w.offsetHeight;w.style.animation='fadeUp .35s ease';
+  document.getElementById('nl').textContent=lbl+'  '+(cur+1)+'/'+total;
+  document.getElementById('bp').disabled=cur===0;
+  document.getElementById('bn').disabled=cur===total-1;
+  var dt=document.getElementById('dots');dt.innerHTML='';
+  for(var i=0;i<total;i++){
+    var d=document.createElement('div');
+    d.className='dot'+(i===cur?' active':'');
+    d.style.width=i===cur?'24px':'8px';
+    (function(idx){d.onclick=function(){cur=idx;render();};})(i);
+    dt.appendChild(d);
+  }
+}
+function cp(dir){cur=Math.max(0,Math.min(total-1,cur+dir));render();}
+render();
+</script>
+</body>
+</html>

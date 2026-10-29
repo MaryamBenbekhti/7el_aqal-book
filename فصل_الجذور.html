@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>فكِّر أقل … حُلَّ أسرع | فصل الجذور</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      background: #1e2a38;
+      font-family: 'Tajawal', sans-serif;
+      direction: rtl;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 12px;
+      gap: 8px;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .nav-btn:disabled {
+      opacity: .3;
+      cursor: default
+    }
+
+    .nav-label {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      animation: fadeUp .35s ease;
+    }
+
+    .page-num-bar {
+      text-align: center;
+      padding: 8px;
+      font-size: 11px;
+      color: #7B8FA1;
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 500px
+    }
+
+    .dot {
+      height: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .2s;
+      background: rgba(255, 255, 255, 0.25)
+    }
+
+    .dot.active {
+      width: 24px !important;
+      background: #F5A623
+    }
+
+    .pw {
+      background: #fff;
+      min-height: 680px;
+      padding-bottom: 28px
+    }
+
+    .pg {
+      background: #F4F7F9;
+      min-height: 680px;
+      padding-bottom: 28px
+    }
+
+    .sec-hdr {
+      margin: 24px 20px 16px;
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-end
+    }
+
+    .sec-hdr-txt {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff
+    }
+
+    .sec-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #F5A623;
+      flex-shrink: 0
+    }
+
+    .sum-row {
+      margin: 0 20px 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      direction: rtl
+    }
+
+    .sum-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #F5A623;
+      flex-shrink: 0
+    }
+
+    /* كسر */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 3px;
+      line-height: 1
+    }
+
+    .frac .top {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 0 3px;
+      border-bottom: 2px solid currentColor;
+      line-height: 1.3
+    }
+
+    .frac .bot {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 0 3px;
+      line-height: 1.3
+    }
+
+    /* الجذر — مقلوب للعربي */
+    .rt {
+      font-weight: 900;
+      display: inline-block;
+      letter-spacing: 1px;
+      unicode-bidi: bidi-override;
+      direction: ltr
+    }
+
+    .rt-sign {
+      display: inline-block;
+      transform: scaleX(-1)
+    }
+
+    /* قاعدة */
+    .rule-card {
+      margin: 0 20px 10px;
+      border-radius: 12px;
+      padding: 14px 16px
+    }
+
+    .rule-num {
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      display: inline-block;
+      margin-bottom: 8px
+    }
+
+    .rule-law {
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+      margin: 8px 0;
+      line-height: 2.4
+    }
+
+    .rule-ex {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 2.6
+    }
+
+    /* quiz */
+    .q-card {
+      margin: 0 20px 10px;
+      border-radius: 12px;
+      padding: 14px 16px;
+      border: 2px solid #E0F2F1;
+      background: #F9FFFE
+    }
+
+    .q-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1A2533;
+      margin-bottom: 10px;
+      line-height: 2
+    }
+
+    .q-opts {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .q-opt {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: right;
+      border: 1.5px solid #E0E0E0;
+      background: #F4F7F9;
+      color: #1A2533;
+      transition: all .2s
+    }
+
+    .q-opt.correct {
+      background: #E8F5E9;
+      border-color: #2E7D32;
+      color: #1B5E20;
+      cursor: default
+    }
+
+    .q-opt.wrong {
+      background: #FFEBEE;
+      border-color: #C62828;
+      color: #B71C1C;
+      text-decoration: line-through;
+      cursor: default
+    }
+
+    .q-explain {
+      background: #E8F5E9;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #1B5E20;
+      line-height: 2;
+      display: none
+    }
+
+    .show-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 8px;
+      background: #F4F7F9;
+      border: 1.5px dashed #B0BEC5;
+      border-radius: 8px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7B8FA1;
+      cursor: pointer
+    }
+
+    .show-btn:hover {
+      background: #E0F7FA;
+      border-color: #00838F;
+      color: #00838F
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav-bar">
+    <button class="nav-btn" id="btnNext" onclick="changePage(1)">التالي ←</button>
+    <span class="nav-label" id="navLabel"></span>
+    <button class="nav-btn" id="btnPrev" onclick="changePage(-1)">→ السابق</button>
+  </div>
+  <div class="page-wrap" id="pageWrap"></div>
+  <div class="dots" id="dots"></div>
+
+  <script>
+    // دوال بسيطة جداً للجذر
+    function rt(n, c = '#00838F') { return `<span class="rt" style="color:${c}">√${n}</span>`; }
+    function rt3(n, c = '#00838F') { return `<span class="rt" style="color:${c}">∛${n}</span>`; }
+    function fr(t, b, c = '#1565C0') {
+      return `<span class="frac" style="color:${c}"><span class="top">${t}</span><span class="bot">${b}</span></span>`;
+    }
+
+    const QDATA = [
+      { correct: 1, explain: `√٤٩ = ٧ لأن ٧ × ٧ = ٤٩ ✓` },
+      { correct: 2, explain: `أبسط صورة لـ √٧٢: نبحث عن أكبر عامل مربع كامل ← ٧٢ = ٣٦ × ٢ ✓` },
+      { correct: 0, explain: `٣√٥ + ٢√٥ = (٣+٢)√٥ = ٥√٥ ✓ (الجذور متشابهة فنجمع المعاملات)` },
+      { correct: 1, explain: `√٣ × √١٢ = √(٣×١٢) = √٣٦ = ٦ ✓` },
+      { correct: 1, explain: `√٧٥ ÷ √٣ = √(٧٥÷٣) = √٢٥ = ٥ ✓` },
+      {
+        correct: 0, explain: `√٥٠ > √٤٥ لأن ٥٠ > ٤٥ ✓ (الأعداد الموجبة)``},
+  {correct:0, explain:{`√٥٠ > √٤٥ لأن ٥٠ > ٤٥ ✓ (الأعداد الموجبة)`},
+  {correct:1, explain:  {correct:0, explain:`√٢٠٠: أكبر عامل مربع = ١٠٠ ← ٢٠٠ = ١٠٠ × ٢ ✓`},√٥٠ > √٤٥ لأن ٥٠ > ٤٥ ✓ (الأعداد الموجبة)`},
+    { correct: 3, explain: `نضرب في المرافق: ٣ ÷ (√٥+٢) × (√٥−٢)/(√٥−٢) = ٣(√٥−٢)/(٥−٤) = ٣√٥ − ٦ ✓` },
+    { correct: 2, explain: `∛٢٧ = ٣ لأن ٣ × ٣ × ٣ = ٢٧ ✓` },
+];
+
+    function revealQ(qi) {
+      const { correct, explain } = QDATA[qi];
+      document.querySelectorAll(`#q${qi}opts .q-opt`).forEach((o, i) => {
+        o.classList.add(i === correct ? 'correct' : 'wrong');
+        o.onclick = null;
+      });
+      const exp = document.getElementById(`q${qi}exp`);
+      exp.innerHTML = '💡 ' + explain;
+      exp.style.display = 'block';
+      const btn = document.getElementById(`q${qi}btn`);
+      if (btn) btn.style.display = 'none';
+    }
+    function pickQ(qi) { revealQ(qi) }
+
+    const PAGES = [
+
+      /* ══ 1: COVER ══ */
+      {
+        label: "الغلاف", bg: "#003838", html: `
+<div style="background:linear-gradient(160deg,#003838,#00838F);min-height:680px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(0,131,143,0.2);bottom:20%;right:-60px"></div>
+  <div style="position:absolute;width:130px;height:130px;border-radius:50%;background:rgba(245,166,35,0.07);top:18%;left:-35px"></div>
+  <div style="background:linear-gradient(to left,#F5A623,#E8940A);padding:11px 20px;font-weight:700;font-size:11px;color:#003838;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <span>فكِّر أقل … حُلَّ أسرع</span><span>فصل الجذور</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:2">
+    <div style="background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.4);border-radius:50px;padding:8px 24px;font-size:11px;color:#F5A623;font-weight:700;margin-bottom:20px">الجذور التربيعية والتكعيبية</div>
+    <div style="font-size:80px;color:#F5A623;text-align:center;line-height:1;font-weight:900;margin-bottom:8px"><span style="display:inline-block;transform:scaleX(-1)">√</span>أ</div>
+    <div style="font-family:'Amiri',serif;font-size:32px;color:#fff;font-weight:700;text-align:center;line-height:1.4">قواعد الجذور</div>
+    <div style="width:50%;height:2px;background:linear-gradient(to left,transparent,#F5A623,transparent);margin:18px auto"></div>
+    <div style="font-size:12.5px;color:rgba(178,235,242,0.9);text-align:center;line-height:2;padding:0 16px">
+      من يتقن الجذور —<br/>يفتح باب <strong style="color:#F5A623">الأسس والجبر كاملاً.</strong>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+      ${['تعريف الجذر', 'الجذور المشهورة', 'التبسيط', 'الجمع والطرح', 'الضرب والقسمة', 'المرافق', 'المقارنة'].map(t => `
+        <div style="background:rgba(0,131,143,0.25);border:1px solid rgba(0,180,204,0.4);border-radius:20px;padding:5px 14px;font-size:11px;color:#B2EBF2;font-weight:600">${t}</div>
+      `).join('')}
+    </div>
+  </div>
+  <div style="background:rgba(0,0,0,0.25);padding:11px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2">
+    <div style="font-size:10px;color:rgba(178,235,242,0.5)">الباب الثاني</div>
+    <div style="font-size:11px;font-weight:700;color:#F5A623">اختبار القدرات العامة</div>
+  </div>
+</div>
+`},
+
+      /* ══ 2: تعريف + جذور مشهورة ══ */
+      {
+        label: "تعريف + المشهورة", bg: "#fff", html: `
+<div class="pw">
+  <div class="sec-hdr" style="background:#00838F">
+    <div class="sec-hdr-txt">ما هو الجذر التربيعي؟</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="margin:0 20px 14px;background:#E0F7FA;border-radius:12px;padding:16px 18px;text-align:center">
+    <div style="font-size:38px;font-weight:900;color:#00838F;margin-bottom:10px"><span style="display:inline-block;transform:scaleX(-1)">√</span>٩ = ٣</div>
+    <div style="font-size:13px;color:#006064;line-height:2;font-weight:600">
+      الجذر التربيعي هو <strong>العدد الذي إذا ضُرب في نفسه أعطى العدد الأصلي</strong><br/>
+      ٣ × ٣ = ٩  ←  إذن <span style="color:#E8512B;font-weight:900;font-size:18px"><span style="display:inline-block;transform:scaleX(-1)">√</span>٩ = ٣</span>
+    </div>
+    <div style="margin-top:10px;font-size:13px;color:#006064;background:rgba(0,131,143,0.1);border-radius:8px;padding:10px;font-weight:700">
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>أ = ب  ←  يعني  ب × ب = أ
+    </div>
+  </div>
+
+  <div class="sec-hdr" style="background:#00838F;margin-top:0">
+    <div class="sec-hdr-txt">⭐ الجذور التربيعية المشهورة</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="margin:0 20px;background:#00838F;border-radius:12px;padding:14px 16px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
+      ${[['١', '١'], ['٤', '٢'], ['٩', '٣'], ['١٦', '٤'], ['٢٥', '٥'], ['٣٦', '٦'], ['٤٩', '٧'], ['٦٤', '٨'], ['٨١', '٩'], ['١٠٠', '١٠'], ['١٢١', '١١'], ['١٤٤', '١٢'], ['١٦٩', '١٣'], ['١٩٦', '١٤'], ['٢٢٥', '١٥'], ['٢٥٦', '١٦']].map(([n, r]) => `
+        <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:7px 4px;text-align:center">
+          <div style="font-size:13px;color:#B2EBF2;font-weight:700"><span style="display:inline-block;transform:scaleX(-1)">√</span>${n}</div>
+          <div style="font-size:14px;font-weight:900;color:#F5A623">${r}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="font-size:10px;color:rgba(178,235,242,0.5);text-align:center;margin-top:8px">القيمة تحت الجذر  ←  الناتج</div>
+  </div>
+</div>
+`},
+
+      /* ══ 3: جذور تكعيبية + التبسيط ══ */
+      {
+        label: "تكعيبية + تبسيط", bg: "#F4F7F9", html: `
+<div class="pg">
+  <div class="sec-hdr" style="background:#006064">
+    <div class="sec-hdr-txt">⭐ الجذور التكعيبية المشهورة</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="margin:0 20px 14px;background:#006064;border-radius:12px;padding:14px 16px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+      ${[['١', '١'], ['٨', '٢'], ['٢٧', '٣'], ['٦٤', '٤'], ['١٢٥', '٥'], ['٢١٦', '٦'], ['٣٤٣', '٧'], ['٥١٢', '٨']].map(([n, r]) => `
+        <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:7px 4px;text-align:center">
+          <div style="font-size:13px;color:#B2EBF2;font-weight:700">∛${n}</div>
+          <div style="font-size:14px;font-weight:900;color:#F5A623">${r}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <div class="rule-card" style="background:#E0F7FA">
+    <span class="rule-num" style="background:#00838F">القاعدة ١</span>
+    <div style="font-size:13px;font-weight:800;color:#006064;margin-bottom:8px;text-align:right">تبسيط الجذر — أخرج العامل المربع الكامل</div>
+    <div class="rule-law" style="background:#00838F;color:#fff">
+      <span style="color:#F5A623"><span style="display:inline-block;transform:scaleX(-1)">√</span>(أ × ب) = <span style="display:inline-block;transform:scaleX(-1)">√</span>أ × <span style="display:inline-block;transform:scaleX(-1)">√</span>ب</span>
+    </div>
+    <div class="rule-ex" style="color:#006064">
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>٧٢ = <span style="display:inline-block;transform:scaleX(-1)">√</span>(٣٦ × ٢) = <strong style="color:#E8512B">٦<span style="display:inline-block;transform:scaleX(-1)">√</span>٢</strong> ✓<br/>
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٠٠ = <span style="display:inline-block;transform:scaleX(-1)">√</span>(١٠٠ × ٢) = <strong style="color:#E8512B">١٠<span style="display:inline-block;transform:scaleX(-1)">√</span>٢</strong> ✓
+    </div>
+    <div style="font-size:11.5px;color:#00838F;margin-top:8px;text-align:right;font-weight:600">
+      💡 الأعداد المربعة الكاملة: ٤ ، ٩ ، ١٦ ، ٢٥ ، ٣٦ ، ٤٩ ، ٦٤ ، ١٠٠
+    </div>
+  </div>
+</div>
+`},
+
+      /* ══ 4: قواعد ٢-٣-٤ ══ */
+      {
+        label: "الجمع والضرب والقسمة", bg: "#fff", html: `
+<div class="pw">
+  <div class="sec-hdr" style="background:#2E7D32">
+    <div class="sec-hdr-txt">الجمع والطرح والضرب والقسمة</div>
+    <div class="sec-dot"></div>
+  </div>
+
+  <div class="rule-card" style="background:#E8F5E9">
+    <span class="rule-num" style="background:#2E7D32">القاعدة ٢</span>
+    <div style="font-size:13px;font-weight:800;color:#1B5E20;margin-bottom:8px;text-align:right">الجمع والطرح — للجذور المتشابهة فقط</div>
+    <div class="rule-law" style="background:#2E7D32;color:#fff">
+      <span style="color:#F5A623">أ<span style="display:inline-block;transform:scaleX(-1)">√</span>ن + ب<span style="display:inline-block;transform:scaleX(-1)">√</span>ن = (أ+ب)<span style="display:inline-block;transform:scaleX(-1)">√</span>ن</span>
+    </div>
+    <div class="rule-ex" style="color:#1B5E20">
+      ٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٢ + ٥<span style="display:inline-block;transform:scaleX(-1)">√</span>٢ = <strong style="color:#E8512B">٨<span style="display:inline-block;transform:scaleX(-1)">√</span>٢</strong> ✓<br/>
+      ٧<span style="display:inline-block;transform:scaleX(-1)">√</span>٣ − ٢<span style="display:inline-block;transform:scaleX(-1)">√</span>٣ = <strong style="color:#E8512B">٥<span style="display:inline-block;transform:scaleX(-1)">√</span>٣</strong> ✓
+    </div>
+    <div style="font-size:11.5px;color:#C62828;margin-top:8px;text-align:right;font-weight:700;background:#FFEBEE;border-radius:6px;padding:6px 10px">
+      ⚠️ ٢<span style="display:inline-block;transform:scaleX(-1)">√</span>٢ + ٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ — لا تُجمع! الجذور مختلفة
+    </div>
+  </div>
+
+  <div class="rule-card" style="background:#E3F2FD">
+    <span class="rule-num" style="background:#1565C0">القاعدة ٣</span>
+    <div style="font-size:13px;font-weight:800;color:#0D47A1;margin-bottom:8px;text-align:right">ضرب الجذور — اضرب ما بداخلها</div>
+    <div class="rule-law" style="background:#1565C0;color:#fff">
+      <span style="color:#F5A623"><span style="display:inline-block;transform:scaleX(-1)">√</span>أ × <span style="display:inline-block;transform:scaleX(-1)">√</span>ب = <span style="display:inline-block;transform:scaleX(-1)">√</span>(أ × ب)</span>
+    </div>
+    <div class="rule-ex" style="color:#0D47A1">
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>٢ × <span style="display:inline-block;transform:scaleX(-1)">√</span>٨ = <span style="display:inline-block;transform:scaleX(-1)">√</span>١٦ = <strong style="color:#E8512B">٤</strong> ✓<br/>
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>٣ × <span style="display:inline-block;transform:scaleX(-1)">√</span>١٢ = <span style="display:inline-block;transform:scaleX(-1)">√</span>٣٦ = <strong style="color:#E8512B">٦</strong> ✓
+    </div>
+  </div>
+
+  <div class="rule-card" style="background:#FBE9E7">
+    <span class="rule-num" style="background:#E8512B">القاعدة ٤</span>
+    <div style="font-size:13px;font-weight:800;color:#BF360C;margin-bottom:8px;text-align:right">قسمة الجذور — اقسم ما بداخلها</div>
+    <div class="rule-law" style="background:#E8512B;color:#fff">
+      <span style="color:#F5A623"><span style="display:inline-block;transform:scaleX(-1)">√</span>أ ÷ <span style="display:inline-block;transform:scaleX(-1)">√</span>ب = <span style="display:inline-block;transform:scaleX(-1)">√</span>(أ ÷ ب)</span>
+    </div>
+    <div class="rule-ex" style="color:#BF360C">
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ ÷ <span style="display:inline-block;transform:scaleX(-1)">√</span>٢ = <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٥ = <strong style="color:#E8512B">٥</strong> ✓<br/>
+      <span style="display:inline-block;transform:scaleX(-1)">√</span>٧٥ ÷ <span style="display:inline-block;transform:scaleX(-1)">√</span>٣ = <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٥ = <strong style="color:#E8512B">٥</strong> ✓
+    </div>
+  </div>
+</div>
+`},
+
+      /* ══ 5: المرافق ══ */
+      {
+        label: "المرافق", bg: "#F4F7F9", html: `
+<div class="pg">
+  <div class="sec-hdr" style="background:#7B2D8B">
+    <div class="sec-hdr-txt">القاعدة ٥ — إزالة الجذر من المقام</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    عندما يكون المقام يحتوي جذراً — نضرب بـ <strong style="color:#7B2D8B">المرافق</strong> للتخلص منه.
+  </div>
+  <div style="margin:0 20px 12px;background:#7B2D8B;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-size:12px;color:#CE93D8;margin-bottom:10px">قانون المرافق</div>
+    <div style="font-size:14px;font-weight:700;color:#F5A623;line-height:2.2">
+      المقام (<span style="display:inline-block;transform:scaleX(-1)">√</span>أ + ب) ← اضرب في (<span style="display:inline-block;transform:scaleX(-1)">√</span>أ − ب)<br/>
+      المقام (<span style="display:inline-block;transform:scaleX(-1)">√</span>أ − ب) ← اضرب في (<span style="display:inline-block;transform:scaleX(-1)">√</span>أ + ب)
+    </div>
+    <div style="font-size:12px;color:#CE93D8;margin-top:6px">
+      (<span style="display:inline-block;transform:scaleX(-1)">√</span>أ + ب)(<span style="display:inline-block;transform:scaleX(-1)">√</span>أ − ب) = أ − ب²
+    </div>
+  </div>
+
+  <div style="margin:0 20px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+    <div style="font-size:13px;font-weight:800;color:#7B2D8B;margin-bottom:12px;text-align:center">
+      مثال: ${fr('٣', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ + ٢', '#7B2D8B')}
+    </div>
+    ${[
+            ['١', '#F5A623', 'اضرب بسطاً ومقاماً في المرافق', `${fr('٣', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ + ٢')} × ${fr('<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ − ٢', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ − ٢')}`],
+            ['٢', '#00838F', 'المقام يصبح فرق مربعين', '(<span style="display:inline-block;transform:scaleX(-1)">√</span>٥)² − (٢)² = ٥ − ٤ = ١'],
+            ['٣', '#2E7D32', 'النتيجة النهائية', '٣(<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ − ٢) ÷ ١ = ٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ − ٦ ✓'],
+          ].map(([n, c, title, calc]) => `
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;direction:rtl">
+        <div style="width:26px;height:26px;border-radius:50%;background:${c};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0">${n}</div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:12.5px;font-weight:800;color:#1A2533">${title}</div>
+          <div style="font-size:13px;color:#7B8FA1;margin-top:2px">${calc}</div>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+`},
+
+      /* ══ 6: مقارنة الجذور ══ */
+      {
+        label: "مقارنة الجذور", bg: "#fff", html: `
+<div class="pw">
+  <div class="sec-hdr" style="background:#E65100">
+    <div class="sec-hdr-txt">مقارنة الجذور — بدون حاسبة!</div>
+    <div class="sec-dot"></div>
+  </div>
+  <div style="padding:0 22px 12px;font-size:13px;color:#1A2533;line-height:2;text-align:right">
+    ثلاث طرق سريعة للمقارنة في القدرات.
+  </div>
+  ${[
+            {
+              title: 'الطريقة ١ — قارن الأعداد داخل الجذر مباشرة', color: '#E65100', bg: '#FBE9E7',
+              steps: [
+                `الأعداد موجبة ← الأكبر داخل الجذر = الأكبر قيمةً`,
+                `<span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ > <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ لأن ٥٠ > ٤٩ ✓`,
+              ]
+            },
+            {
+              title: 'الطريقة ٢ — التربيع للمقارنة مع عدد صحيح', color: '#1565C0', bg: '#E3F2FD',
+              steps: [
+                `إذا كانت المقارنة مع عدد صحيح — ربّع الطرفين`,
+                `<span style="display:inline-block;transform:scaleX(-1)">√</span>٤٥ مقابل ٦ ← ٤٥ مقابل ٣٦ ← <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٥ أكبر ✓`,
+              ]
+            },
+            {
+              title: 'الطريقة ٣ — التقدير من الجذور المعروفة', color: '#2E7D32', bg: '#E8F5E9',
+              steps: [
+                `<span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ = ٧ تماماً  |  <span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ ≈ ٧٫١`,
+                `<span style="display:inline-block;transform:scaleX(-1)">√</span>٦٤ = ٨ تماماً  |  <span style="display:inline-block;transform:scaleX(-1)">√</span>٦٠ ≈ ٧٫٧`,
+              ]
+            },
+          ].map(({ title, color, bg, steps }) => `
+    <div style="margin:0 20px 10px;background:${bg};border-radius:12px;padding:13px 15px">
+      <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:8px">▸ ${title}</div>
+      ${steps.map(s => `
+        <div style="background:rgba(255,255,255,0.65);border-radius:8px;padding:8px 12px;margin-bottom:5px;font-size:13px;color:${color};font-weight:600;text-align:right;line-height:2">${s}</div>
+      `).join('')}
+    </div>
+  `).join('')}
+  <div style="margin:0 20px;background:#0D4F5C;border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:#B2EBF2;font-weight:600;line-height:1.8">
+    💡 مقارنة الأعداد داخل الجذر مباشرة تكفي في أغلب أسئلة القدرات
+  </div>
+</div>
+`},
+
+      /* ══ 7: الأخطاء الشائعة ══ */
+      {
+        label: "الأخطاء الشائعة", bg: "#F4F7F9", html: `
+<div class="pg">
+  <div class="sec-hdr" style="background:#C62828">
+    <div class="sec-hdr-txt">⚠️ أكثر الأخطاء شيوعاً</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+            {
+              title: 'جمع جذور مختلفة',
+              wrong: `<span style="display:inline-block;transform:scaleX(-1)">√</span>٢ + <span style="display:inline-block;transform:scaleX(-1)">√</span>٣ = <span style="display:inline-block;transform:scaleX(-1)">√</span>٥ ✗`,
+              correct: `<span style="display:inline-block;transform:scaleX(-1)">√</span>٢ + <span style="display:inline-block;transform:scaleX(-1)">√</span>٣ — يبقى كما هو ✓`,
+              note: 'لا تجمع إلا الجذور المتشابهة'
+            },
+            {
+              title: 'جذر مجموع عددين',
+              wrong: `<span style="display:inline-block;transform:scaleX(-1)">√</span>(٩+١٦) = <span style="display:inline-block;transform:scaleX(-1)">√</span>٩ + <span style="display:inline-block;transform:scaleX(-1)">√</span>١٦ = ٣+٤ = ٧ ✗`,
+              correct: `<span style="display:inline-block;transform:scaleX(-1)">√</span>(٩+١٦) = <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٥ = ٥ ✓`,
+              note: 'الجذر لا يوزع على الجمع — احسب الداخل أولاً'
+            },
+            {
+              title: 'الجذر التربيعي لعدد سالب',
+              wrong: `<span style="display:inline-block;transform:scaleX(-1)">√</span>(−٩) = −٣ ✗`,
+              correct: `<span style="display:inline-block;transform:scaleX(-1)">√</span>(−٩) غير معرّفة في الأعداد الحقيقية ✓`,
+              note: 'الجذر التربيعي يكون فقط للأعداد الموجبة أو الصفر'
+            },
+            {
+              title: 'الخلط بين الجذر والقسمة على ٢',
+              wrong: `<span style="display:inline-block;transform:scaleX(-1)">√</span>١٦ = ١٦ ÷ ٢ = ٨ ✗`,
+              correct: `<span style="display:inline-block;transform:scaleX(-1)">√</span>١٦ = ٤  لأن  ٤ × ٤ = ١٦ ✓`,
+              note: 'الجذر ليس نصف العدد!'
+            },
+          ].map(({ title, wrong, correct, note }) => `
+    <div style="margin:0 20px 10px;background:#fff;border-radius:12px;padding:13px 15px;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
+      <div style="font-size:12px;font-weight:800;color:#C62828;margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:flex-end">
+        <span>${title}</span><span>⚠️</span>
+      </div>
+      <div style="background:#FFEBEE;border-radius:8px;padding:7px 12px;font-size:13px;color:#C62828;margin-bottom:5px;text-align:right">${wrong}</div>
+      <div style="background:#E8F5E9;border-radius:8px;padding:7px 12px;font-size:13px;color:#1B5E20;margin-bottom:5px;text-align:right">${correct}</div>
+      <div style="font-size:11px;color:#7B8FA1;text-align:right">💡 ${note}</div>
+    </div>
+  `).join('')}
+</div>
+`},
+
+      /* ══ 8: تدريبات ١-٥ ══ */
+      {
+        label: "تدريبات ١-٥", bg: "#fff", html: `
+<div class="pw">
+  <div class="sec-hdr" style="background:#00838F">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (١-٥)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+            {
+              qi: 0, q: `ما قيمة: <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ ؟`,
+              opts: ['٩', '٧', '٦', '٨']
+            },
+            {
+              qi: 1, q: `أي العبارات التالية تُمثل أبسط صورة لـ <span style="display:inline-block;transform:scaleX(-1)">√</span>٧٢ ؟`,
+              opts: ['<span style="display:inline-block;transform:scaleX(-1)">√</span>(٤ × ١٨)', '<span style="display:inline-block;transform:scaleX(-1)">√</span>(٨ × ٩)', '<span style="display:inline-block;transform:scaleX(-1)">√</span>(٣٦ × ٢)', '<span style="display:inline-block;transform:scaleX(-1)">√</span>(٢ × ٣٦)']
+            },
+            {
+              qi: 2, q: `ما ناتج: ٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ + ٢<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ ؟`,
+              opts: ['٥<span style="display:inline-block;transform:scaleX(-1)">√</span>٥', '٥<span style="display:inline-block;transform:scaleX(-1)">√</span>١٠', '٦<span style="display:inline-block;transform:scaleX(-1)">√</span>٥', '٥<span style="display:inline-block;transform:scaleX(-1)">√</span>٢٥']
+            },
+            {
+              qi: 3, q: `ما ناتج: <span style="display:inline-block;transform:scaleX(-1)">√</span>٣ × <span style="display:inline-block;transform:scaleX(-1)">√</span>١٢ ؟`,
+              opts: ['٣', '٦', '٤', '٥']
+            },
+            {
+              qi: 4, q: `ما ناتج: <span style="display:inline-block;transform:scaleX(-1)">√</span>٧٥ ÷ <span style="display:inline-block;transform:scaleX(-1)">√</span>٣ ؟`,
+              opts: ['٣', '٥', '٢٥', '٧']
+            },
+          ].map(({ qi, q, opts }) => `
+    <div class="q-card">
+      <div class="q-text">س${['١', '٢', '٣', '٤', '٥'][qi]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o, oi) => `<div class="q-opt" onclick="pickQ(${qi})">${['أ', 'ب', 'ج', 'د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة الصحيحة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+      /* ══ 9: تدريبات ٦-١٠ ══ */
+      {
+        label: "تدريبات ٦-١٠", bg: "#F4F7F9", html: `
+<div class="pg">
+  <div class="sec-hdr" style="background:#006064">
+    <div class="sec-hdr-txt">🎯 تدريبات بأسلوب القياس (٦-١٠)</div>
+    <div class="sec-dot"></div>
+  </div>
+  ${[
+            {
+              qi: 5, q: `أيهما أكبر: <span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ أم <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٥ ؟`,
+              opts: ['<span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ أكبر', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٤٥ أكبر', 'متساويان', 'لا يمكن المقارنة']
+            },
+            {
+              qi: 6, q: `أيهما أكبر: <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٥ أم ٦ ؟`,
+              opts: ['٦ أكبر', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٤٥ أكبر', 'متساويان', 'يعتمد على القيمة']
+            },
+            {
+              qi: 7, q: `ما تحليل: <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٠٠ لأبسط صورة ؟`,
+              opts: ['<span style="display:inline-block;transform:scaleX(-1)">√</span>(٢٠ × ١٠)', '<span style="display:inline-block;transform:scaleX(-1)">√</span>(١٠٠ × ٢)', '<span style="display:inline-block;transform:scaleX(-1)">√</span>(٤ × ٥٠)', '<span style="display:inline-block;transform:scaleX(-1)">√</span>(٢٥ × ٨)']
+            },
+            {
+              qi: 8, q: `ما ناتج: ${fr('٣', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ + ٢', '#1A2533')} بعد التبسيط ؟`,
+              opts: ['٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ + ٦', '٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ − ٦', '٣<span style="display:inline-block;transform:scaleX(-1)">√</span>٥', '<span style="display:inline-block;transform:scaleX(-1)">√</span>٥ − ٢']
+            },
+            {
+              qi: 9, q: `ما قيمة: ∛٢٧ ؟`,
+              opts: ['٩', '٣', '٢٧', '٦']
+            },
+          ].map(({ qi, q, opts }) => `
+    <div class="q-card">
+      <div class="q-text">س${['٦', '٧', '٨', '٩', '١٠'][qi - 5]}: ${q}</div>
+      <div class="q-opts" id="q${qi}opts">
+        ${opts.map((o, oi) => `<div class="q-opt" onclick="pickQ(${qi})">${['أ', 'ب', 'ج', 'د'][oi]}) ${o}</div>`).join('')}
+      </div>
+      <div class="q-explain" id="q${qi}exp"></div>
+      <button class="show-btn" id="q${qi}btn" onclick="revealQ(${qi})">🔍 أظهر الإجابة الصحيحة</button>
+    </div>
+  `).join('')}
+</div>
+`},
+
+      /* ══ 10: الملخص ══ */
+
+      {
+        label: "⚡ فكِّر أقل — حُلَّ أسرع", bg: "#fff", html: `
+<div class="pw">
+  <div style="margin:24px 20px 14px;border-radius:10px;padding:14px 20px;background:linear-gradient(to left,#00838F,#00838FCC);display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#fff">⚡ فكِّر أقل — حُلَّ أسرع</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#F5A623;flex-shrink:0"></div>
+  </div>
+  <div style="padding:0 22px 10px;font-size:12.5px;color:#1A2533;line-height:2;text-align:right">
+    هذه الحيل <strong style="color:#00838F">تميّز الكتاب</strong> — وفِّر وقتك في الاختبار.
+  </div>
+
+  <div style="margin:0 20px 12px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#7B8FA1">📚 الطريقة الكلاسيكية</div>
+      <div style="padding:10px 12px;font-size:12px;font-weight:800;color:#fff;text-align:center;background:#00838F">⚡ الحيلة السريعة</div>
+    </div>
+    
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">حساب <span style="display:inline-block;transform:scaleX(-1)">√</span>٧٢ يدوياً</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#00838F;font-weight:700;text-align:right;line-height:1.8"><span style="display:inline-block;transform:scaleX(-1)">√</span>٧٢ = <span style="display:inline-block;transform:scaleX(-1)">√</span>(٣٦×٢) = ٦<span style="display:inline-block;transform:scaleX(-1)">√</span>٢</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">مقارنة <span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ و<span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ → نحسب</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#00838F;font-weight:700;text-align:right;line-height:1.8">٥٠>٤٩ → <span style="display:inline-block;transform:scaleX(-1)">√</span>٥٠ > <span style="display:inline-block;transform:scaleX(-1)">√</span>٤٩ مباشرة</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
+        <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8"><span style="display:inline-block;transform:scaleX(-1)">√</span>(٩+١٦) = <span style="display:inline-block;transform:scaleX(-1)">√</span>٩ + <span style="display:inline-block;transform:scaleX(-1)">√</span>١٦ = ٧</div>
+        <div style="padding:9px 11px;font-size:11.5px;color:#00838F;font-weight:700;text-align:right;line-height:1.8">احسب الداخل أولاً: <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٥ = ٥</div>
+      </div>
+  </div>
+
+  <div style="margin:0 20px;background:#00838F15;border:2px solid #00838F;border-radius:10px;padding:12px 16px;text-align:center">
+    <div style="font-size:13px;font-weight:800;color:#00838F;margin-bottom:4px">💡 اللقطة الذهبية</div>
+    <div style="font-size:12px;color:#1A2533;font-weight:600;line-height:1.8"><span style="display:inline-block;transform:scaleX(-1)">√</span>٧٢ = <span style="display:inline-block;transform:scaleX(-1)">√</span>(٣٦×٢) = ٦<span style="display:inline-block;transform:scaleX(-1)">√</span>٢</div>
+  </div>
+</div>
+`},
+      {
+        label: "الملخص", bg: "#003838", html: `
+<div style="background:linear-gradient(160deg,#003838,#00838F);min-height:680px;padding-bottom:28px">
+  <div style="margin:24px 20px 16px;background:#F5A623;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+    <div style="font-size:15px;font-weight:800;color:#003838">ملخص فصل الجذور</div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#003838;flex-shrink:0"></div>
+  </div>
+  ${[
+            ['تعريف الجذر', '<span style="display:inline-block;transform:scaleX(-1)">√</span>أ = ب يعني ب × ب = أ'],
+            ['<span style="display:inline-block;transform:scaleX(-1)">√</span>(أ × ب) = <span style="display:inline-block;transform:scaleX(-1)">√</span>أ × <span style="display:inline-block;transform:scaleX(-1)">√</span>ب', 'الضرب — اضرب ما بداخل الجذرين'],
+            ['<span style="display:inline-block;transform:scaleX(-1)">√</span>أ ÷ <span style="display:inline-block;transform:scaleX(-1)">√</span>ب = <span style="display:inline-block;transform:scaleX(-1)">√</span>(أ ÷ ب)', 'القسمة — اقسم ما بداخل الجذرين'],
+            ['أ<span style="display:inline-block;transform:scaleX(-1)">√</span>ن + ب<span style="display:inline-block;transform:scaleX(-1)">√</span>ن = (أ+ب)<span style="display:inline-block;transform:scaleX(-1)">√</span>ن', 'الجمع والطرح للمتشابهة فقط'],
+            ['المرافق لإزالة الجذر من المقام', '(<span style="display:inline-block;transform:scaleX(-1)">√</span>أ+ب)(<span style="display:inline-block;transform:scaleX(-1)">√</span>أ−ب) = أ − ب²'],
+            ['<span style="display:inline-block;transform:scaleX(-1)">√</span>أ + <span style="display:inline-block;transform:scaleX(-1)">√</span>ب ≠ <span style="display:inline-block;transform:scaleX(-1)">√</span>(أ+ب)', 'الجذر لا يوزع على الجمع — خطأ شائع'],
+            ['مقارنة الجذور', 'قارن الأعداد داخل الجذر مباشرة'],
+            ['∛أ = ب يعني ب × ب × ب = أ', 'الجذر التكعيبي'],
+          ].map(([t, d]) => `
+    <div class="sum-row">
+      <div class="sum-dot"></div>
+      <div style="flex:1;text-align:right">
+        <div style="font-size:12.5px;font-weight:800;color:#E0F7FA">${t}</div>
+        <div style="font-size:11px;color:rgba(178,235,242,0.6);margin-top:2px">${d}</div>
+      </div>
+    </div>
+  `).join('')}
+  <div style="margin:12px 20px 0;background:#F5A623;border-radius:12px;padding:14px 18px;text-align:center">
+    <div style="font-family:'Amiri',serif;font-size:15px;font-weight:700;color:#003838;line-height:1.8">
+      احفظ الجذور التربيعية حتى <span style="display:inline-block;transform:scaleX(-1)">√</span>٢٥٦ —<br/>ستوفّر <strong>ثوانٍ ثمينة</strong> في كل سؤال.
+    </div>
+  </div>
+  <div style="margin:10px 20px 0;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;text-align:center;font-size:12px;color:rgba(178,235,242,0.6)">
+    التالي: الكسور والنسب المئوية ←
+  </div>
+</div>
+`},
+
+    ];
+
+    function initExplains() {
+      QDATA.forEach((q, qi) => {
+        const el = document.getElementById('q' + qi + 'exp');
+        if (el) el.innerHTML = '💡 ' + q.explain;
+      });
+    }
+
+    let current = 0;
+    function render() {
+      const p = PAGES[current];
+      const wrap = document.getElementById('pageWrap');
+      wrap.innerHTML = p.html + `<div class="page-num-bar" style="background:${p.bg}">${current + 1}</div>`;
+      wrap.style.animation = 'none'; wrap.offsetHeight; wrap.style.animation = 'fadeUp .35s ease';
+      document.getElementById('navLabel').textContent = p.label + '  ' + (current + 1) + '/' + PAGES.length;
+      document.getElementById('btnPrev').disabled = current === 0;
+      document.getElementById('btnNext').disabled = current === PAGES.length - 1;
+      const dots = document.getElementById('dots');
+      dots.innerHTML = '';
+      PAGES.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i === current ? ' active' : '');
+        d.style.width = i === current ? '24px' : '8px';
+        d.onclick = () => { current = i; render() };
+        dots.appendChild(d);
+      });
+      initExplains();
+    }
+    function changePage(dir) { current = Math.max(0, Math.min(PAGES.length - 1, current + dir)); render(); }
+    render();
+  </script>
+</body>
+
+</html>
