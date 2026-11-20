@@ -90,8 +90,8 @@ const QDATA = [
   {correct:3, explain:'نضرب الأسس: ٢×٣=٦ ← '+pw('٢','٦')+'= ٦٤ ✓'},
   {correct:1, explain:pw('٢','−٤')+'= ١ ÷ '+pw('٢','٤')+'= ١ ÷ ١٦ ✓'},
   {correct:1, explain:'٢٧ = '+pw('٣','٣')+' ← الجذر التكعيبي لـ ٢٧ = ٣ ✓'},
-  {correct:0, explain:'نحوّل: '+pw('٤','٢')+'= ('+pw('٢','٢')+')² = '+pw('٢','٤')+' | '+pw('٢','٥')+' > '+pw('٢','٤')+' ✓'},
-  {correct:1, explain:'الأساس بين ٠ و١ → الأس الأكبر = قيمة أصغر: '+pw('(½)','٣')+' < '+pw('(½)','٢')+' ✓'},
+  {correct:0, explain:'نحوّل: '+pw('٤','٢')+'= ('+pw('٢','٢')+')<span style=\"font-size:10px;font-weight:900;vertical-align:super;color:#E8512B\">٢</span> = '+pw('٢','٤')+' | '+pw('٢','٥')+' > '+pw('٢','٤')+' ✓'},
+  {correct:1, explain:'الأساس بين ٠ و١ → الأس الأكبر = قيمة أصغر: '+pw('('+fr('١','٢')+')','٣')+' < '+pw('('+fr('١','٢')+')','٢')+' ✓'},
   {correct:0, explain:pw('٢','٤')+'= ١٦ | '+pw('٤','٢')+'= ١٦ ← ١٦ − ١٦ = ٠ ✓'},
   {correct:0, explain:'نضرب الأسس: ٢×٣=٦ ← '+pw('٥','٦')+' ✓'},
 ];
@@ -234,8 +234,8 @@ const PAGES = [
   <div style="margin:0 20px;background:#FFF8E7;border:2px solid #F5A623;border-radius:10px;padding:12px 16px;text-align:center">
     <div style="font-size:12px;font-weight:800;color:#7A4800;margin-bottom:4px">💡 حيلة سريعة</div>
     <div style="font-size:12px;color:#9B6000;line-height:1.9">
-      ${pw('٤','٣','#7A4800','#E8512B')} = ${pw('(٢²)','٣','#7A4800','#E8512B')} = ${pw('٢','٦','#E8512B','#E8512B')} = ٦٤<br/>
-      ${pw('٨','٢','#7A4800','#E8512B')} = ${pw('(٢³)','٢','#7A4800','#E8512B')} = ${pw('٢','٦','#E8512B','#E8512B')} = ٦٤<br/>
+      ${pw('٤','٣','#7A4800','#E8512B')} = ${pw('('+pw('٢','٢','#7A4800','#E8512B')+')','٣','#7A4800','#E8512B')} = ${pw('٢','٦','#E8512B','#E8512B')} = ٦٤<br/>
+      ${pw('٨','٢','#7A4800','#E8512B')} = ${pw('('+pw('٢','٣','#7A4800','#E8512B')+')','٢','#7A4800','#E8512B')} = ${pw('٢','٦','#E8512B','#E8512B')} = ٦٤<br/>
       <strong style="color:#E8512B">كثير من الأعداد تُحلَّل لقوى ٢ أو ٣!</strong>
     </div>
   </div>
@@ -281,8 +281,8 @@ const PAGES = [
       (أ<sup style="font-size:12px;color:#F5A623;font-weight:900">م</sup>)<sup style="font-size:12px;color:#F5A623;font-weight:900">ن</sup> = أ<sup style="font-size:12px;color:#F5A623;font-weight:900">م×ن</sup>
     </div>
     <div class="rule-ex" style="color:#1B5E20">
-      (${pw('٣','٢')})³ = ${pw('٣','٦')} = <strong style="color:#E8512B">٧٢٩</strong><br/>
-      (${pw('٥','٢')})³ = ${pw('٥','٦')} = <strong style="color:#E8512B">١٥٦٢٥</strong>
+      (${pw('٣','٢')})<sup style="font-size:11px;color:#E8512B;font-weight:900">٣</sup> = ${pw('٣','٦')} = <strong style="color:#E8512B">٧٢٩</strong><br/>
+      (${pw('٥','٢')})<sup style="font-size:11px;color:#E8512B;font-weight:900">٣</sup> = ${pw('٥','٦')} = <strong style="color:#E8512B">١٥٦٢٥</strong>
     </div>
   </div>
 </div>
@@ -416,9 +416,9 @@ const PAGES = [
      ex:[`${pw('٥','٢')} و ${pw('٣','٢')} ← ٥ > ٣ ← ${pw('٥','٢')} أكبر ✓`,
          `${pw('١٠','٣')} و ${pw('٧','٣')} ← ١٠ > ٧ ← ${pw('١٠','٣')} أكبر ✓`]},
     {rule:'الأساس بين ٠ و١ → الأس الأكبر = قيمة أصغر!', color:'#C62828', bg:'#FFEBEE',
-     ex:[`${pw('(½)','٢')} و ${pw('(½)','٤')} ← الأس ٤ أكبر ← ${pw('(½)','٢')} أكبر ✓`]},
+     ex:[`${pw('('+fr('١','٢')+')','٢')} و ${pw('('+fr('١','٢')+')','٤')} ← الأس ٤ أكبر ← ${pw('('+fr('١','٢')+')','٢')} أكبر ✓`]},
     {rule:'استخدم التحليل عند الاختلاف', color:'#2E7D32', bg:'#E8F5E9',
-     ex:[`${pw('٤','٣')} و ${pw('٢','٦')} ← ${pw('٤','٣')} = ${pw('(٢²)','٣')} = ${pw('٢','٦')} ← متساويان ✓`]},
+     ex:[`${pw('٤','٣')} و ${pw('٢','٦')} ← ${pw('٤','٣')} = ${pw('('+pw('٢','٢')+')','٣')} = ${pw('٢','٦')} ← متساويان ✓`]},
   ].map(({rule,color,bg,ex})=>`
     <div style="margin:0 20px 10px;background:${bg};border-radius:12px;padding:12px 14px">
       <div style="font-size:12px;font-weight:800;color:${color};margin-bottom:8px;text-align:right">▸ ${rule}</div>
@@ -445,7 +445,7 @@ const PAGES = [
      opts:['٩', '٨١', '٢٧', '٣']},
     {qi:2, q:`ما قيمة: ${pw('٩٩','٠')} ؟`,
      opts:['١', '٩٩', 'صفر', 'غير معرّف']},
-    {qi:3, q:`ما ناتج: (${pw('٢','٢')})³ ؟`,
+    {qi:3, q:`ما ناتج: (${pw('٢','٢')})<span style=\"font-size:10px;font-weight:900;vertical-align:super;color:#E8512B\">٣</span> ؟`,
      opts:[pw('٢','٣'), pw('٢','٥'), pw('٢','٤'), pw('٢','٦')]},
     {qi:4, q:`ما قيمة: ${pw('٢','−٤')} ؟`,
      opts:[fr('١','٢'), fr('١','١٦'), fr('١','٨'), fr('١','٤')]},
@@ -475,11 +475,11 @@ const PAGES = [
      opts:['٩', '٣', '٢٧', '٦']},
     {qi:6, q:`أيهما أكبر: ${pw('٢','٥')} أم ${pw('٤','٢')} ؟`,
      opts:[`${pw('٢','٥')} أكبر`, `${pw('٤','٢')} أكبر`, 'متساويان', 'لا يمكن المقارنة']},
-    {qi:7, q:`إذا كان الأساس بين ٠ و١، أيهما أكبر: ${pw('(½)','٢')} أم ${pw('(½)','٣')} ؟`,
-     opts:[`${pw('(½)','٣')} أكبر`, `${pw('(½)','٢')} أكبر`, 'متساويان', 'يعتمد']},
+    {qi:7, q:`إذا كان الأساس بين ٠ و١، أيهما أكبر: ${pw('('+fr('١','٢')+')','٢')} أم ${pw('('+fr('١','٢')+')','٣')} ؟`,
+     opts:[`${pw('('+fr('١','٢')+')','٣')} أكبر`, `${pw('('+fr('١','٢')+')','٢')} أكبر`, 'متساويان', 'يعتمد']},
     {qi:8, q:`ما قيمة: ${pw('٢','٤')} − ${pw('٤','٢')} ؟`,
      opts:['صفر', '٣', '٨', '١٢']},
-    {qi:9, q:`ما ناتج: (${pw('٥','٢')})³ ؟`,
+    {qi:9, q:`ما ناتج: (${pw('٥','٢')})<span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span> ؟`,
      opts:[pw('٥','٦'), pw('٥','٥'), pw('٥','٨'), pw('٥','٩')]},
   ].map(({qi,q,opts})=>`
     <div class="q-card">
@@ -517,7 +517,7 @@ const PAGES = [
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;background:#F9F9F9">
       <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span></span> = ٤×٤×٤ = ٦٤</div>
-      <div style="padding:9px 11px;font-size:11.5px;color:#7B2D8B;font-weight:700;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span></span> = (<span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٢</span></span>)³ = <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٦</span></span> = ٦٤</div>
+      <div style="padding:9px 11px;font-size:11.5px;color:#7B2D8B;font-weight:700;text-align:right;line-height:1.8"><span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span></span> = (<span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٢</span></span>)<span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٣</span> = <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٦</span></span> = ٦٤</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;background:#fff">
       <div style="padding:9px 11px;font-size:11.5px;color:#888;border-left:1px solid #eee;text-align:right;line-height:1.8">مقارنة <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٢</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٥</span></span> و <span style="display:inline-flex;align-items:flex-start;vertical-align:middle"><span style="font-size:15px;font-weight:900;color:#1A2533">٤</span><span style="font-size:10px;font-weight:900;vertical-align:super;color:#E8512B">٢</span></span> — نحسب كل منهما</div>

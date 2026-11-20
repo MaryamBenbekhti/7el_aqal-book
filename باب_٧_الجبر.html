@@ -66,14 +66,14 @@ function pw(base,exp,bc='#1A2533',ec='#E8512B'){
 const QDATA=[
   {correct:2, explain:`٣س + ٥س = ٨س | ٢ص − ٤ص = −٢ص | النتيجة: ٨س − ٢ص ✓`},
   {correct:0, explain:`${pw('س','٣')} × ${pw('س','٤')} = ${pw('س','٣+٤')} = ${pw('س','٧')} ✓ (نجمع الأسس)`},
-  {correct:2, explain:`(٥+٣)² = ٥² + ٢×٥×٣ + ٣² = ٢٥+٣٠+٩ = ٦٤ ✓`},
+  {correct:2, explain:`(٥+٣)<sup style="color:#2E7D32">٢</sup> = ٥<sup style="color:#2E7D32">٢</sup> + ٢×٥×٣ + ٣<sup style="color:#2E7D32">٢</sup> = ٢٥+٣٠+٩ = ٦٤ ✓`},
   {correct:0, explain:`١٠٢ × ٩٨ = (١٠٠+٢)(١٠٠−٢) = ١٠٠٠٠−٤ = ٩٩٩٦ ✓`},
   {correct:2, explain:`٣س+٤=٢٥ | ٣س=٢١ | س=٧ ✓`},
   {correct:1, explain:`س+ص=١٠ وس−ص=٤ | نجمع: ٢س=١٤ | س=٧ | ص=٣ | س×ص=٢١ ✓`},
   {correct:3, explain:`٢س−٣>٧ | ٢س>١٠ | س>٥ ✓`},
   {correct:1, explain:`${pw('س','٢')}−٥س+٦=٠ | (س−٢)(س−٣)=٠ | س=٢ أو س=٣ ✓`},
   {correct:1, explain:`الكبير=س | الصغير=س−٦ | س+(س−٦)=٤٠ | ٢س=٤٦ | س=٢٣ ✓`},
-  {correct:0, explain:`العدد=س | س+${fr('س','٢')}+${fr('س','٣')}=${fr('٦س+٣س+٢س','٦')}=${fr('١١س','٦')}=٣٠ | ١١س=١٨٠ | س≈١٦٫٤ قريب من الخيار الصحيح: ٣٦ ← ٣٦/٢=١٨، ٣٦/٣=١٢ → ٣٦+١٨+١٢=٦٦≠٣٠... الصحيح: نصفه+ثلثه=${fr('٥','٦')}س=٣٠ | س=٣٦ ✓`},
+  {correct:0, explain:`العدد = س | نصفه + ثلثه = ${fr('س','٢')} + ${fr('س','٣')} = ${fr('٥س','٦')} = ٣٠ ← ٥س = ١٨٠ ← س = ٣٦ ✓`},
 ];
 
 function revealQ(qi){
@@ -125,7 +125,7 @@ const PAGES=[
 {label:"التعابير الجبرية",bg:"#fff",html:`
 <div class="pw">
   <div class="sec-hdr" style="background:#6A1B9A">
-    <div class="sec-hdr-txt">التعابير الجبرية والتب سيط</div>
+    <div class="sec-hdr-txt">التعابير الجبرية والتبسيط</div>
     <div class="sec-dot"></div>
   </div>
 
@@ -142,7 +142,7 @@ const PAGES=[
   </div>
 
   <div style="margin:0 20px 12px;background:#0D4F5C;border-radius:12px;padding:13px 15px;text-align:center">
-    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:6px">⚡ تب سيط التعابير — اجمع الحدود المتشابهة فقط</div>
+    <div style="font-size:13px;font-weight:800;color:#F5A623;margin-bottom:6px">⚡ تبسيط التعابير — اجمع الحدود المتشابهة فقط</div>
     <div style="font-size:12px;color:#B2EBF2">الحدود المتشابهة = نفس المتغير ونفس الأس</div>
   </div>
 
@@ -575,11 +575,11 @@ const PAGES=[
     <div class="sec-dot"></div>
   </div>
   ${[
-    {qi:0,q:`ما تب سيط: ٣س + ٥س − ٢ص − ٤ص − ٢ص ؟`,
+    {qi:0,q:`ما تبسيط: ٣س + ٥س + ٢ص − ٤ص ؟`,
      opts:['٨س + ٦ص','٦س − ٢ص','٨س − ٢ص','٦س − ٦ص']},
     {qi:1,q:`ما ناتج: ${pw('س','٣')} × ${pw('س','٤')} ؟`,
      opts:[pw('س','٧'),pw('س','١٢'),pw('س','٣٤'),pw('س','٤')]},
-    {qi:2,q:`ما قيمة (٥+٣)² باستخدام المتطابقات؟`,
+    {qi:2,q:`ما قيمة (٥+٣)<sup style="color:#7B2D8B">٢</sup> باستخدام المتطابقات؟`,
      opts:['٣٦','٤٠','٦٤','٤٨']},
     {qi:3,q:`ما ناتج ١٠٢ × ٩٨ بطريقة فرق المربعين؟`,
      opts:['٩٩٩٦','٩٩٩٨','٩٩٩٩','١٠٠٠٠']},
